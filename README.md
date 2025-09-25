@@ -37,3 +37,6 @@ Le Pettite Coffee es una página web dedicada a mostrar y compartir la experienc
 ## 🤝 Colaboración
 * Trabajo en equipo bajo metodologías tradicionales - PMBOK.
 * Revisión de código y retroalimentación constante para mejorar la calidad.
+
+Figma
+https://www.figma.com/design/XLiFkipsaDOK6vd8Rw6YTO?node-id=0-1
