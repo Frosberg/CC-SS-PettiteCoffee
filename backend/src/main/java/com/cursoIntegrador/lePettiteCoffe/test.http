@@ -1,0 +1,14 @@
+// ZONA DE PRUEBAS HTTP
+
+### Login
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "1234"
+}
+
+### Endpoint Protegido
+GET http://localhost:8080/auth/protectedTest
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc1ODk1NTk4NiwiZXhwIjoxNzU4OTU5NTg2fQ.PLI9eTCmQxCwBsVRd6wwcH2df5dxi45ZD0fqZBhj55c
