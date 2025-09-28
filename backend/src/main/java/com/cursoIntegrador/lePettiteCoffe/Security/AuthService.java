@@ -1,5 +1,6 @@
 package com.cursoIntegrador.lePettiteCoffe.Security;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.cursoIntegrador.lePettiteCoffe.Model.IUserDAO;
@@ -9,15 +10,17 @@ import com.cursoIntegrador.lePettiteCoffe.Model.User;
 public class AuthService {
     private final JwtUtil jwtUtil;
     private final IUserDAO userDAO;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthService(JwtUtil jwtUtil, IUserDAO userDAO) {
+    public AuthService(JwtUtil jwtUtil, IUserDAO userDAO, PasswordEncoder passwordEncoder) {
         this.jwtUtil = jwtUtil;
         this.userDAO = userDAO;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public String login(String username, String password) {
         User user = userDAO.findByUsername(username);
-        if (user != null && user.getPassword().equals(password)) {
+        if (this.userExists(username) && passwordEncoder.matches(password, user.getPassword())) {
             return jwtUtil.generateToken(user.getUsername());
         }
         throw new RuntimeException("Credenciales invaálidas");
@@ -25,5 +28,18 @@ public class AuthService {
 
     public String extractUsername(String token) {
         return jwtUtil.validateAndGetUser(token);
+    }
+
+    public void register(String username, String password) {
+        if (this.userExists(username)) {
+            throw new RuntimeException("El usuario ya está registrado");
+        }
+        String encriptada = passwordEncoder.encode(password);
+        User newUser = new User(username, encriptada);
+        userDAO.save(newUser);
+    }
+
+    public boolean userExists(String username) {
+        return userDAO.findByUsername(username) != null;
     }
 }

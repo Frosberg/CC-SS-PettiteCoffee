@@ -11,4 +11,13 @@ Content-Type: application/json
 
 ### Endpoint Protegido
 GET http://localhost:8080/auth/protectedTest
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc1ODk1NTk4NiwiZXhwIjoxNzU4OTU5NTg2fQ.PLI9eTCmQxCwBsVRd6wwcH2df5dxi45ZD0fqZBhj55c
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc1OTA0NzU2NCwiZXhwIjoxNzU5MDUxMTY0fQ.SA6ErIh4l23bbYRVvcLNXYXaJJ9YTXnZ-ucaIF6GuKk
+
+### Registro
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{
+  "username": "periquito",
+  "password": "periquito"
+}
