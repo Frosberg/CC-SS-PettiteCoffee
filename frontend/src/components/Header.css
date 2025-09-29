@@ -1,60 +1,69 @@
+/* HEADER */
 .header {
-  display: flex;
-  align-items: center;
-  padding-inline: 80px;
-  height: 140px;
+    display: flex;
+    align-items: center;
+    padding-inline: 5rem;
+    height: 8.75rem;
 }
 
 .header__logo,
 .header__actions {
-  display: flex;
-  flex-grow: 1;
-  flex-basis: 0;
+    display: flex;
+    flex-grow: 1;
+    flex-basis: 0;
+}
+
+.header__logo {
+    align-items: center;
 }
 
 .header__actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+    justify-content: flex-end;
+    gap: 0.625rem;
 }
 
 .header__actions i {
-  color: var(--color-accent);
+    color: var(--color-accent);
 }
 
-.header__logo h1 {
-  color: var(--color-accent);
-  font-weight: bold;
-  font-size: 24px;
+.header__logo h1 a {
+    margin: 0;
+    color: var(--color-accent);
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-decoration: none;
 }
 
 .header a {
-  transition: color 0.2s ease;
-  color: white;
-  font-weight: 500;
-  font-size: 18px;
-  text-decoration: none;
+    transition: color 0.2s ease;
+    color: white;
+    font-weight: 500;
+    font-size: 1.125rem;
+    text-decoration: none;
 }
 
 .header ul {
-  display: flex;
-  gap: 55px;
-  margin: 0;
-  list-style: none;
+    display: flex;
+    gap: 3.4375rem;
+    margin: 0;
+    list-style: none;
 }
 
 .header ul a:hover {
-  color: var(--color-accent);
+    color: var(--color-accent);
 }
 
-.header .link-outline {
-  transition: background 0.2s ease;
-  border-radius: 8px;
-  background-color: hsl(from var(--color-accent) h s l / 0.2);
-  padding: 10px;
-  color: var(--color-accent);
+.header__actions .link-outline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.2s ease;
+    border-radius: 0.5rem;
+    background-color: hsl(from var(--color-accent) h s l / 0.2);
+    padding: 0.625rem;
+    color: var(--color-accent);
 }
 
-.header .link-outline:hover {
-  background-color: hsl(from var(--color-accent) h s l / 0.4);
+.header__actions .link-outline:hover {
+    background-color: hsl(from var(--color-accent) h s l / 0.4);
 }
