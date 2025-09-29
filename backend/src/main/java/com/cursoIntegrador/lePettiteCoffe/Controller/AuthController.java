@@ -27,8 +27,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
-            String token = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
-            return ResponseEntity.ok(Map.of("token", token));
+            return ResponseEntity.ok(generateTokenResponse(loginRequest.getUsername(), loginRequest.getPassword()));
         } catch (RuntimeException e) {
             return ResponseEntity.status(401).body(e.getMessage());
         }
@@ -39,6 +38,11 @@ public class AuthController {
         try {
             String token = authHeader.replace("Bearer ", "");
             String username = authService.extractUsername(token);
+
+            if (!authService.isTokenValid(token)) {
+                return ResponseEntity.status(401).body("Token inválido o cerrado sesión");
+            }
+
             if (authService.userExists(username)) {
                 return ResponseEntity.ok("USUARIO : " + username + " ENTRO AL ENDPOINT PROTEGIDO");
             } else {
@@ -50,13 +54,32 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> getMethodName(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> register(@RequestBody LoginRequest loginRequest) {
         try {
             authService.register(loginRequest.getUsername(), loginRequest.getPassword());
-            return ResponseEntity.ok("Usuario registrado exitosamente");
+            Map<String, String> response = generateTokenResponse(loginRequest.getUsername(),
+                    loginRequest.getPassword());
+            return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             return ResponseEntity.status(400).body(e.getMessage());
         }
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = authHeader.replace("Bearer ", "");
+            authService.invalidateToken(token);
+            return ResponseEntity.ok("Token invalidado, funcionó el logout");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body("Error al hacer logout");
+        }
+    }
+
+    private Map<String, String> generateTokenResponse(String username, String password) {
+        String token = authService.login(username, password);
+        return Map.of(
+                "token", token,
+                "username", username);
+    }
 }
