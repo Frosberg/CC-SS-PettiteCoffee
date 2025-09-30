@@ -5,21 +5,21 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "username": "admin",
-  "password": "1234"
+  "username": "auxilio@gmail.com",
+  "password": "auxilio"
 }
 
 ### Endpoint Protegido
 GET http://localhost:8080/auth/protectedTest
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXJpcXVpdG8yIiwiaWF0IjoxNzU5MTA0MDI3LCJleHAiOjE3NTkxMDc2Mjd9.m1yqetYRCb4jkaAvk3gawCLtk-oZnVmZedt5HQbbJMA
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdXhpbGlvQGdtYWlsLmNvbSIsImlhdCI6MTc1OTE5MDAxMSwiZXhwIjoxNzU5MTkzNjExfQ.QlNXuO1ypzsNfgkMd1LHxPNJvuEXgRMjYT8w6hpnams
 
 ### Registro
 POST http://localhost:8080/auth/register
 Content-Type: application/json
 
 {
-  "username": "periquito2",
-  "password": "periquito2"
+  "username": "auxilio@gmail.com",
+  "password": "auxilio"
 }
 
 ### Logout
