@@ -4,4 +4,6 @@ public interface IUserDAO {
     User findByUsername(String username);
 
     void save(User user);
+
+    void updatePassword(String email, String nuevaPassword);
 }

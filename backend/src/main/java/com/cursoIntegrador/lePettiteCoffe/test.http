@@ -5,8 +5,8 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "username": "auxilio@gmail.com",
-  "password": "auxilio"
+  "username": "angelolma2080@gmail.com",
+  "password": "nuvaContra123"
 }
 
 ### Endpoint Protegido
@@ -18,10 +18,28 @@ POST http://localhost:8080/auth/register
 Content-Type: application/json
 
 {
-  "username": "auxilio@gmail.com",
-  "password": "auxilio"
+  "username": "angelolma2080@gmail.com",
+  "password": "prueba123"
 }
 
 ### Logout
 POST http://localhost:8080/auth/logout
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc1OTEwMzg1NywiZXhwIjoxNzU5MTA3NDU3fQ.RiYqNZPgMYGO8Y_jvRRCjIDvS4LOMy4t6J6_AwS69Gw
+
+### Recuperar contraseña - envia token
+POST http://localhost:8080/auth/recuperar
+Content-Type: application/json
+
+{
+  "email": "angelolma2080@gmail.com"
+}
+
+### Cambiar contraseña con token
+POST http://localhost:8080/auth/cambiar-password
+Content-Type: application/json
+
+{
+  "email": "angelolma2080@gmail.com",
+  "token": "462fb9e2-0cab-4fa6-8db2-e6e3d807fb3f",
+  "nuevaPassword": "nuvaContra123"
+}

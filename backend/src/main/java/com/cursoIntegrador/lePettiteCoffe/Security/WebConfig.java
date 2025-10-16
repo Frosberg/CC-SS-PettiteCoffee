@@ -14,7 +14,7 @@ public class WebConfig implements WebMvcConfigurer {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://127.0.0.1:53590") // Aqui cambias a tu host waaa
+                        .allowedOrigins("http://localhost:5173") // Aqui cambias a tu host waaa
                         .allowedMethods("GET", "POST")
                         .allowedHeaders("*")
                         .allowCredentials(true);
