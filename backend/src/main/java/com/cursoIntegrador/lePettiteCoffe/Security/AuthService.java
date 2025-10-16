@@ -55,4 +55,13 @@ public class AuthService {
         return !invalidatedTokens.contains(token);
     }
 
+    public void actualizarPassword(String email, String newPassword) {
+        User user = userDAO.findByUsername(email);
+        if (user == null) {
+            throw new RuntimeException("Usuario no encontrado");
+        }
+        String encriptada = passwordEncoder.encode(newPassword);
+        userDAO.updatePassword(email, encriptada);
+    }
+
 }

@@ -40,4 +40,10 @@ public class AccountDAO implements IUserDAO {
                 "CLIENTE",
                 "ACTIVO");
     }
+
+    @Override
+    public void updatePassword(String email, String nuevaPassword) {
+        String sql = "UPDATE Cuenta SET Password = ? WHERE Email = ?";
+        jdbcTemplate.update(sql, nuevaPassword, email);
+    }
 }

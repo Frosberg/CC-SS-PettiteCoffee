@@ -1,13 +1,19 @@
 package com.cursoIntegrador.lePettiteCoffe.Controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cursoIntegrador.lePettiteCoffe.Model.LoginRequest;
+import com.cursoIntegrador.lePettiteCoffe.Model.PasswordChangeRequest;
 import com.cursoIntegrador.lePettiteCoffe.Security.AuthService;
+import com.cursoIntegrador.lePettiteCoffe.Security.PasswordRecoveryService;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,11 +24,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final AuthService authService;
+    @Autowired
+    private AuthService authService;
 
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
+    @Autowired
+    private PasswordRecoveryService passwordRecoveryService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
@@ -81,5 +87,44 @@ public class AuthController {
         return Map.of(
                 "token", token,
                 "username", username);
+    }
+
+    @PostMapping("/recuperar")
+    public ResponseEntity<String> enviarToken(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        try {
+            passwordRecoveryService.generarYEnviarToken(email);
+            return ResponseEntity.ok("Se envió un token de recuperación al correo " + email);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al enviar token: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/cambiar-password")
+    public ResponseEntity<Map<String, Object>> cambiarPassword(@RequestBody PasswordChangeRequest request) {
+        Map<String, Object> respuesta = new HashMap<>();
+
+        boolean valido = passwordRecoveryService.validarToken(request.getEmail(), request.getToken());
+
+        if (!valido) {
+            respuesta.put("valido", false);
+            respuesta.put("mensaje", "Token inválido o expirado, no se cambió la contraseña");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(respuesta);
+        }
+
+        try {
+            authService.actualizarPassword(request.getEmail(), request.getNuevaPassword());
+            passwordRecoveryService.invalidarToken(request.getEmail());
+
+            respuesta.put("valido", true);
+            respuesta.put("mensaje", "Contraseña actualizada correctamente");
+            return ResponseEntity.ok(respuesta);
+
+        } catch (Exception e) {
+            respuesta.put("valido", false);
+            respuesta.put("mensaje", "Error al cambiar la contraseña: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
+        }
     }
 }
