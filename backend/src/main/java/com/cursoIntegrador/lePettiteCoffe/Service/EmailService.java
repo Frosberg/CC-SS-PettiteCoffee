@@ -1,4 +1,4 @@
-package com.cursoIntegrador.lePettiteCoffe.Security;
+package com.cursoIntegrador.lePettiteCoffe.Service;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,6 +7,8 @@ import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.MultiPartEmail;
 import org.springframework.stereotype.Service;
+
+import com.cursoIntegrador.lePettiteCoffe.Util.PdfGenerator;
 
 @Service
 public class EmailService {

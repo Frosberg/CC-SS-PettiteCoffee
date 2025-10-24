@@ -1,4 +1,4 @@
-package com.cursoIntegrador.lePettiteCoffe.Model;
+package com.cursoIntegrador.lePettiteCoffe.Model.DTO;
 
 import lombok.Data;
 

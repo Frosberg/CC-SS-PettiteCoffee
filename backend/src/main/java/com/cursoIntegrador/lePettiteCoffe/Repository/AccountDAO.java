@@ -4,8 +4,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.cursoIntegrador.lePettiteCoffe.Model.IUserDAO;
-import com.cursoIntegrador.lePettiteCoffe.Model.User;
+import com.cursoIntegrador.lePettiteCoffe.Model.DAO.IUserDAO;
+import com.cursoIntegrador.lePettiteCoffe.Model.Entity.User;
 
 @Repository
 public class AccountDAO implements IUserDAO {
