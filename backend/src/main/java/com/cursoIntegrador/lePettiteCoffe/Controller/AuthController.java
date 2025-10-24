@@ -3,10 +3,10 @@ package com.cursoIntegrador.lePettiteCoffe.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cursoIntegrador.lePettiteCoffe.Model.LoginRequest;
-import com.cursoIntegrador.lePettiteCoffe.Model.PasswordChangeRequest;
-import com.cursoIntegrador.lePettiteCoffe.Security.AuthService;
-import com.cursoIntegrador.lePettiteCoffe.Security.PasswordRecoveryService;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.LoginRequest;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.PasswordChangeRequest;
+import com.cursoIntegrador.lePettiteCoffe.Service.AuthService;
+import com.cursoIntegrador.lePettiteCoffe.Service.PasswordRecoveryService;
 
 import java.util.HashMap;
 import java.util.Map;

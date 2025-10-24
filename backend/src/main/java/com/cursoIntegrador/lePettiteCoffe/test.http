@@ -11,7 +11,7 @@ Content-Type: application/json
 
 ### Endpoint Protegido
 GET http://localhost:8080/auth/protectedTest
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdXhpbGlvQGdtYWlsLmNvbSIsImlhdCI6MTc1OTE5MDAxMSwiZXhwIjoxNzU5MTkzNjExfQ.QlNXuO1ypzsNfgkMd1LHxPNJvuEXgRMjYT8w6hpnams
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbmdlbG9sbWEyMDgwQGdtYWlsLmNvbSIsImlhdCI6MTc2MTI3NDc0NCwiZXhwIjoxNzYxMjc4MzQ0fQ.bUKRPPyDQspEXiZBD09yiJuPpNJ952uCYptz1PHXh10
 
 ### Registro
 POST http://localhost:8080/auth/register
@@ -24,7 +24,7 @@ Content-Type: application/json
 
 ### Logout
 POST http://localhost:8080/auth/logout
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc1OTEwMzg1NywiZXhwIjoxNzU5MTA3NDU3fQ.RiYqNZPgMYGO8Y_jvRRCjIDvS4LOMy4t6J6_AwS69Gw
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbmdlbG9sbWEyMDgwQGdtYWlsLmNvbSIsImlhdCI6MTc2MTI3NDc0NCwiZXhwIjoxNzYxMjc4MzQ0fQ.bUKRPPyDQspEXiZBD09yiJuPpNJ952uCYptz1PHXh10
 
 ### Recuperar contraseña - envia token
 POST http://localhost:8080/auth/recuperar
@@ -40,6 +40,6 @@ Content-Type: application/json
 
 {
   "email": "angelolma2080@gmail.com",
-  "token": "462fb9e2-0cab-4fa6-8db2-e6e3d807fb3f",
-  "nuevaPassword": "nuvaContra123"
+  "token": "a2be60cb-38b6-4db5-88fe-97bdd78734c6",
+  "nuevaPassword": "nuvaContra1234"
 }

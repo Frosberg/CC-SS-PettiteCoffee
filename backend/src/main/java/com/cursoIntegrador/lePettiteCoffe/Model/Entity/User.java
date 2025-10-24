@@ -1,4 +1,4 @@
-package com.cursoIntegrador.lePettiteCoffe.Model;
+package com.cursoIntegrador.lePettiteCoffe.Model.Entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

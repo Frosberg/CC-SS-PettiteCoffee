@@ -1,4 +1,4 @@
-package com.cursoIntegrador.lePettiteCoffe.Security;
+package com.cursoIntegrador.lePettiteCoffe.Service;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -6,8 +6,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.cursoIntegrador.lePettiteCoffe.Model.IUserDAO;
-import com.cursoIntegrador.lePettiteCoffe.Model.User;
+import com.cursoIntegrador.lePettiteCoffe.Model.DAO.IUserDAO;
+import com.cursoIntegrador.lePettiteCoffe.Model.Entity.User;
+import com.cursoIntegrador.lePettiteCoffe.Security.JwtUtil;
 
 @Service
 public class AuthService {

@@ -12,9 +12,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.cursoIntegrador.lePettiteCoffe.Model.IUserDAO;
-import com.cursoIntegrador.lePettiteCoffe.Model.User;
-import com.cursoIntegrador.lePettiteCoffe.Security.AuthService;
+import com.cursoIntegrador.lePettiteCoffe.Model.DAO.IUserDAO;
+import com.cursoIntegrador.lePettiteCoffe.Model.Entity.User;
 import com.cursoIntegrador.lePettiteCoffe.Security.JwtUtil;
 
 @ExtendWith(MockitoExtension.class)
