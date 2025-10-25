@@ -35,7 +35,7 @@ public class AuthService {
             respuesta.put("loginData", new AccountLoginDTO(cuenta, token));
             return respuesta;
         }
-        throw new RuntimeException("Credenciales invaálidas");
+        throw new RuntimeException("Credenciales inválidas");
     }
 
     public String extractUsername(String token) {
