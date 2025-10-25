@@ -3,30 +3,31 @@ package com.cursoIntegrador.lePettiteCoffe.Service;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.cursoIntegrador.lePettiteCoffe.Model.DAO.IUserDAO;
-import com.cursoIntegrador.lePettiteCoffe.Model.Entity.User;
+import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Cuenta;
 import com.cursoIntegrador.lePettiteCoffe.Security.JwtUtil;
+import com.cursoIntegrador.lePettiteCoffe.Service.DAO.AccountService;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
+    @Autowired
     private final JwtUtil jwtUtil;
-    private final IUserDAO userDAO;
+    @Autowired
+    private final AccountService accountService;
+    @Autowired
     private final PasswordEncoder passwordEncoder;
     private final Set<String> invalidatedTokens = ConcurrentHashMap.newKeySet();
 
-    public AuthService(JwtUtil jwtUtil, IUserDAO userDAO, PasswordEncoder passwordEncoder) {
-        this.jwtUtil = jwtUtil;
-        this.userDAO = userDAO;
-        this.passwordEncoder = passwordEncoder;
-    }
-
     public String login(String username, String password) {
-        User user = userDAO.findByUsername(username);
+        Cuenta user = accountService.findByEmail(username);
         if (this.userExists(username) && passwordEncoder.matches(password, user.getPassword())) {
-            return jwtUtil.generateToken(user.getUsername());
+            return jwtUtil.generateToken(user.getEmail());
         }
         throw new RuntimeException("Credenciales invaálidas");
     }
@@ -35,17 +36,20 @@ public class AuthService {
         return jwtUtil.validateAndGetUser(token);
     }
 
-    public void register(String username, String password) {
-        if (this.userExists(username)) {
+    public void register(String email, String password) {
+        if (this.userExists(email)) {
             throw new RuntimeException("El usuario ya está registrado");
         }
         String encriptada = passwordEncoder.encode(password);
-        User newUser = new User(username, encriptada);
-        userDAO.save(newUser);
+
+        Cuenta newUser = new Cuenta();
+        newUser.setEmail(email);
+        newUser.setPassword(encriptada);
+        accountService.save(newUser);
     }
 
     public boolean userExists(String username) {
-        return userDAO.findByUsername(username) != null;
+        return accountService.findByEmail(username) != null;
     }
 
     public void invalidateToken(String token) {
@@ -57,12 +61,12 @@ public class AuthService {
     }
 
     public void actualizarPassword(String email, String newPassword) {
-        User user = userDAO.findByUsername(email);
+        Cuenta user = accountService.findByEmail(email);
         if (user == null) {
             throw new RuntimeException("Usuario no encontrado");
         }
         String encriptada = passwordEncoder.encode(newPassword);
-        userDAO.updatePassword(email, encriptada);
+        accountService.updatePassword(email, encriptada);
     }
 
 }
