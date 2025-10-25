@@ -11,6 +11,8 @@ import com.cursoIntegrador.lePettiteCoffe.Service.PasswordRecoveryService;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequestMapping("/auth")
 public class AuthController {
 
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+
     @Autowired
     private AuthService authService;
 
@@ -31,9 +35,14 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+
+        String email = loginRequest.getUsername();
+        logger.info("Intento de login para: {}", email);
         try {
-            return ResponseEntity.ok(authService.login(loginRequest.getUsername(), loginRequest.getPassword()));
+            logger.debug("Login exitoso para: {}", loginRequest.getUsername());
+            return ResponseEntity.ok(authService.login(email, loginRequest.getPassword()));
         } catch (RuntimeException e) {
+            logger.warn("Login fallido para: {} - {}", loginRequest.getUsername(), e.getMessage());
             return ResponseEntity.status(401).body(e.getMessage());
         }
     }
