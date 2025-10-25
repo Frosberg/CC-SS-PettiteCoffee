@@ -8,6 +8,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,9 +27,13 @@ public class Cuenta {
     @Column(name = "idcuenta")
     private Integer idcuenta;
 
+    @Email(message = "El correo debe tener un formato válido (ejemplo@dominio.com)")
+    @NotBlank(message = "El correo no puede estar vacío")
     @Column(length = 150, nullable = false, unique = true)
     private String email;
 
+    @NotBlank(message = "La contraseña no puede estar vacía")
+    @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
     @Column(length = 180, nullable = false)
     private String password;
 

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Cuenta;
 
 @Repository
-public interface AccountRepository extends JpaRepository<Cuenta, Long> {
+public interface AccountRepository extends JpaRepository<Cuenta, Integer> {
 
     Cuenta findByEmail(String email);
 
