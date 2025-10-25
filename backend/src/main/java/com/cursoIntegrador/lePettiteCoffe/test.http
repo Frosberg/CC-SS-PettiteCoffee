@@ -18,7 +18,7 @@ POST http://localhost:8080/auth/register
 Content-Type: application/json
 
 {
-  "username": "pepe@gmail.com",
+  "username": "pepe",
   "password": "prueba123"
 }
 
@@ -43,3 +43,6 @@ Content-Type: application/json
   "token": "a2be60cb-38b6-4db5-88fe-97bdd78734c6",
   "nuevaPassword": "nuvaContra1234"
 }
+
+### Obtener todos los productos
+GET http://localhost:8080/products/getAllProducts
