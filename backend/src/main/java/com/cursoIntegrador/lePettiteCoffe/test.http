@@ -18,7 +18,7 @@ POST http://localhost:8080/auth/register
 Content-Type: application/json
 
 {
-  "username": "pepe",
+  "username": "pepe@pepe.com",
   "password": "prueba123"
 }
 
@@ -40,7 +40,7 @@ Content-Type: application/json
 
 {
   "email": "angelolma2080@gmail.com",
-  "token": "a2be60cb-38b6-4db5-88fe-97bdd78734c6",
+  "token": "a75cf376-50fc-40bd-81a6-8cad13c8045f",
   "nuevaPassword": "nuvaContra1234"
 }
 
