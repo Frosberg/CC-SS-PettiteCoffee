@@ -6,19 +6,19 @@ Content-Type: application/json
 
 {
   "username": "angelolma2080@gmail.com",
-  "password": "nuvaContra123"
+  "password": "nuvaContra1234"
 }
 
 ### Endpoint Protegido
 GET http://localhost:8080/auth/protectedTest
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbmdlbG9sbWEyMDgwQGdtYWlsLmNvbSIsImlhdCI6MTc2MTI3NDc0NCwiZXhwIjoxNzYxMjc4MzQ0fQ.bUKRPPyDQspEXiZBD09yiJuPpNJ952uCYptz1PHXh10
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbmdlbG9sbWEyMDgwQGdtYWlsLmNvbSIsImlhdCI6MTc2MTM1NjMxNSwiZXhwIjoxNzYxMzU5OTE1fQ.yfTd_DKKysSIaTpus73m0f8eMVg_EqSWYsAuKV2jA4M
 
 ### Registro
 POST http://localhost:8080/auth/register
 Content-Type: application/json
 
 {
-  "username": "angelolma2080@gmail.com",
+  "username": "pepe@gmail.com",
   "password": "prueba123"
 }
 
