@@ -32,7 +32,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
-            return ResponseEntity.ok(generateTokenResponse(loginRequest.getUsername(), loginRequest.getPassword()));
+            return ResponseEntity.ok(authService.login(loginRequest.getUsername(), loginRequest.getPassword()));
         } catch (RuntimeException e) {
             return ResponseEntity.status(401).body(e.getMessage());
         }
@@ -62,7 +62,7 @@ public class AuthController {
     public ResponseEntity<?> register(@RequestBody LoginRequest loginRequest) {
         try {
             authService.register(loginRequest.getUsername(), loginRequest.getPassword());
-            Map<String, String> response = generateTokenResponse(loginRequest.getUsername(),
+            Map<String, Object> response = authService.login(loginRequest.getUsername(),
                     loginRequest.getPassword());
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
@@ -79,13 +79,6 @@ public class AuthController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(400).body("Error al hacer logout");
         }
-    }
-
-    private Map<String, String> generateTokenResponse(String username, String password) {
-        String token = authService.login(username, password);
-        return Map.of(
-                "token", token,
-                "username", username);
     }
 
     @PostMapping("/recuperar")

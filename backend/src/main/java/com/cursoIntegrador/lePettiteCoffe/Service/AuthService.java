@@ -1,5 +1,6 @@
 package com.cursoIntegrador.lePettiteCoffe.Service;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.AccountLoginDTO;
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Cuenta;
 import com.cursoIntegrador.lePettiteCoffe.Security.JwtUtil;
 import com.cursoIntegrador.lePettiteCoffe.Service.DAO.AccountService;
@@ -24,10 +26,14 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final Set<String> invalidatedTokens = ConcurrentHashMap.newKeySet();
 
-    public String login(String username, String password) {
+    public Map<String, Object> login(String username, String password) {
         Cuenta user = accountService.findByEmail(username);
         if (this.userExists(username) && passwordEncoder.matches(password, user.getPassword())) {
-            return jwtUtil.generateToken(user.getEmail());
+            Map<String, Object> respuesta = new ConcurrentHashMap<>();
+            String token = jwtUtil.generateToken(user.getEmail());
+            Cuenta cuenta = accountService.findByEmail(username);
+            respuesta.put("loginData", new AccountLoginDTO(cuenta, token));
+            return respuesta;
         }
         throw new RuntimeException("Credenciales invaálidas");
     }
