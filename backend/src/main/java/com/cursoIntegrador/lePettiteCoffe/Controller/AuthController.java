@@ -39,8 +39,9 @@ public class AuthController {
         String email = loginRequest.getUsername();
         logger.info("Intento de login para: {}", email);
         try {
-            logger.debug("Login exitoso para: {}", loginRequest.getUsername());
-            return ResponseEntity.ok(authService.login(email, loginRequest.getPassword()));
+            var response = authService.login(email, loginRequest.getPassword());
+            logger.debug("Login exitoso para: {}", email);
+            return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             logger.warn("Login fallido para: {} - {}", loginRequest.getUsername(), e.getMessage());
             return ResponseEntity.status(401).body(e.getMessage());
@@ -69,12 +70,17 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody LoginRequest loginRequest) {
+
+        String email = loginRequest.getUsername();
+        logger.info("Intento de registro para: {}", email);
+
         try {
-            authService.register(loginRequest.getUsername(), loginRequest.getPassword());
-            Map<String, Object> response = authService.login(loginRequest.getUsername(),
-                    loginRequest.getPassword());
+            authService.register(email, loginRequest.getPassword());
+            logger.debug("Registro exitoso para: {}", email);
+            Map<String, Object> response = authService.login(email, loginRequest.getPassword());
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
+            logger.warn("Error en registro de {} - {}", email, e.getMessage());
             return ResponseEntity.status(400).body(e.getMessage());
         }
     }
@@ -83,9 +89,12 @@ public class AuthController {
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeader) {
         try {
             String token = authHeader.replace("Bearer ", "");
+            String username = authService.extractUsername(token);
             authService.invalidateToken(token);
+            logger.info("Logout exitoso para: {}", username);
             return ResponseEntity.ok("Token invalidado, funcionó el logout");
         } catch (RuntimeException e) {
+            logger.error("Error al hacer logout: {}", e.getMessage(), e);
             return ResponseEntity.status(400).body("Error al hacer logout");
         }
     }
@@ -93,10 +102,13 @@ public class AuthController {
     @PostMapping("/recuperar")
     public ResponseEntity<String> enviarToken(@RequestBody Map<String, String> body) {
         String email = body.get("email");
+        logger.info("Solicitud de recuperación de contraseña para: {}", email);
         try {
             passwordRecoveryService.generarYEnviarToken(email);
+            logger.debug("Token de recuperación generado y enviado a {}", email);
             return ResponseEntity.ok("Se envió un token de recuperación al correo " + email);
         } catch (Exception e) {
+            logger.error("Error al enviar token de recuperación a {} - {}", email, e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al enviar token: " + e.getMessage());
         }
@@ -104,25 +116,30 @@ public class AuthController {
 
     @PostMapping("/cambiar-password")
     public ResponseEntity<Map<String, Object>> cambiarPassword(@RequestBody PasswordChangeRequest request) {
-        Map<String, Object> respuesta = new HashMap<>();
 
-        boolean valido = passwordRecoveryService.validarToken(request.getEmail(), request.getToken());
+        String email = request.getEmail();
+        logger.info("Intento de cambio de contraseña para: {}", email);
+        Map<String, Object> respuesta = new HashMap<>();
+        boolean valido = passwordRecoveryService.validarToken(email, request.getToken());
 
         if (!valido) {
+            logger.warn("Token inválido o expirado en intento de cambio de contraseña para: {}", email);
             respuesta.put("valido", false);
             respuesta.put("mensaje", "Token inválido o expirado, no se cambió la contraseña");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(respuesta);
         }
 
         try {
-            authService.actualizarPassword(request.getEmail(), request.getNuevaPassword());
-            passwordRecoveryService.invalidarToken(request.getEmail());
+            authService.actualizarPassword(email, request.getNuevaPassword());
+            passwordRecoveryService.invalidarToken(email);
 
+            logger.debug("Contraseña actualizada correctamente para: {}", email);
             respuesta.put("valido", true);
             respuesta.put("mensaje", "Contraseña actualizada correctamente");
             return ResponseEntity.ok(respuesta);
 
         } catch (Exception e) {
+            logger.error("Error al cambiar la contraseña para {} - {}", email, e.getMessage(), e);
             respuesta.put("valido", false);
             respuesta.put("mensaje", "Error al cambiar la contraseña: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);

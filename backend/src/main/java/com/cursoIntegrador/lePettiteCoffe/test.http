@@ -40,8 +40,8 @@ Content-Type: application/json
 
 {
   "email": "angelolma2080@gmail.com",
-  "token": "a75cf376-50fc-40bd-81a6-8cad13c8045f",
-  "nuevaPassword": "nuvaContra1234"
+  "token": "151e456d-336e-42df-acae-4f38ec7a3f57",
+  "nuevaPassword": "contraseña123"
 }
 
 ### Obtener todos los productos
