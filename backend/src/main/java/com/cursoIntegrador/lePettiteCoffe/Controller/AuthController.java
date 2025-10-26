@@ -103,6 +103,12 @@ public class AuthController {
     public ResponseEntity<String> enviarToken(@RequestBody Map<String, String> body) {
         String email = body.get("email");
         logger.info("Solicitud de recuperación de contraseña para: {}", email);
+
+        if (!authService.userExists(email)) {
+            logger.warn("Intento de recuperación de contraseña para email no registrado: {}", email);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No existe ninguna cuenta asociada a este correo");
+        }
+
         try {
             passwordRecoveryService.generarYEnviarToken(email);
             logger.debug("Token de recuperación generado y enviado a {}", email);
