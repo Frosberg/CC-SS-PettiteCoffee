@@ -61,3 +61,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tI
   "direccion": "Calle Falsa 123"
 }
 
+
+### Listar notificaciones de un usuario
+GET http://localhost:8080/notificaciones/listar
+Content-Type: application/json
+Authorization: Bearer rrrr.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNTMxODI0LCJleHAiOjE3NjE1MzU0MjR9._G1hLAy6prYz6s0YC18r309k78YtNiygDZdfIWH5EJ0

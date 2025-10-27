@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import java.util.ArrayList;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,7 +39,7 @@ public class ProductController {
 
         try {
             List<Product> products = productService.getAllProducts();
-            List<ProductDTO> productsDTO = new java.util.ArrayList<>();
+            List<ProductDTO> productsDTO = new ArrayList<>();
 
             if (products.isEmpty()) {
                 return ResponseEntity.noContent().build();

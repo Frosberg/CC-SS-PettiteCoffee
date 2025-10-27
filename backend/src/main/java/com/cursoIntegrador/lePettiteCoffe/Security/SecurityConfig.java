@@ -32,7 +32,9 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/products/**", "/images/**", "/sucursales/**").permitAll()
+                        .requestMatchers("/auth/**", "/products/**", "/images/**", "/sucursales/**",
+                                "/notificaciones/**")
+                        .permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(
                         org.springframework.security.config.http.SessionCreationPolicy.STATELESS));
