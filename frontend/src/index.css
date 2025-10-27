@@ -15,24 +15,57 @@
     font-family: "Poppins", sans-serif;
 }
 
-#root {
+body {
+    color: var(--color-light);
+    --bs-link-color-rgb: var(--color-light);
+    overflow: auto;
+}
+
+.root-default {
     background-color: var(--color-dark);
     height: 100vh;
-    color: var(--color-light);
 }
 
-.main__section {
+.root-auth {
+    background-image: url("/assets/Hero.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.layout__main {
     display: flex;
     flex-direction: column;
-    gap: 5rem;
-    background-color: var(--color-light);
-    padding: 5.625rem 0;
+    align-items: center;
+    width: 100%;
 }
 
-.main__title {
-    color: var(--color-dark);
-    font-weight: bold;
-    font-size: 4rem;
-    font-family: "Sansita Swashed", Oxygen, Helvetica, Arial;
+/* Layouts Repeats */
+.wrapper {
+    background-color: var(--color-light);
+}
+
+.wrapper__container {
+    display: flex;
+    flex-direction: column;
+    gap: 6.25rem;
+    padding: 5.625rem 0;
+    width: 100%;
+    max-width: 1200px;
     text-align: center;
+}
+
+.wrapper__title {
+    color: var(--color-dark);
+    font-weight: 600;
+    font-size: 4rem;
+    font-family: "Sansita Swashed", cursive;
+}
+
+/* RESPONSIVE DESIGN */
+@media screen and (max-width: 768px) {
+    .wrapper__title {
+        font-size: 3rem;
+        line-height: 1.1;
+    }
 }
