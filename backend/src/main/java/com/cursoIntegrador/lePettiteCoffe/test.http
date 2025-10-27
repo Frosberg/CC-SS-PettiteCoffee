@@ -46,3 +46,18 @@ Content-Type: application/json
 
 ### Obtener todos los productos
 GET http://localhost:8080/products/getAllProducts
+
+
+### Listar sucursales
+GET http://localhost:8080/sucursales/listar
+
+### Agregar una nueva sucursal
+POST http://localhost:8080/sucursales/agregar
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNTIzNzE5LCJleHAiOjE3NjE1MjczMTl9.k4oT8gKK1xyfG3Kr8nKsAAZOrAlvBjvuEIZoF0wCka8
+
+{
+  "nombre": "Sucursal Centro",
+  "direccion": "Calle Falsa 123"
+}
+

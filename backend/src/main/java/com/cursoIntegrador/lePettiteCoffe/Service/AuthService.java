@@ -75,4 +75,14 @@ public class AuthService {
         accountService.updatePassword(email, encriptada);
     }
 
+    public boolean userHasRole(String email, String searchRole){
+
+        if(userExists(email)){
+            Cuenta user = accountService.findByEmail(email);
+            String role = user.getRol();
+            return role.equals(searchRole);
+        }
+
+        return false;
+    }
 }
