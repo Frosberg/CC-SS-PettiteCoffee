@@ -8,7 +8,9 @@ function Register() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [idError, setIdError] = useState(0);
     const [repeatPassword, setRepeatPassword] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const authRegisterStore = useAuthStore((state) => state.register);
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -20,12 +22,19 @@ function Register() {
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (password !== repeatPassword) {
-            alert("Las contraseñas no coinciden");
-            return;
-        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) return setIdError(3);
+        if (password.length < 8) return setIdError(2);
+        if (password !== repeatPassword) return setIdError(1);
 
-        authRegisterStore(email, password);
+        setIdError(0);
+        setLoading(true);
+
+        try {
+            await authRegisterStore(email, password);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -43,29 +52,34 @@ function Register() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="Correo Electrónico"
+                            disabled={loading}
                         />
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Contraseña"
+                            disabled={loading}
                         />
                         <input
                             type="password"
                             value={repeatPassword}
                             onChange={(e) => setRepeatPassword(e.target.value)}
                             placeholder="Repetir Contraseña"
+                            disabled={loading}
                         />
                     </div>
 
                     <ul className="form__content__requisitos">
-                        <li>Mínimo 8 caracteres</li>
-                        <li>Mayúsculas y Minúsculas</li>
-                        <li>Símbolos y Números</li>
+                        {idError === 1 && <li>Las contraseñas deben ser iguales</li>}
+                        {idError === 2 && <li>La contraseña debe tener al menos 8 caracteres</li>}
+                        {idError === 3 && <li>El correo no es válido</li>}
                     </ul>
 
                     <div className="form__content__actions">
-                        <button className="btn-filled">QUIERO REGISTRARME</button>
+                        <button className="btn-filled" disabled={loading}>
+                            {loading ? "REGISTRANDO..." : "QUIERO REGISTRARME"}
+                        </button>
                         <Link className="btn-outline" to="/login">
                             ESTOY REGISTRADO
                         </Link>
