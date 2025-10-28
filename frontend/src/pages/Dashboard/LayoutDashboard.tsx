@@ -1,7 +1,9 @@
-import { Outlet, useLocation } from "react-router";
+import { Outlet, useLocation, useNavigate } from "react-router";
 import DHeader from "../../components/Dashboard/DHeader";
 import DNavbar from "../../components/Dashboard/DNavbar";
 import "./LayoutDashboard.css";
+import useAuthStore from "../../stores/useAuthStore";
+import { useEffect } from "react";
 
 const routesPaths = {
     main: [
@@ -37,6 +39,13 @@ const routesPaths = {
 
 function LayoutDashboard() {
     const { pathname } = useLocation();
+    const navigate = useNavigate();
+    const isAuthenticated = useAuthStore((store) => store.isAuthenticated);
+
+    useEffect(() => {
+        if (!isAuthenticated) navigate("/login");
+    }, [isAuthenticated]);
+
     const searchMain = routesPaths.main.find((route) => route.path === pathname)?.name;
     const searchManage = routesPaths.manage.find((route) => route.path === pathname)?.name;
     const currentPath = searchMain || searchManage;

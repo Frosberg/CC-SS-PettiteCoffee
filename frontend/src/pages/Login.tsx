@@ -12,7 +12,7 @@ function Login() {
     const [loadingRecovery, setLoadingRecovery] = useState(false);
     const isMounted = useRef(true);
 
-    const authUserStore = useAuthStore((state) => state.user);
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const authErrorStore = useAuthStore((state) => state.error);
     const authSetLoginStore = useAuthStore((state) => state.login);
     const authSetRecoveryStore = useAuthStore((state) => state.setRecovery);
@@ -25,8 +25,8 @@ function Login() {
     }, []);
 
     useEffect(() => {
-        if (authUserStore) navigate("/perfil");
-    }, [navigate, authUserStore]);
+        if (isAuthenticated) navigate("/perfil");
+    }, [isAuthenticated]);
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();

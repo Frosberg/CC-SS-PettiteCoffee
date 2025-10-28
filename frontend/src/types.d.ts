@@ -31,14 +31,16 @@ interface Notify {
 
 // Stores
 interface AuthStore {
-    user: User | null;
+    user: any | null;
     email: string | null;
-    error: string | null;
-    register: (email: string, password: string) => void;
-    login: (email: string, password: string) => void;
-    logout: () => void;
-    setSession: (user: User) => void;
-    setRecovery: (recovery: { email: string | null }) => Promise<boolean>;
+    error: any | null;
+    isAuthenticated: boolean;
+    register: (email: string, password: string) => Promise<void>;
+    login: (email: string, password: string) => Promise<void>;
+    logout: () => Promise<void>;
+    verify: () => Promise<boolean>;
+    setSession: (user: any) => void;
+    setRecovery: ({ email }: { email: string | null }) => Promise<boolean>;
     setChangePassword: ({
         password,
         token,

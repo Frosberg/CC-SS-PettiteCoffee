@@ -6,30 +6,34 @@ const useAuthStore = create<AuthStore>((set, get) => ({
     user: null,
     email: null,
     error: null,
+    isAuthenticated: false,
+
     register: async (email, password) => {
         try {
             const credentials = { username: email, password };
             const { data } = await ApiRequest.post("/auth/register", credentials);
             window.localStorage.setItem("session", JSON.stringify(data.loginData));
-            set({ user: data.loginData, error: null });
+            set({ user: data.loginData, error: null, isAuthenticated: true });
         } catch (error) {
             if (error instanceof AxiosError) {
                 set({ error: error.response?.data });
             }
         }
     },
+
     login: async (email, password) => {
         try {
             const credentials = { username: email, password };
             const { data } = await ApiRequest.post("/auth/login", credentials);
             window.localStorage.setItem("session", JSON.stringify(data.loginData));
-            set({ user: data.loginData, error: null });
+            set({ user: data.loginData, error: null, isAuthenticated: true });
         } catch (error) {
             if (error instanceof AxiosError) {
                 set({ error: error.response?.data });
             }
         }
     },
+
     logout: async () => {
         try {
             await ApiRequest.post("/auth/logout");
@@ -37,15 +41,29 @@ const useAuthStore = create<AuthStore>((set, get) => ({
             console.log(error);
         }
         window.localStorage.removeItem("session");
-        set({ user: null, error: null });
+        set({ user: null, error: null, isAuthenticated: false });
     },
+
+    verify: async () => {
+        try {
+            const { status } = await ApiRequest.get("/auth/protectedTest");
+            if (status === 200) return true;
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                set({ error: error.response?.data });
+            }
+        }
+        return false;
+    },
+
     setSession: (user) => {
-        set({ user });
+        set({ user, isAuthenticated: true });
     },
+
     setRecovery: async ({ email }) => {
         try {
             const credentials = { email };
-            const data = await ApiRequest.post("/auth/recuperar", credentials);
+            const { data } = await ApiRequest.post("/auth/recuperar", credentials);
             if (data.status === 200) {
                 set({ email });
                 return true;
@@ -55,9 +73,9 @@ const useAuthStore = create<AuthStore>((set, get) => ({
                 set({ error: error.response?.data });
             }
         }
-
         return false;
     },
+
     setChangePassword: async ({ password, token }) => {
         try {
             const credentials = { email: get().email, token, nuevaPassword: password };

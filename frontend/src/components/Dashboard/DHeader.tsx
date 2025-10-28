@@ -26,14 +26,17 @@ function DHeader({ currentPath }: Props) {
                                 <span>Notificaciones</span>
                             </Popover.Header>
                             <Popover.Body className="notifications__description">
-                                {notifys.map((notify) => (
-                                    <NotifyCard
-                                        key={notify.idNotificaciones}
-                                        title={notify.asunto}
-                                        description={notify.descripcion}
-                                        date={notify.fechaHoraEnvio}
-                                    />
-                                ))}
+                                {notifys &&
+                                    notifys.map((notify) => (
+                                        <NotifyCard
+                                            key={notify.idNotificaciones}
+                                            title={notify.asunto}
+                                            description={notify.descripcion}
+                                            date={notify.fechaHoraEnvio}
+                                        />
+                                    ))}
+
+                                {!notifys && <p>No hay notificaciones</p>}
                             </Popover.Body>
                         </Popover>
                     }
