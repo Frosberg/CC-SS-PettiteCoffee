@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
 import useAuthStore from "../stores/useAuthStore";
-import "./LoginRegister.css";
+import Layout from "./Layout";
+import "./Auth.css";
 
 function Register() {
     const navigate = useNavigate();
@@ -30,61 +29,50 @@ function Register() {
     };
 
     return (
-        <>
-            <main className="main__auth__hero">
-                <Header />
+        <Layout className="auth">
+            <form className="form" onSubmit={handleRegister}>
+                <header className="form__header">
+                    <h2>¿Una Mañana de Cafe?</h2>
+                    <p>Únete a esta gran comunidad de amantes del café</p>
+                </header>
 
-                <section className="content_forms">
-                    <form className="form" onSubmit={handleRegister}>
-                        <div className="form__bg"></div>
-                        <div className="form__content">
-                            <header className="form__header">
-                                <h2>¿Una Mañana de Cafe?</h2>
-                                <p>Únete a esta gran comunidad de amantes del café</p>
-                            </header>
+                <section className="form__content">
+                    <div className="form__content__inputs">
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Correo Electrónico"
+                        />
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Contraseña"
+                        />
+                        <input
+                            type="password"
+                            value={repeatPassword}
+                            onChange={(e) => setRepeatPassword(e.target.value)}
+                            placeholder="Repetir Contraseña"
+                        />
+                    </div>
 
-                            <section className="form__content">
-                                <div className="form__content__inputs">
-                                    <input
-                                        type="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        placeholder="Correo Electrónico"
-                                    />
-                                    <input
-                                        type="password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        placeholder="Contraseña"
-                                    />
-                                    <input
-                                        type="password"
-                                        value={repeatPassword}
-                                        onChange={(e) => setRepeatPassword(e.target.value)}
-                                        placeholder="Repetir Contraseña"
-                                    />
-                                </div>
+                    <ul className="form__content__requisitos">
+                        <li>Mínimo 8 caracteres</li>
+                        <li>Mayúsculas y Minúsculas</li>
+                        <li>Símbolos y Números</li>
+                    </ul>
 
-                                <ul className="form__content__requisitos">
-                                    <li>Mínimo 8 caracteres</li>
-                                    <li>Mayúsculas y Minúsculas</li>
-                                    <li>Símbolos y Números</li>
-                                </ul>
-
-                                <div className="form__content__actions">
-                                    <button className="btn-filled">QUIERO REGISTRARME</button>
-                                    <Link className="btn-outline" to="/login">
-                                        ESTOY REGISTRADO
-                                    </Link>
-                                </div>
-                            </section>
-                        </div>
-                    </form>
+                    <div className="form__content__actions">
+                        <button className="btn-filled">QUIERO REGISTRARME</button>
+                        <Link className="btn-outline" to="/login">
+                            ESTOY REGISTRADO
+                        </Link>
+                    </div>
                 </section>
-            </main>
-
-            <Footer />
-        </>
+            </form>
+        </Layout>
     );
 }
 

@@ -1,15 +1,34 @@
+import { useState } from "react";
 import "./ViewInfoUser.css";
 
-interface ViewInfoUserProps {
+type Props = {
     title: string;
-    value: string | null;
-}
+    value: string | undefined;
+    editable?: boolean;
+    onChange?: (newValue: string) => void;
+};
 
-function ViewInfoUser({ title, value }: ViewInfoUserProps) {
+function ViewInfoUser({ title, value, editable = false, onChange }: Props) {
+    const [localValue, setLocalValue] = useState(value || "");
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setLocalValue(e.target.value);
+        if (onChange) onChange(e.target.value);
+    };
+
     return (
-        <div className="perfil__content__data__item">
-            <h4 className="perfil__content__data__item-title">{title}</h4>
-            <p className="perfil__content__data__item-value">{value}</p>
+        <div className="perfil_input">
+            <h4 className="perfil_input__title">{title}</h4>
+            {editable ? (
+                <input
+                    type="text"
+                    className="perfil_input__input"
+                    value={localValue}
+                    onChange={handleChange}
+                />
+            ) : (
+                <p className="perfil_input__value">{value || ""}</p>
+            )}
         </div>
     );
 }

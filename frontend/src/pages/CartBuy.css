@@ -1,0 +1,42 @@
+.cartbuy {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.cartbuy__products p {
+    color: var(--color-dark);
+}
+
+.cartbuy__actions {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.cartbuy__actions a {
+    transition: background 0.2s ease;
+    padding: 0.5rem 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.125rem;
+    text-decoration: none;
+}
+
+.cartbuy__actions a:first-child {
+    border: 1px solid var(--color-dark);
+    color: var(--color-dark);
+
+    &:hover {
+        background-color: hsl(from var(--color-dark) h s l / 0.15);
+    }
+}
+
+.cartbuy__actions a:last-child {
+    border: 1px solid var(--color-dark);
+    background-color: var(--color-dark);
+    color: var(--color-light);
+
+    &:hover {
+        background-color: hsl(from var(--color-dark) h s l / 0.95);
+    }
+}

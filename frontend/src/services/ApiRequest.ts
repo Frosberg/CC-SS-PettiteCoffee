@@ -8,10 +8,11 @@ export const ApiRequest = axios.create({
 });
 
 ApiRequest.interceptors.request.use((config) => {
-    const token = useAuthStore.getState().token;
+    const token = useAuthStore.getState().user?.token;
 
     if (token) {
         config.headers = config.headers ?? {};
+        config.headers["Content-Type"] = "application/json";
         config.headers.Authorization = `Bearer ${token}`;
     }
 
