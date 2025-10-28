@@ -10,6 +10,7 @@ function Recovery() {
     const [repeatPassword, setRepeatPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [loadingResend, setLoadingResend] = useState(false);
+    const [localError, setLocalError] = useState("");
 
     const navigate = useNavigate();
 
@@ -27,34 +28,30 @@ function Recovery() {
         e.preventDefault();
         if (loadingResend) return;
 
-        if (password !== repeatPassword) {
-            alert("Las contraseñas no coinciden");
-            return;
-        }
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+        setLocalError("");
+
+        if (!uuidRegex.test(token)) return setLocalError("El token no es válido");
+        if (password.length < 8)
+            return setLocalError("La contraseña debe tener al menos 8 caracteres");
+        if (password !== repeatPassword) return setLocalError("Las contraseñas no coinciden");
 
         setLoading(true);
         const success = await authSetChangePassword({ password, token });
         setLoading(false);
 
-        if (success) {
-            alert("¡Contraseña actualizada correctamente!");
-            navigate("/login");
-        } else {
-            alert("Token inválido o expirado. Intente nuevamente.");
-        }
+        if (success) navigate("/login");
+        else setLocalError("Token inválido o expirado. Intente nuevamente.");
     };
 
     const handleResendRecovery = async () => {
         if (loading) return;
+        setLocalError("");
         setLoadingResend(true);
         const success = await authSetRecoveryStore({ email: authEmailStore });
         setLoadingResend(false);
 
-        if (success) {
-            alert("Se ha reenviado el correo con el token");
-        } else {
-            alert("No se pudo reenviar el correo de recuperación");
-        }
+        if (!success) setLocalError("No se pudo reenviar el correo de recuperación");
     };
 
     return (
@@ -71,21 +68,21 @@ function Recovery() {
                             type="text"
                             value={token}
                             onChange={(e) => setToken(e.target.value)}
-                            placeholder="Token"
+                            placeholder="Token (UUID)"
                             disabled={loading || loadingResend}
                         />
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            placeholder="Contraseña"
+                            placeholder="Contraseña nueva"
                             disabled={loading || loadingResend}
                         />
                         <input
                             type="password"
                             value={repeatPassword}
                             onChange={(e) => setRepeatPassword(e.target.value)}
-                            placeholder="Repetir Contraseña"
+                            placeholder="Repetir contraseña"
                             disabled={loading || loadingResend}
                         />
                     </div>
@@ -105,7 +102,9 @@ function Recovery() {
                         </p>
                     </div>
 
-                    {authErrorStore && <p>{authErrorStore}</p>}
+                    {(authErrorStore || localError) && (
+                        <p className="form__error">{authErrorStore || localError}</p>
+                    )}
 
                     <div className="form__content__actions">
                         <button
