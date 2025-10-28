@@ -13,16 +13,15 @@ function Recovery() {
 
     const navigate = useNavigate();
 
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const authEmailStore = useAuthStore((state) => state.email);
     const authErrorStore = useAuthStore((state) => state.error);
     const authSetRecoveryStore = useAuthStore((state) => state.setRecovery);
     const authSetChangePassword = useAuthStore((state) => state.setChangePassword);
 
     useEffect(() => {
-        if (!authEmailStore || authEmailStore.trim() === "") {
-            navigate("/login");
-        }
-    }, [navigate, authEmailStore]);
+        if (!isAuthenticated || !authEmailStore || authEmailStore.trim() === "") navigate("/login");
+    }, [navigate, isAuthenticated, authEmailStore]);
 
     const handleRecovery = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();

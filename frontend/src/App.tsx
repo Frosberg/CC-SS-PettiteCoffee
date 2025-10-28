@@ -19,30 +19,42 @@ import useBranchStore from "./stores/useBranchStore";
 import useNotifyStore from "./stores/useNotifyStore";
 
 function App() {
+    const { pathname } = useLocation();
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const authSetSessionStore = useAuthStore((state) => state.setSession);
-
+    const authVerify = useAuthStore((state) => state.verify);
+    const authLogout = useAuthStore((state) => state.logout);
     const getProducts = useProductsStore((state) => state.getProducts);
     const getBranchs = useBranchStore((state) => state.getBranchs);
     const getNotifys = useNotifyStore((state) => state.getNotifys);
 
-    const { pathname } = useLocation();
+    useEffect(() => {
+        const initApp = async () => {
+            const session = window.localStorage.getItem("session");
+            if (session) {
+                authSetSessionStore(JSON.parse(session));
+                const isValid = await authVerify();
+                if (!isValid) await authLogout();
+            } else {
+                await authLogout();
+            }
+        };
+
+        initApp();
+    }, []);
 
     useEffect(() => {
-        const session = window.localStorage.getItem("session");
-        if (session) authSetSessionStore(JSON.parse(session));
-    }, [authSetSessionStore]);
+        const loadData = async () => {
+            if (isAuthenticated) await Promise.all([getProducts(), getBranchs(), getNotifys()]);
+            else await Promise.all([getProducts(), getBranchs()]);
+        };
+
+        loadData();
+    }, [isAuthenticated]);
 
     const isAuthPage =
         pathname === "/login" || pathname === "/register" || pathname === "/recovery";
     const isHomePage = pathname === "/";
-
-    // Load Data
-    useEffect(() => {
-        const promise = Promise.all([getProducts(), getBranchs(), getNotifys()]);
-        promise.then(() => {
-            console.log("Data Loaded!");
-        });
-    }, [getProducts, getBranchs, getNotifys]);
 
     return (
         <div className={isAuthPage ? "root-auth" : isHomePage ? "root-home" : "root-default"}>
@@ -57,7 +69,6 @@ function App() {
 
                 <Route path="/recovery" element={<Recovery />} />
                 <Route path="/perfil" element={<MiPerfil />} />
-
                 <Route path="/dashboard" element={<LayoutDashboard />}>
                     <Route index element={<Main />} />
                     <Route path="products" element={<Products />} />

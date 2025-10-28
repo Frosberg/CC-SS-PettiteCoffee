@@ -10,11 +10,12 @@ function MiPerfil() {
     const [editable, setEditable] = useState(false);
     const navigate = useNavigate();
     const authLogoutStore = useAuthStore((state) => state.logout);
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const authUserStore = useAuthStore((state) => state.user);
 
     useEffect(() => {
-        if (!authUserStore) navigate("/login");
-    }, [navigate, authUserStore]);
+        if (!isAuthenticated) navigate("/login");
+    }, [isAuthenticated]);
 
     const handleLogout = () => {
         authLogoutStore();

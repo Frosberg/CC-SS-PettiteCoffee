@@ -11,11 +11,11 @@ function Register() {
     const [repeatPassword, setRepeatPassword] = useState("");
 
     const authRegisterStore = useAuthStore((state) => state.register);
-    const authUserStore = useAuthStore((state) => state.user);
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
     useEffect(() => {
-        if (authUserStore) navigate("/perfil");
-    }, [navigate, authUserStore]);
+        if (isAuthenticated) navigate("/perfil");
+    }, [isAuthenticated]);
 
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
