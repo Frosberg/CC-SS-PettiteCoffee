@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -133,6 +134,37 @@ public class ProductController {
         } catch (Exception e) {
             logger.error("Error al eliminar producto: {}", e.getMessage(), e);
             return ResponseEntity.internalServerError().body("Error al eliminar producto");
+        }
+    }
+
+    @PatchMapping("/modificar/{id}")
+    public ResponseEntity<?> actualizarParcial(
+            @RequestHeader("Authorization") String authHeader,
+            @PathVariable Integer id,
+            @RequestBody Product productoParcial) {
+
+        logger.info("Intento de actualización parcial de producto con ID: {}", id);
+
+        try {
+            String token = authHeader.replace("Bearer ", "");
+            if (!authService.isTokenValid(token)) {
+                logger.error("Token invalido o expirado");
+                return ResponseEntity.status(401).body("Token inválido");
+            }
+
+            String username = authService.extractUsername(token);
+
+            if (!authService.userHasRole(username, "ADMIN")) {
+                logger.error("Usuario {} sin permisos de administrador", username);
+                return ResponseEntity.status(403).body("No tienes permisos");
+            }
+
+            Product actualizado = productService.modificarProducto(id, productoParcial);
+            return ResponseEntity.ok(actualizado);
+
+        } catch (Exception e) {
+            logger.error("Error en actualización parcial: {}", e.getMessage(), e);
+            return ResponseEntity.internalServerError().body("Error al actualizar producto");
         }
     }
 

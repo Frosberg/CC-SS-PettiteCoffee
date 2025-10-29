@@ -7,8 +7,4 @@ import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
-
-    boolean existsByCodproducto(String codproducto);
-
-    void deleteByCodproducto(String codproducto);
 }

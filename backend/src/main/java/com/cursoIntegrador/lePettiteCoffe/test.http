@@ -85,3 +85,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tI
 ### Eliminar producto por ID (solo ADMIN)
 DELETE http://localhost:8080/products/eliminar/13
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNjk2NzYzLCJleHAiOjE3NjE3MDAzNjN9.HJq7WSySDKgYoc5R54ZuZJ8M0OfwhlfCOnu-GOwqaSE
+
+### Modificar parcialmente un producto (solo ADMIN)
+PATCH http://localhost:8080/products/modificar/12
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNjk2MjA2LCJleHAiOjE3NjE2OTk4MDZ9.6swrU6sI1gQ8Nd9t5TZ8IbH0bFEAyzyH0Mo91S0zSBI
+
+{
+  "nombre" : "PRUEBACCHINO XD",
+  "stock": 60,
+  "precioventa": 11.50
+}
