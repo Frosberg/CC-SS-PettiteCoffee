@@ -94,4 +94,12 @@ public class AuthService {
 
         return false;
     }
+
+    public boolean validateTokenAndRole(String token, String role) {
+        if (this.isTokenValid(token)) {
+            String username = this.extractUsername(token);
+            return this.userHasRole(username, role);
+        }
+        return false;
+    }
 }

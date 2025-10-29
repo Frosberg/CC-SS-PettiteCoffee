@@ -79,19 +79,13 @@ public class ProductController {
         try {
             String token = authHeader.replace("Bearer ", "");
 
-            if (!authService.isTokenValid(token)) {
-                return ResponseEntity.status(401).body("Token inválido o expirado");
-            }
-
-            String username = authService.extractUsername(token);
-
-            if (!authService.userHasRole(username, "ADMIN")) {
-                logger.warn("Usuario {} sin permisos para agregar productos", username);
-                return ResponseEntity.status(403).body("No tienes permisos para esta acción");
+            if (!authService.validateTokenAndRole(token, "ADMIN")) {
+                logger.error("Usuario con token invalido o sin permisos de administrador");
+                return ResponseEntity.status(403).body("No tienes permisos");
             }
 
             Product nuevo = productService.guardarProducto(product);
-            logger.info("Producto agregado por ADMIN {}: {}", username, nuevo.getNombre());
+            logger.info("Producto agregado por ADMIN : {}", nuevo.getNombre());
 
             return ResponseEntity.ok(nuevo);
 
@@ -111,19 +105,13 @@ public class ProductController {
         try {
             String token = authHeader.replace("Bearer ", "");
 
-            if (!authService.isTokenValid(token)) {
-                return ResponseEntity.status(401).body("Token inválido o expirado");
-            }
-
-            String username = authService.extractUsername(token);
-
-            if (!authService.userHasRole(username, "ADMIN")) {
-                logger.warn("Usuario {} sin permisos para eliminar productos", username);
-                return ResponseEntity.status(403).body("No tienes permisos para esta acción");
+            if (!authService.validateTokenAndRole(token, "ADMIN")) {
+                logger.error("Usuario con token invalido o sin permisos de administrador");
+                return ResponseEntity.status(403).body("No tienes permisos");
             }
 
             productService.eliminarProductoPorId(id);
-            logger.info("Producto con ID {} eliminado por admin {}", id, username);
+            logger.info("Producto con ID {} eliminado por admin", id);
 
             return ResponseEntity.ok("Producto eliminado correctamente");
 
@@ -147,15 +135,9 @@ public class ProductController {
 
         try {
             String token = authHeader.replace("Bearer ", "");
-            if (!authService.isTokenValid(token)) {
-                logger.error("Token invalido o expirado");
-                return ResponseEntity.status(401).body("Token inválido");
-            }
 
-            String username = authService.extractUsername(token);
-
-            if (!authService.userHasRole(username, "ADMIN")) {
-                logger.error("Usuario {} sin permisos de administrador", username);
+            if (!authService.validateTokenAndRole(token, "ADMIN")) {
+                logger.error("Usuario con token invalido o sin permisos de administrador");
                 return ResponseEntity.status(403).body("No tienes permisos");
             }
 

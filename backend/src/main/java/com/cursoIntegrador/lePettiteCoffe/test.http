@@ -44,20 +44,6 @@ Content-Type: application/json
   "nuevaPassword": "enana123"
 }
 
-### Listar sucursales
-GET http://localhost:8080/sucursales/listar
-
-### Agregar una nueva sucursal
-POST http://localhost:8080/sucursales/agregar
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNTIzNzE5LCJleHAiOjE3NjE1MjczMTl9.k4oT8gKK1xyfG3Kr8nKsAAZOrAlvBjvuEIZoF0wCka8
-
-{
-  "nombre": "Sucursal Centro",
-  "direccion": "Calle Falsa 123"
-}
-
-
 ### Listar notificaciones de un usuario
 GET http://localhost:8080/notificaciones/listar
 Content-Type: application/json
@@ -95,4 +81,32 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tI
   "nombre" : "PRUEBACCHINO XD",
   "stock": 60,
   "precioventa": 11.50
+}
+
+
+### Listar sucursales
+GET http://localhost:8080/sucursales/listar
+
+### Agregar una nueva sucursal
+POST http://localhost:8080/sucursales/agregar
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNzAwOTk5LCJleHAiOjE3NjE3MDQ1OTl9.5hdCmqxsBtK3uSC3Mnanmh6323vObbffNkZZ2yaEm7o
+
+{
+  "nombre": "Sucursal Pepito",
+  "direccion": "Calle Pepeeeee 123"
+}
+
+### Eliminar sucursal por ID (solo ADMIN)
+DELETE http://localhost:8080/sucursales/eliminar/12
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNzAwOTk5LCJleHAiOjE3NjE3MDQ1OTl9.5hdCmqxsBtK3uSC3Mnanmh6323vObbffNkZZ2yaEm7o
+
+
+### Modificar parcialmente una sucursal (solo ADMIN)
+PATCH http://localhost:8080/sucursales/modificar/11
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNzAwOTk5LCJleHAiOjE3NjE3MDQ1OTl9.5hdCmqxsBtK3uSC3Mnanmh6323vObbffNkZZ2yaEm7o
+
+{
+  "nombre": "Sucursal Norte Renovada"
 }
