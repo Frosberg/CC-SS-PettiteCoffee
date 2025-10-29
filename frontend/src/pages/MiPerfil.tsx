@@ -1,24 +1,20 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { TabItem, TabNavbar, TabPanel, TabsContent, TabsCustom } from "../components/TabsCustom";
-import useAuthStore from "../stores/useAuthStore";
+import useAuthStore from "../stores/AuthStore";
 import ViewInfoUser from "../components/ViewInfoUser";
 import Layout from "./Layout";
 import "./MiPerfil.css";
 
 function MiPerfil() {
-    const [editable, setEditable] = useState(false);
     const navigate = useNavigate();
-    const authLogoutStore = useAuthStore((state) => state.logout);
-    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-    const authUserStore = useAuthStore((state) => state.user);
+    const [editable, setEditable] = useState(false);
 
-    useEffect(() => {
-        if (!isAuthenticated) navigate("/login");
-    }, [isAuthenticated]);
+    const LogoutStore = useAuthStore((state) => state.logout);
+    const userStore = useAuthStore((state) => state.user);
 
-    const handleLogout = () => {
-        authLogoutStore();
+    const handleLogout = async () => {
+        await LogoutStore();
         navigate("/login");
     };
 
@@ -43,7 +39,7 @@ function MiPerfil() {
                         >
                             <ViewInfoUser
                                 title="Correo Electrónico"
-                                value={authUserStore?.email}
+                                value={userStore?.email}
                                 editable={editable}
                             />
                             <ViewInfoUser title="Nombre y Apellido" value="" editable={editable} />
@@ -56,7 +52,7 @@ function MiPerfil() {
                             />
                             <ViewInfoUser title="País" value="" editable={editable} />
                             <div className="perfil__content__data__actions">
-                                {authUserStore?.rol === "ADMIN" && (
+                                {userStore?.rol === "ADMIN" && (
                                     <Link to="/dashboard" className="btn-filled">
                                         Ir Panel de Control
                                     </Link>

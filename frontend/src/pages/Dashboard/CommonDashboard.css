@@ -7,6 +7,73 @@
     overflow: hidden;
 }
 
+/* COMMONS - SEARCH */
+.search__container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 10px;
+    height: 40px;
+}
+
+.search__box {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    box-sizing: border-box;
+    border: 1px solid var(--color-dark);
+    border-radius: 8px;
+    padding: 10px;
+    width: 767px;
+    height: 40px;
+}
+
+.search__box i {
+    color: var(--color-dark);
+}
+
+.search__box input {
+    outline: none;
+    border: none;
+    width: 100%;
+    height: 24px;
+    color: var(--color-dark);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    font-family: "Poppins", sans-serif;
+}
+
+.search__box input::placeholder {
+    color: var(--color-dark);
+}
+
+.search__button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.2s ease-in-out;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background: var(--color-dark);
+    padding: 0 20px;
+    width: 103px;
+    height: 40px;
+    color: var(--color-light);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    font-family: "Poppins", sans-serif;
+}
+
+.search__button:hover {
+    background: hsl(from var(--color-dark) h s l / 0.85);
+}
+
 /* COMMONS - TABLE */
 .commons__table {
     flex-grow: 1;
@@ -38,18 +105,23 @@
     white-space: nowrap;
 }
 
-.table__content tbody tr td {
-    vertical-align: middle;
-    border-bottom: 1px solid var(--color-dark);
-    padding: 0.625rem;
-}
-
 .table__content tr {
     border-block: 1px solid var(--color-dark);
 }
 
 .table__content tbody tr:hover {
+    cursor: pointer;
     background-color: var(--color-1);
+}
+
+.table__content tbody tr.selected td {
+    background-color: hsl(from var(--color-dark) h s l / 0.12);
+}
+
+.table__content tbody tr td {
+    vertical-align: middle;
+    border-bottom: 1px solid var(--color-dark);
+    padding: 0.625rem;
 }
 
 /* COMMONS - ACTIONS */

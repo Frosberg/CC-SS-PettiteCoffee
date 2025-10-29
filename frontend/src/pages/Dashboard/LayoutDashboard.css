@@ -1,3 +1,7 @@
+.root-dashboard {
+    padding-top: 0;
+}
+
 .dashboard {
     display: flex;
     gap: 1.875rem;

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
-import useAuthStore from "../stores/useAuthStore";
+import AuthStore from "../stores/AuthStore";
 import Layout from "./Layout";
 import "./Auth.css";
 
@@ -8,14 +8,14 @@ function Login() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [loadingRecovery, setLoadingRecovery] = useState(false);
     const isMounted = useRef(true);
 
-    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-    const authErrorStore = useAuthStore((state) => state.error);
-    const authSetLoginStore = useAuthStore((state) => state.login);
-    const authSetRecoveryStore = useAuthStore((state) => state.setRecovery);
+    const AuthIsLoading = AuthStore((state) => state.isLoading);
+    const AuthTypeLoading = AuthStore((state) => state.typeLoading);
+    const AuthMessageError = AuthStore((state) => state.messageError);
+    const AuthRecoveryPassword = AuthStore((state) => state.setRecoveryPassword);
+    const AuthLoginStore = AuthStore((state) => state.login);
+    const AuthSetLoadingStore = AuthStore((state) => state.setLoading);
 
     useEffect(() => {
         isMounted.current = true;
@@ -24,23 +24,21 @@ function Login() {
         };
     }, []);
 
-    useEffect(() => {
-        if (isAuthenticated) navigate("/perfil");
-    }, [isAuthenticated]);
-
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (loadingRecovery) return;
-        setLoading(true);
-        await authSetLoginStore(email.trim(), password);
-        if (isMounted.current) setLoading(false);
+        if (AuthIsLoading) return;
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (email === "") return alert("Por favor ingrese su correo");
+        if (!emailRegex.test(email)) return alert("El correo no es válido");
+
+        await AuthLoginStore(email, password);
+        if (isMounted.current) AuthSetLoadingStore(false);
     };
 
     const handleForgotPassword = async () => {
-        if (email.trim() === "") return alert("Por favor ingrese su correo");
-        setLoadingRecovery(true);
-        const success = await authSetRecoveryStore({ email: email.trim() });
-        setLoadingRecovery(false);
+        if (email === "") return alert("Por favor ingrese su correo");
+        const success = await AuthRecoveryPassword(email);
         if (!isMounted.current) return;
         if (success) navigate("/recovery");
         else alert("No se encontró ningún usuario con ese correo");
@@ -48,7 +46,7 @@ function Login() {
 
     return (
         <Layout className="auth">
-            <form className="form" onSubmit={handleLogin}>
+            <form className="form" onSubmit={handleLogin} noValidate>
                 <header className="form__header">
                     <h2>INICIAR SESION</h2>
                     <p>Por favor ingresar su correo y contraseña</p>
@@ -59,37 +57,37 @@ function Login() {
                         <input
                             type="email"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => setEmail(e.target.value.trim())}
                             placeholder="Correo Electrónico"
-                            disabled={loadingRecovery}
+                            disabled={AuthIsLoading}
                         />
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Contraseña"
-                            disabled={loadingRecovery}
+                            disabled={AuthIsLoading}
                         />
                     </div>
 
-                    {authErrorStore && <p>{authErrorStore}</p>}
+                    {AuthMessageError && <p>{AuthMessageError}</p>}
 
                     <button
                         className="form__content__forgot"
                         onClick={handleForgotPassword}
                         type="button"
-                        disabled={loadingRecovery || loading}
+                        disabled={AuthIsLoading}
                     >
-                        {loadingRecovery ? "Enviando correo..." : "¿Has olvidado tu contraseña?"}
+                        {AuthIsLoading && AuthTypeLoading === "RECOVERY"
+                            ? "Enviando correo..."
+                            : "¿Has olvidado tu contraseña?"}
                     </button>
 
                     <div className="form__content__actions">
-                        <button
-                            className="btn-filled"
-                            type="submit"
-                            disabled={loading || loadingRecovery}
-                        >
-                            {loading ? "INICIANDO..." : "INICIAR SESIÓN"}
+                        <button className="btn-filled" type="submit" disabled={AuthIsLoading}>
+                            {AuthIsLoading && AuthTypeLoading === "LOGIN"
+                                ? "INICIANDO..."
+                                : "INICIAR SESIÓN"}
                         </button>
                         <Link className="btn-outline" to="/register">
                             NO ESTOY REGISTRADO
