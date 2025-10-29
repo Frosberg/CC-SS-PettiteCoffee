@@ -31,7 +31,7 @@ POST http://localhost:8080/auth/recuperar
 Content-Type: application/json
 
 {
-  "email": "gaylin773@gmail.com"
+  "email": "angelolma2080@gmail.com"
 }
 
 ### Cambiar contraseña con token
