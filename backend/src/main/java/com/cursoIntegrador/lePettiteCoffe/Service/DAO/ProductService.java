@@ -20,4 +20,16 @@ public class ProductService {
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
+
+    public Product guardarProducto(Product product) {
+        return productRepository.save(product);
+    }
+
+    public void eliminarProductoPorId(Integer idproducto) {
+        if (!productRepository.existsById(idproducto)) {
+            throw new IllegalArgumentException("El producto con ID " + idproducto + " no existe");
+        }
+        productRepository.deleteById(idproducto);
+    }
+
 }

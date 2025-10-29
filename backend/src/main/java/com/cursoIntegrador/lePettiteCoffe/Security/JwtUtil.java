@@ -34,7 +34,15 @@ public class JwtUtil {
     }
 
     public String validateAndGetUser(String token) {
-        Claims claims = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
+        Claims claims = validateTokenAndGetClaims(token);
         return claims.getSubject();
+    }
+
+    public Claims validateTokenAndGetClaims(String token) {
+        try {
+            return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
+        } catch (Exception e) {
+            throw new RuntimeException("Token inválido o expirado", e);
+        }
     }
 }

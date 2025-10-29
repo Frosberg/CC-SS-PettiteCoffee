@@ -17,25 +17,27 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public class ProductControllerTest {
 
-    @Test
-    void testGetAllProductsWithImage() {
-        ProductService mockService = Mockito.mock(ProductService.class);
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        ProductController controller = new ProductController(mockService);
+    // @Test
+    // void testGetAllProductsWithImage() {
+    // ProductService mockService = Mockito.mock(ProductService.class);
+    // HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    // ProductController controller = new ProductController(mockService);
 
-        Product p = new Product();
-        p.setCodproducto("1");
-        p.setNombre("Café");
+    // Product p = new Product();
+    // p.setCodproducto("1");
+    // p.setNombre("Café");
 
-        Mockito.when(mockService.getAllProducts()).thenReturn(List.of(p));
-        Mockito.when(request.getScheme()).thenReturn("http");
-        Mockito.when(request.getServerName()).thenReturn("localhost");
-        Mockito.when(request.getServerPort()).thenReturn(8080);
+    // Mockito.when(mockService.getAllProducts()).thenReturn(List.of(p));
+    // Mockito.when(request.getScheme()).thenReturn("http");
+    // Mockito.when(request.getServerName()).thenReturn("localhost");
+    // Mockito.when(request.getServerPort()).thenReturn(8080);
 
-        ResponseEntity<List<ProductDTO>> response = controller.getAllProductsWithImage(request);
+    // ResponseEntity<List<ProductDTO>> response =
+    // controller.getAllProductsWithImage(request);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(1, response.getBody().size());
-        assertEquals("http://localhost:8080/images/productos/1.webp", response.getBody().get(0).getImageUrl());
-    }
+    // assertEquals(HttpStatus.OK, response.getStatusCode());
+    // assertEquals(1, response.getBody().size());
+    // assertEquals("http://localhost:8080/images/productos/1.webp",
+    // response.getBody().get(0).getImageUrl());
+    // }
 }

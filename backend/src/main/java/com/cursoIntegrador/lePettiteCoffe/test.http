@@ -44,10 +44,6 @@ Content-Type: application/json
   "nuevaPassword": "enana123"
 }
 
-### Obtener todos los productos
-GET http://localhost:8080/products/getAllProducts
-
-
 ### Listar sucursales
 GET http://localhost:8080/sucursales/listar
 
@@ -66,3 +62,26 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tI
 GET http://localhost:8080/notificaciones/listar
 Content-Type: application/json
 Authorization: Bearer rrrr.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNTMxODI0LCJleHAiOjE3NjE1MzU0MjR9._G1hLAy6prYz6s0YC18r309k78YtNiygDZdfIWH5EJ0
+
+### Obtener todos los productos
+GET http://localhost:8080/products/getAllProducts
+
+### Agregar un nuevo producto (solo ADMIN)
+POST http://localhost:8080/products/agregar
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNjk2MjA2LCJleHAiOjE3NjE2OTk4MDZ9.6swrU6sI1gQ8Nd9t5TZ8IbH0bFEAyzyH0Mo91S0zSBI
+
+{
+  "codproducto": "CAF014",
+  "nombre": "Café prueba 2",
+  "categoria": "Bebidas Calientes",
+  "stock": 45,
+  "preciocompra": 6.50,
+  "precioventa": 10.00,
+  "fechavencimiento": "2026-09-15T00:00:00"
+}
+
+
+### Eliminar producto por ID (solo ADMIN)
+DELETE http://localhost:8080/products/eliminar/13
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNjk2NzYzLCJleHAiOjE3NjE3MDAzNjN9.HJq7WSySDKgYoc5R54ZuZJ8M0OfwhlfCOnu-GOwqaSE
