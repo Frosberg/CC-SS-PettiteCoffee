@@ -6,15 +6,21 @@ import java.io.IOException;
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.MultiPartEmail;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import com.cursoIntegrador.lePettiteCoffe.Util.PdfGenerator;
 
 @Service
+@PropertySource("classpath:email-credentials.properties")
 public class EmailService {
 
-    private static final String EMAIL_EMISOR = "uedu806@gmail.com";
-    private static final String PASSWORD_EMISOR = "uums nowg qjws vcaa";
+    @Value("${email.sender}")
+    private String EMAIL_EMISOR;
+
+    @Value("${email.password}")
+    private String PASSWORD_EMISOR;
 
     private MultiPartEmail configurarEmail() throws EmailException {
         MultiPartEmail email = new MultiPartEmail();
