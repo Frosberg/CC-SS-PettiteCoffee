@@ -7,6 +7,7 @@ import com.cursoIntegrador.lePettiteCoffe.Model.DTO.LoginRequest;
 import com.cursoIntegrador.lePettiteCoffe.Model.DTO.PasswordChangeRequest;
 import com.cursoIntegrador.lePettiteCoffe.Service.AuthService;
 import com.cursoIntegrador.lePettiteCoffe.Service.PasswordRecoveryService;
+import com.cursoIntegrador.lePettiteCoffe.Service.WelcomeService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +33,9 @@ public class AuthController {
 
     @Autowired
     private PasswordRecoveryService passwordRecoveryService;
+
+    @Autowired
+    private WelcomeService welcomeService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
@@ -77,6 +81,7 @@ public class AuthController {
         try {
             authService.register(email, loginRequest.getPassword());
             logger.debug("Registro exitoso para: {}", email);
+            welcomeService.enviarBienvenida(email);
             Map<String, Object> response = authService.login(email, loginRequest.getPassword());
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {

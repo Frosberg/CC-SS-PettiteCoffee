@@ -31,7 +31,7 @@ POST http://localhost:8080/auth/recuperar
 Content-Type: application/json
 
 {
-  "email": "gaylin773@gmail.com"
+  "email": "angelolma2080@gmail.com"
 }
 
 ### Cambiar contraseña con token
@@ -44,8 +44,44 @@ Content-Type: application/json
   "nuevaPassword": "enana123"
 }
 
+### Listar notificaciones de un usuario
+GET http://localhost:8080/notificaciones/listar
+Content-Type: application/json
+Authorization: Bearer rrrr.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNTMxODI0LCJleHAiOjE3NjE1MzU0MjR9._G1hLAy6prYz6s0YC18r309k78YtNiygDZdfIWH5EJ0
+
 ### Obtener todos los productos
 GET http://localhost:8080/products/getAllProducts
+
+### Agregar un nuevo producto (solo ADMIN)
+POST http://localhost:8080/products/agregar
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNjk2MjA2LCJleHAiOjE3NjE2OTk4MDZ9.6swrU6sI1gQ8Nd9t5TZ8IbH0bFEAyzyH0Mo91S0zSBI
+
+{
+  "codproducto": "CAF014",
+  "nombre": "Café prueba 2",
+  "categoria": "Bebidas Calientes",
+  "stock": 45,
+  "preciocompra": 6.50,
+  "precioventa": 10.00,
+  "fechavencimiento": "2026-09-15T00:00:00"
+}
+
+
+### Eliminar producto por ID (solo ADMIN)
+DELETE http://localhost:8080/products/eliminar/13
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNjk2NzYzLCJleHAiOjE3NjE3MDAzNjN9.HJq7WSySDKgYoc5R54ZuZJ8M0OfwhlfCOnu-GOwqaSE
+
+### Modificar parcialmente un producto (solo ADMIN)
+PATCH http://localhost:8080/products/modificar/12
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNjk2MjA2LCJleHAiOjE3NjE2OTk4MDZ9.6swrU6sI1gQ8Nd9t5TZ8IbH0bFEAyzyH0Mo91S0zSBI
+
+{
+  "nombre" : "PRUEBACCHINO XD",
+  "stock": 60,
+  "precioventa": 11.50
+}
 
 
 ### Listar sucursales
@@ -54,15 +90,31 @@ GET http://localhost:8080/sucursales/listar
 ### Agregar una nueva sucursal
 POST http://localhost:8080/sucursales/agregar
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNTIzNzE5LCJleHAiOjE3NjE1MjczMTl9.k4oT8gKK1xyfG3Kr8nKsAAZOrAlvBjvuEIZoF0wCka8
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNzAwOTk5LCJleHAiOjE3NjE3MDQ1OTl9.5hdCmqxsBtK3uSC3Mnanmh6323vObbffNkZZ2yaEm7o
 
 {
-  "nombre": "Sucursal Centro",
-  "direccion": "Calle Falsa 123"
+  "nombre": "Sucursal Pepito",
+  "direccion": "Calle Pepeeeee 123"
 }
 
+### Eliminar sucursal por ID (solo ADMIN)
+DELETE http://localhost:8080/sucursales/eliminar/12
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNzAwOTk5LCJleHAiOjE3NjE3MDQ1OTl9.5hdCmqxsBtK3uSC3Mnanmh6323vObbffNkZZ2yaEm7o
 
-### Listar notificaciones de un usuario
-GET http://localhost:8080/notificaciones/listar
+
+### Modificar parcialmente una sucursal (solo ADMIN)
+PATCH http://localhost:8080/sucursales/modificar/11
 Content-Type: application/json
-Authorization: Bearer rrrr.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNTMxODI0LCJleHAiOjE3NjE1MzU0MjR9._G1hLAy6prYz6s0YC18r309k78YtNiygDZdfIWH5EJ0
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNzAwOTk5LCJleHAiOjE3NjE3MDQ1OTl9.5hdCmqxsBtK3uSC3Mnanmh6323vObbffNkZZ2yaEm7o
+
+{
+  "nombre": "Sucursal Norte Renovada"
+}
+
+### Exportar Excel de cuentas (solo ADMIN)
+GET http://localhost:8080/accounts/export
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNzE5NDUxLCJleHAiOjE3NjE3MjMwNTF9.Y_keB46LgPY6n4EU3J1FMxXDCsmje3MKQTuEJ5vBh_g
+
+### Exportar Excel de cuentas (solo ADMIN)
+GET http://localhost:8080/accounts/listar
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNzE5NDUxLCJleHAiOjE3NjE3MjMwNTF9.Y_keB46LgPY6n4EU3J1FMxXDCsmje3MKQTuEJ5vBh_g

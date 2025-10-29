@@ -3,11 +3,8 @@ package com.cursoIntegrador.lePettiteCoffe.Model.Entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,12 +19,28 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idproducto;
-    private String codproducto;
-    private String nombre;
-    private String categoria;
-    private Integer stock;
-    private BigDecimal preciocompra;
-    private BigDecimal precioventa;
-    private LocalDateTime fechaVencimiento;
 
+    @NotBlank(message = "El código del producto es obligatorio")
+    @Column(unique = true, nullable = false)
+    private String codproducto;
+
+    @NotBlank(message = "El nombre del producto no puede estar vacío")
+    private String nombre;
+
+    @NotBlank(message = "La categoría es obligatoria")
+    private String categoria;
+
+    @NotNull(message = "El stock no puede ser nulo")
+    @PositiveOrZero(message = "El stock no puede ser negativo")
+    private Integer stock;
+
+    @NotNull(message = "El precio de compra es obligatorio")
+    @DecimalMin(value = "0.0", inclusive = false, message = "El precio de compra debe ser mayor que 0")
+    private BigDecimal preciocompra;
+
+    @NotNull(message = "El precio de venta es obligatorio")
+    @DecimalMin(value = "0.0", inclusive = false, message = "El precio de venta debe ser mayor que 0")
+    private BigDecimal precioventa;
+
+    private LocalDateTime fechavencimiento;
 }

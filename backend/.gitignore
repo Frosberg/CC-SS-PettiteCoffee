@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+## Contraseña de email ###
+/src/main/resources/email-credentials.properties

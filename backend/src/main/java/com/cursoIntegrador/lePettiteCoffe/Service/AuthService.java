@@ -63,7 +63,16 @@ public class AuthService {
     }
 
     public boolean isTokenValid(String token) {
-        return !invalidatedTokens.contains(token);
+        if (invalidatedTokens.contains(token)) {
+            return false;
+        }
+
+        try {
+            jwtUtil.validateTokenAndGetClaims(token);
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 
     public void actualizarPassword(String email, String newPassword) {
@@ -75,14 +84,22 @@ public class AuthService {
         accountService.updatePassword(email, encriptada);
     }
 
-    public boolean userHasRole(String email, String searchRole){
+    public boolean userHasRole(String email, String searchRole) {
 
-        if(userExists(email)){
+        if (userExists(email)) {
             Cuenta user = accountService.findByEmail(email);
             String role = user.getRol();
             return role.equals(searchRole);
         }
 
+        return false;
+    }
+
+    public boolean validateTokenAndRole(String token, String role) {
+        if (this.isTokenValid(token)) {
+            String username = this.extractUsername(token);
+            return this.userHasRole(username, role);
+        }
         return false;
     }
 }
