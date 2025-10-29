@@ -11,33 +11,34 @@ import org.springframework.http.ResponseEntity;
 
 import com.cursoIntegrador.lePettiteCoffe.Model.DTO.ProductDTO;
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Product;
+import com.cursoIntegrador.lePettiteCoffe.Service.AuthService;
 import com.cursoIntegrador.lePettiteCoffe.Service.DAO.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 public class ProductControllerTest {
 
-    // @Test
-    // void testGetAllProductsWithImage() {
-    // ProductService mockService = Mockito.mock(ProductService.class);
-    // HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-    // ProductController controller = new ProductController(mockService);
+    @Test
+    void testGetAllProductsWithImage() {
+        ProductService mockProductService = Mockito.mock(ProductService.class);
+        AuthService mockAuthService = Mockito.mock(AuthService.class);
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 
-    // Product p = new Product();
-    // p.setCodproducto("1");
-    // p.setNombre("Café");
+        ProductController controller = new ProductController(mockProductService, mockAuthService);
 
-    // Mockito.when(mockService.getAllProducts()).thenReturn(List.of(p));
-    // Mockito.when(request.getScheme()).thenReturn("http");
-    // Mockito.when(request.getServerName()).thenReturn("localhost");
-    // Mockito.when(request.getServerPort()).thenReturn(8080);
+        Product p = new Product();
+        p.setCodproducto("1");
+        p.setNombre("Café");
 
-    // ResponseEntity<List<ProductDTO>> response =
-    // controller.getAllProductsWithImage(request);
+        Mockito.when(mockProductService.getAllProducts()).thenReturn(List.of(p));
+        Mockito.when(request.getScheme()).thenReturn("http");
+        Mockito.when(request.getServerName()).thenReturn("localhost");
+        Mockito.when(request.getServerPort()).thenReturn(8080);
 
-    // assertEquals(HttpStatus.OK, response.getStatusCode());
-    // assertEquals(1, response.getBody().size());
-    // assertEquals("http://localhost:8080/images/productos/1.webp",
-    // response.getBody().get(0).getImageUrl());
-    // }
+        ResponseEntity<List<ProductDTO>> response = controller.getAllProductsWithImage(request);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(1, response.getBody().size());
+        assertEquals("http://localhost:8080/images/productos/1.webp", response.getBody().get(0).getImageUrl());
+    }
 }
