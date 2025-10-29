@@ -110,3 +110,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tI
 {
   "nombre": "Sucursal Norte Renovada"
 }
+
+### Exportar Excel de cuentas (solo ADMIN)
+GET http://localhost:8080/accounts/export
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNzE5NDUxLCJleHAiOjE3NjE3MjMwNTF9.Y_keB46LgPY6n4EU3J1FMxXDCsmje3MKQTuEJ5vBh_g
+
+### Exportar Excel de cuentas (solo ADMIN)
+GET http://localhost:8080/accounts/listar
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNzE5NDUxLCJleHAiOjE3NjE3MjMwNTF9.Y_keB46LgPY6n4EU3J1FMxXDCsmje3MKQTuEJ5vBh_g
