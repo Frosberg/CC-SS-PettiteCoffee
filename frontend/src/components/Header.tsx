@@ -1,41 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router";
 import NavbarCanvas from "./NavbarCanvas";
+import AuthStore from "../stores/AuthStore";
 import "./Header.css";
-import useAuthStore from "../stores/useAuthStore";
 
 const routesPaths = [
-    {
-        path: "/",
-        name: "Inicio",
-    },
-    {
-        path: "/menus",
-        name: "Menús",
-    },
-    {
-        path: "/services",
-        name: "Servicios",
-    },
-    {
-        path: "/reviews",
-        name: "Reseñas",
-    },
+    { path: "/", name: "Inicio" },
+    { path: "/menus", name: "Menús" },
+    { path: "/services", name: "Servicios" },
+    { path: "/reviews", name: "Reseñas" },
 ];
 
 function Header() {
     const [show, setShow] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
     const { pathname } = useLocation();
 
-    const authUserStore = useAuthStore((state) => state.user);
+    const isAuth = AuthStore((state) => state.isAuth);
+    const AuthUserStore = AuthStore((state) => state.user);
     const styleExpand = show ? "active" : "";
 
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 0);
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
     return (
-        <header className="header">
+        <header className={`header ${isScrolled ? "scrolled" : ""}`}>
             <div className="header__container">
                 <h1 className="header__title">
                     <Link to="/">LE PETTITE COFFEE</Link>
                 </h1>
+
                 <nav className={`header__navbar ${styleExpand}`}>
                     <ul>
                         {routesPaths.map((route) => (
@@ -53,8 +52,8 @@ function Header() {
                     <Link to="/cartbuy">
                         <i className="fa-solid fa-cart-shopping"></i>
                     </Link>
-                    {authUserStore ? (
-                        <Link to="/perfil">{authUserStore.email}</Link>
+                    {isAuth && AuthUserStore ? (
+                        <Link to="/perfil">{AuthUserStore.email}</Link>
                     ) : (
                         <Link to="/login">UNIRME</Link>
                     )}
@@ -74,8 +73,8 @@ function Header() {
                         <Link to="/cartbuy">
                             <i className="fa-solid fa-cart-shopping"></i>
                         </Link>
-                        {authUserStore ? (
-                            <Link to="/perfil">{authUserStore.email}</Link>
+                        {isAuth && AuthUserStore ? (
+                            <Link to="/perfil">{AuthUserStore.email}</Link>
                         ) : (
                             <Link to="/login">UNIRME</Link>
                         )}

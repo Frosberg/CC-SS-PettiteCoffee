@@ -1,11 +1,15 @@
-import CardProduct from "../components/CardProduct";
 import { TabItem, TabNavbar, TabPanel, TabsContent, TabsCustom } from "../components/TabsCustom";
-import useProductsStore from "../stores/useProductsStore";
+import CardProduct from "../components/CardProduct";
 import Layout from "./Layout";
+import { RequestProducts } from "../api/ProductApi";
+import { useQuery } from "@tanstack/react-query";
 import "./Menus.css";
 
 function Menus() {
-    const products = useProductsStore((state) => state.products);
+    const { data: products, isLoading } = useQuery({
+        queryKey: ["products"],
+        queryFn: () => RequestProducts().then((res) => res.data),
+    });
 
     return (
         <Layout className="wrapper">
@@ -21,6 +25,7 @@ function Menus() {
                         <TabItem eventKey="pasteles" title="Pasteles" />
                         <TabItem eventKey="panes" title="Panes" />
                     </TabNavbar>
+
                     <TabsContent>
                         <TabPanel
                             eventKey="novedosos"
@@ -28,37 +33,48 @@ function Menus() {
                         >
                             <p>Novedosos</p>
                         </TabPanel>
+
                         <TabPanel
                             eventKey="cafes"
                             className="d-flex justify-content-center flex-wrap gap-5"
                         >
-                            {products.map((product) => (
-                                <CardProduct
-                                    key={product.codproducto}
-                                    image={product.imageUrl}
-                                    title={product.nombre}
-                                    price={product.precioventa}
-                                />
-                            ))}
+                            {isLoading && <p>Cargando productos...</p>}
+                            {!products || products.length === 0 ? (
+                                <p>No hay productos</p>
+                            ) : (
+                                products.map((product) => (
+                                    <CardProduct
+                                        key={product.codproducto}
+                                        codproducto={product.codproducto}
+                                        image={product.imageUrl}
+                                        title={product.nombre}
+                                        price={product.precioventa}
+                                    />
+                                ))
+                            )}
                         </TabPanel>
+
                         <TabPanel
                             eventKey="tortas"
                             className="d-flex justify-content-center flex-wrap gap-5"
                         >
                             <p>Tortas</p>
                         </TabPanel>
+
                         <TabPanel
                             eventKey="muffins"
                             className="d-flex justify-content-center flex-wrap gap-5"
                         >
                             <p>Muffins</p>
                         </TabPanel>
+
                         <TabPanel
                             eventKey="pasteles"
                             className="d-flex justify-content-center flex-wrap gap-5"
                         >
                             <p>Pasteles</p>
                         </TabPanel>
+
                         <TabPanel
                             eventKey="panes"
                             className="d-flex justify-content-center flex-wrap gap-5"

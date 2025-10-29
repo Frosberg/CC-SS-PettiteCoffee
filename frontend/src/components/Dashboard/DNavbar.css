@@ -23,6 +23,7 @@
 .dnavbar__nav ul {
     display: flex;
     flex-direction: column;
+    gap: 0.25rem;
     padding: 0 1rem;
     list-style: none;
 }
@@ -30,6 +31,7 @@
 .dnavbar__nav ul .nav-item,
 .dnavbar__nav ul .nav-title {
     color: var(--color-dark);
+    text-decoration: none;
 }
 
 .dnavbar__nav ul .nav-title {

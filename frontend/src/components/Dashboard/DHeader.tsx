@@ -1,17 +1,21 @@
-import { OverlayTrigger, Popover } from "react-bootstrap";
-import "./DHeader.css";
-import useAuthStore from "../../stores/useAuthStore";
 import { Link } from "react-router";
-import useNotifyStore from "../../stores/useNotifyStore";
+import { OverlayTrigger, Popover } from "react-bootstrap";
+import AuthStore from "../../stores/AuthStore";
 import NotifyCard from "./NotifyCard";
+import "./DHeader.css";
+import { useQuery } from "@tanstack/react-query";
+import { RequestNotifys } from "../../api/NotifyApi";
 
 type Props = {
     currentPath?: string;
 };
 
 function DHeader({ currentPath }: Props) {
-    const authUserStore = useAuthStore((state) => state.user);
-    const notifys = useNotifyStore((state) => state.notifys);
+    const { data: notifys, isLoading } = useQuery({
+        queryKey: ["notifys"],
+        queryFn: () => RequestNotifys().then((res) => res.data),
+    });
+    const AuthUserStore = AuthStore((state) => state.user);
 
     return (
         <header className="dheader">
@@ -26,7 +30,11 @@ function DHeader({ currentPath }: Props) {
                                 <span>Notificaciones</span>
                             </Popover.Header>
                             <Popover.Body className="notifications__description">
-                                {notifys &&
+                                {isLoading && <p>Cargando notificaciones...</p>}
+
+                                {!notifys || notifys.length === 0 ? (
+                                    <p>No hay notificaciones</p>
+                                ) : (
                                     notifys.map((notify) => (
                                         <NotifyCard
                                             key={notify.idNotificaciones}
@@ -34,9 +42,8 @@ function DHeader({ currentPath }: Props) {
                                             description={notify.descripcion}
                                             date={notify.fechaHoraEnvio}
                                         />
-                                    ))}
-
-                                {!notifys && <p>No hay notificaciones</p>}
+                                    ))
+                                )}
                             </Popover.Body>
                         </Popover>
                     }
@@ -47,7 +54,7 @@ function DHeader({ currentPath }: Props) {
                 </OverlayTrigger>
                 <Link className="dheader__perfil" to="/perfil">
                     <span></span>
-                    <p>{authUserStore?.email}</p>
+                    <p>{AuthUserStore?.email}</p>
                 </Link>
             </section>
         </header>

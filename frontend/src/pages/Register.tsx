@@ -1,23 +1,17 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router";
-import useAuthStore from "../stores/useAuthStore";
+import { useState } from "react";
+import { Link } from "react-router";
+import useAuthStore from "../stores/AuthStore";
 import Layout from "./Layout";
 import "./Auth.css";
 
 function Register() {
-    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [idError, setIdError] = useState(0);
     const [repeatPassword, setRepeatPassword] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [idError, setIdError] = useState(0);
 
-    const authRegisterStore = useAuthStore((state) => state.register);
-    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-
-    useEffect(() => {
-        if (isAuthenticated) navigate("/perfil");
-    }, [isAuthenticated]);
+    const AuthIsLoading = useAuthStore((state) => state.isLoading);
+    const AuthRegisterStore = useAuthStore((state) => state.register);
 
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -28,13 +22,7 @@ function Register() {
         if (password !== repeatPassword) return setIdError(1);
 
         setIdError(0);
-        setLoading(true);
-
-        try {
-            await authRegisterStore(email, password);
-        } finally {
-            setLoading(false);
-        }
+        await AuthRegisterStore(email, password);
     };
 
     return (
@@ -52,21 +40,21 @@ function Register() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="Correo Electrónico"
-                            disabled={loading}
+                            disabled={AuthIsLoading}
                         />
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Contraseña"
-                            disabled={loading}
+                            disabled={AuthIsLoading}
                         />
                         <input
                             type="password"
                             value={repeatPassword}
                             onChange={(e) => setRepeatPassword(e.target.value)}
                             placeholder="Repetir Contraseña"
-                            disabled={loading}
+                            disabled={AuthIsLoading}
                         />
                     </div>
 
@@ -77,8 +65,8 @@ function Register() {
                     </ul>
 
                     <div className="form__content__actions">
-                        <button className="btn-filled" disabled={loading}>
-                            {loading ? "REGISTRANDO..." : "QUIERO REGISTRARME"}
+                        <button className="btn-filled" disabled={AuthIsLoading}>
+                            {AuthIsLoading ? "REGISTRANDO..." : "QUIERO REGISTRARME"}
                         </button>
                         <Link className="btn-outline" to="/login">
                             ESTOY REGISTRADO
