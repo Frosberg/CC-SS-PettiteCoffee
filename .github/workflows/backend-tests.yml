@@ -29,12 +29,6 @@ jobs:
         cd backend
         ./mvnw clean test
         
-    - name: Generar reporte de cobertura (opcional)
-      run: |
-        cd backend
-        ./mvnw jacoco:report
-      continue-on-error: true
-        
     - name: Publicar resultados de tests
       uses: dorny/test-reporter@v1
       if: always()
