@@ -20,6 +20,9 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+    
+    - name: Dar permisos a mvnw
+      run: chmod +x backend/mvnw
         
     - name: Ejecutar tests con Maven
       run: |
@@ -30,6 +33,7 @@ jobs:
       run: |
         cd backend
         ./mvnw jacoco:report
+      continue-on-error: true
         
     - name: Publicar resultados de tests
       uses: dorny/test-reporter@v1
