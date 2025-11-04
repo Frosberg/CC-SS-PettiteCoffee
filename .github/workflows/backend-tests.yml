@@ -9,32 +9,30 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-
+    
     steps:
     - name: Checkout código
       uses: actions/checkout@v4
-
+      
     - name: Configurar JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-
+    
     - name: Dar permisos a mvnw
       run: chmod +x backend/mvnw
-
-    - name: Ejecutar tests con Maven (JUnit + Spring Boot)
+        
+    - name: Ejecutar tests con Maven
       run: |
         cd backend
-        ./mvnw clean test -B -e --fail-at-end
-
+        ./mvnw clean test
+        
     - name: Publicar resultados de tests
       uses: dorny/test-reporter@v1
       if: always()
       with:
         name: Test Results
-        path: |
-          backend/target/surefire-reports/*.xml
-          backend/target/failsafe-reports/*.xml
+        path: backend/target/surefire-reports/*.xml
         reporter: java-junit
