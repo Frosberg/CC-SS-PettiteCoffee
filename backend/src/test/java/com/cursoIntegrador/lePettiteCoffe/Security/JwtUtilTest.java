@@ -26,7 +26,7 @@ public class JwtUtilTest {
     }
 
     @Test
-    void testTokenExpirado() throws InterruptedException {
+    void testTokenExpirado() {
         JwtUtil jwtUtil = new JwtUtil();
 
         String token = Jwts.builder()
@@ -36,8 +36,11 @@ public class JwtUtilTest {
                 .signWith(Keys.hmacShaKeyFor("llave_De_Prueba_Momentanea_12345".getBytes(StandardCharsets.UTF_8)))
                 .compact();
 
-        assertThrows(io.jsonwebtoken.ExpiredJwtException.class,
+        // Cambio: esperamos RuntimeException porque JwtUtil.validateAndGetUser envuelve las excepciones
+        RuntimeException exception = assertThrows(RuntimeException.class,
                 () -> jwtUtil.validateAndGetUser(token));
+        
+        assertEquals("Token inválido o expirado", exception.getMessage());
     }
 
     @Test
@@ -46,7 +49,10 @@ public class JwtUtilTest {
         SecretKey otraClave = Keys.hmacShaKeyFor("llave_De_Prueba_Momentanea_123456".getBytes(StandardCharsets.UTF_8));
         String tokenInvalido = Jwts.builder().subject("usuario@prueba.com").signWith(otraClave).compact();
 
-        assertThrows(io.jsonwebtoken.security.SignatureException.class,
+        // Cambio: esperamos RuntimeException porque JwtUtil.validateAndGetUser envuelve las excepciones
+        RuntimeException exception = assertThrows(RuntimeException.class,
                 () -> jwtUtil.validateAndGetUser(tokenInvalido));
+        
+        assertEquals("Token inválido o expirado", exception.getMessage());
     }
 }
