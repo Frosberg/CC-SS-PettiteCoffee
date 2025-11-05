@@ -1,12 +1,18 @@
 /* FOOTER */
 .footer {
     display: flex;
+    justify-content: center;
+    background-color: var(--color-dark-alt);
+    width: 100%;
+}
+
+.footer__container {
+    display: flex;
     flex-direction: column;
     align-items: center;
     gap: 30px;
-    background-color: var(--color-dark-alt);
-    padding-inline: 80px;
     width: 100%;
+    max-width: 1200px;
 }
 
 .footer__links {
@@ -43,4 +49,15 @@
 
 .footer__copyright {
     height: 48px;
+}
+
+@media (max-width: 768px) {
+    .footer {
+        padding: 1.25rem;
+        text-align: center;
+    }
+
+    .footer__links {
+        flex-wrap: wrap;
+    }
 }

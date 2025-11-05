@@ -1,79 +1,77 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
-import useAuthStore from "../stores/useAuthStore";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router";
+import { TabItem, TabNavbar, TabPanel, TabsContent, TabsCustom } from "../components/TabsCustom";
+import useAuthStore from "../stores/AuthStore";
 import ViewInfoUser from "../components/ViewInfoUser";
+import Layout from "./Layout";
 import "./MiPerfil.css";
 
 function MiPerfil() {
     const navigate = useNavigate();
-    const authLogoutStore = useAuthStore((state) => state.logout);
-    const authUserStore = useAuthStore((state) => state.user);
+    const [editable, setEditable] = useState(false);
 
-    useEffect(() => {
-        if (!authUserStore) navigate("/login");
-    }, [navigate, authUserStore]);
+    const LogoutStore = useAuthStore((state) => state.logout);
+    const userStore = useAuthStore((state) => state.user);
 
-    const handleLogout = () => {
-        authLogoutStore();
+    const handleLogout = async () => {
+        await LogoutStore();
         navigate("/login");
     };
 
-    return (
-        <>
-            <Header />
-            <main className="main__section">
-                <h1 className="main__title">Mi Perfil</h1>
-                <article className="container py-2">
-                    <ul className="nav nav-tabs tabs-custom justify-content-center">
-                        <li className="nav-item">
-                            <button
-                                className="nav-link active"
-                                data-bs-toggle="tab"
-                                data-bs-target="#datos"
-                                type="button"
-                                role="tab"
-                            >
-                                Datos
-                            </button>
-                        </li>
-                        <li className="nav-item">
-                            <button
-                                className="nav-link"
-                                data-bs-toggle="tab"
-                                data-bs-target="#pedidos"
-                                type="button"
-                                role="tab"
-                            >
-                                Mis Pedidos
-                            </button>
-                        </li>
-                    </ul>
+    const handleEditable = () => {
+        setEditable(!editable);
+    };
 
-                    <section className="tab-content pt-4">
-                        <div className="tab-pane fade show active" id="datos" role="tabpanel">
-                            <div className="perfil__content__data">
-                                <ViewInfoUser title="Correo Electrónico" value={authUserStore} />
-                                <ViewInfoUser title="Nombre y Apellido" value="" />
-                                <ViewInfoUser title="Dirección" value="" />
-                                <ViewInfoUser title="Teléfono" value="" />
-                                <ViewInfoUser title="Fecha de Nacimiento" value="" />
-                                <ViewInfoUser title="País" value="" />
-                                <div className="perfil__content__data__actions">
-                                    <button className="btn-filled">Editar Datos</button>
-                                    <button className="btn-filled" onClick={handleLogout}>
-                                        Cerrar Sesion
-                                    </button>
-                                </div>
+    return (
+        <Layout className="wrapper">
+            <div className="wrapper__container">
+                <h1 className="wrapper__title">Mi Perfil</h1>
+
+                <TabsCustom defaultActiveKey="datos">
+                    <TabNavbar>
+                        <TabItem eventKey="datos" title="Datos" />
+                        <TabItem eventKey="pedidos" title="Pedidos" />
+                    </TabNavbar>
+                    <TabsContent>
+                        <TabPanel
+                            eventKey="datos"
+                            className="d-flex flex-column justify-content-center gap-2"
+                        >
+                            <ViewInfoUser
+                                title="Correo Electrónico"
+                                value={userStore?.email}
+                                editable={editable}
+                            />
+                            <ViewInfoUser title="Nombre y Apellido" value="" editable={editable} />
+                            <ViewInfoUser title="Dirección" value="" editable={editable} />
+                            <ViewInfoUser title="Teléfono" value="" editable={editable} />
+                            <ViewInfoUser
+                                title="Fecha de Nacimiento"
+                                value=""
+                                editable={editable}
+                            />
+                            <ViewInfoUser title="País" value="" editable={editable} />
+                            <div className="perfil__content__data__actions">
+                                {userStore?.rol === "ADMIN" && (
+                                    <Link to="/dashboard" className="btn-filled">
+                                        Ir Panel de Control
+                                    </Link>
+                                )}
+                                <button className="btn-filled" onClick={handleEditable}>
+                                    {editable ? "Guardar" : "Editar Datos"}
+                                </button>
+                                <button className="btn-filled" onClick={handleLogout}>
+                                    Cerrar Sesion
+                                </button>
                             </div>
-                        </div>
-                        <div className="tab-pane fade" id="pedidos" role="tabpanel"></div>
-                    </section>
-                </article>
-            </main>
-            <Footer />
-        </>
+                        </TabPanel>
+                        <TabPanel eventKey="pedidos">
+                            <p>Pedidos</p>
+                        </TabPanel>
+                    </TabsContent>
+                </TabsCustom>
+            </div>
+        </Layout>
     );
 }
 

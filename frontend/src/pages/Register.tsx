@@ -1,90 +1,80 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
-import useAuthStore from "../stores/useAuthStore";
-import "./LoginRegister.css";
+import { useState } from "react";
+import { Link } from "react-router";
+import useAuthStore from "../stores/AuthStore";
+import Layout from "./Layout";
+import "./Auth.css";
 
 function Register() {
-    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [repeatPassword, setRepeatPassword] = useState("");
+    const [idError, setIdError] = useState(0);
 
-    const authRegisterStore = useAuthStore((state) => state.register);
-    const authUserStore = useAuthStore((state) => state.user);
-
-    useEffect(() => {
-        if (authUserStore) navigate("/perfil");
-    }, [navigate, authUserStore]);
+    const AuthIsLoading = useAuthStore((state) => state.isLoading);
+    const AuthRegisterStore = useAuthStore((state) => state.register);
 
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (password !== repeatPassword) {
-            alert("Las contraseñas no coinciden");
-            return;
-        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) return setIdError(3);
+        if (password.length < 8) return setIdError(2);
+        if (password !== repeatPassword) return setIdError(1);
 
-        authRegisterStore(email, password);
+        setIdError(0);
+        await AuthRegisterStore(email, password);
     };
 
     return (
-        <>
-            <main className="main__auth__hero">
-                <Header />
+        <Layout className="auth">
+            <form className="form" onSubmit={handleRegister}>
+                <header className="form__header">
+                    <h2>¿Una Mañana de Cafe?</h2>
+                    <p>Únete a esta gran comunidad de amantes del café</p>
+                </header>
 
-                <section className="content_forms">
-                    <form className="form" onSubmit={handleRegister}>
-                        <div className="form__bg"></div>
-                        <div className="form__content">
-                            <header className="form__header">
-                                <h2>¿Una Mañana de Cafe?</h2>
-                                <p>Únete a esta gran comunidad de amantes del café</p>
-                            </header>
+                <section className="form__content">
+                    <div className="form__content__inputs">
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Correo Electrónico"
+                            disabled={AuthIsLoading}
+                        />
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Contraseña"
+                            disabled={AuthIsLoading}
+                        />
+                        <input
+                            type="password"
+                            value={repeatPassword}
+                            onChange={(e) => setRepeatPassword(e.target.value)}
+                            placeholder="Repetir Contraseña"
+                            disabled={AuthIsLoading}
+                        />
+                    </div>
 
-                            <section className="form__content">
-                                <div className="form__content__inputs">
-                                    <input
-                                        type="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        placeholder="Correo Electrónico"
-                                    />
-                                    <input
-                                        type="password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        placeholder="Contraseña"
-                                    />
-                                    <input
-                                        type="password"
-                                        value={repeatPassword}
-                                        onChange={(e) => setRepeatPassword(e.target.value)}
-                                        placeholder="Repetir Contraseña"
-                                    />
-                                </div>
+                    <ul className="form__content__requisitos">
+                        {idError === 1 && <li>Las contraseñas deben ser iguales</li>}
+                        {idError === 2 && <li>La contraseña debe tener al menos 8 caracteres</li>}
+                        {idError === 3 && <li>El correo no es válido</li>}
+                    </ul>
 
-                                <ul className="form__content__requisitos">
-                                    <li>Mínimo 8 caracteres</li>
-                                    <li>Mayúsculas y Minúsculas</li>
-                                    <li>Símbolos y Números</li>
-                                </ul>
-
-                                <div className="form__content__actions">
-                                    <button className="btn-filled">QUIERO REGISTRARME</button>
-                                    <Link className="btn-outline" to="/login">
-                                        ESTOY REGISTRADO
-                                    </Link>
-                                </div>
-                            </section>
-                        </div>
-                    </form>
+                    <div className="form__content__actions">
+                        <button className="btn-filled" disabled={AuthIsLoading}>
+                            {AuthIsLoading ? "REGISTRANDO..." : "QUIERO REGISTRARME"}
+                        </button>
+                        <Link className="btn-outline" to="/login">
+                            ESTOY REGISTRADO
+                        </Link>
+                    </div>
                 </section>
-            </main>
-
-            <Footer />
-        </>
+            </form>
+        </Layout>
     );
 }
 
