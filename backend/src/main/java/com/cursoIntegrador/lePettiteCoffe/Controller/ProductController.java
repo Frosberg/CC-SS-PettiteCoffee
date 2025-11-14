@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cursoIntegrador.lePettiteCoffe.Model.DTO.ProductDTO;
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Product;
-import com.cursoIntegrador.lePettiteCoffe.Service.AuthService;
 import com.cursoIntegrador.lePettiteCoffe.Service.DAO.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,9 +35,6 @@ public class ProductController {
 
     @Autowired
     private final ProductService productService;
-
-    @Autowired
-    private final AuthService authService;
 
     @GetMapping("/getAllProducts")
     public ResponseEntity<List<ProductDTO>> getAllProductsWithImage(HttpServletRequest request) {
