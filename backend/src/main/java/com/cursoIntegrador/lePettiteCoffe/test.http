@@ -11,14 +11,14 @@ Content-Type: application/json
 
 ### Endpoint Protegido
 GET http://localhost:8080/auth/protectedTest
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbmdlbG9sbWEyMDgwQGdtYWlsLmNvbSIsImlhdCI6MTc2MTM1NjMxNSwiZXhwIjoxNzYxMzU5OTE1fQ.yfTd_DKKysSIaTpus73m0f8eMVg_EqSWYsAuKV2jA4M
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYzMDgxMDk2LCJleHAiOjE3NjMwODQ2OTZ9.zY5_wqUbv0mx0Ob2JdOgzGLHuv3iGndeptbDdnqHt6I
 
 ### Registro
 POST http://localhost:8080/auth/register
 Content-Type: application/json
 
 {
-  "username": "gaylin773@gmail.com",
+  "username": "pruebinii@gmail.com",
   "password": "prueba123"
 }
 
@@ -39,15 +39,15 @@ POST http://localhost:8080/auth/cambiar-password
 Content-Type: application/json
 
 {
-  "email": "gaylin773@gmail.com",
-  "token": "4bcc4bfa-159f-4857-bbfd-c89d06d1fa12",
-  "nuevaPassword": "enana123"
+  "email": "angelolma2080@gmail.com",
+  "token": "d1364738-e432-46f7-bdd2-3cd17aff81cf",
+  "nuevaPassword": "prueba123"
 }
 
 ### Listar notificaciones de un usuario
 GET http://localhost:8080/notificaciones/listar
 Content-Type: application/json
-Authorization: Bearer rrrr.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNTMxODI0LCJleHAiOjE3NjE1MzU0MjR9._G1hLAy6prYz6s0YC18r309k78YtNiygDZdfIWH5EJ0
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYzMDgxMDk2LCJleHAiOjE3NjMwODQ2OTZ9.zY5_wqUbv0mx0Ob2JdOgzGLHuv3iGndeptbDdnqHt6I
 
 ### Obtener todos los productos
 GET http://localhost:8080/products/getAllProducts
@@ -55,11 +55,11 @@ GET http://localhost:8080/products/getAllProducts
 ### Agregar un nuevo producto (solo ADMIN)
 POST http://localhost:8080/products/agregar
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNjk2MjA2LCJleHAiOjE3NjE2OTk4MDZ9.6swrU6sI1gQ8Nd9t5TZ8IbH0bFEAyzyH0Mo91S0zSBI
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYzMDgxNDUwLCJleHAiOjE3NjMwODUwNTB9.teMkyN8yf7X6DM1qElWJYrCSgUYzbDGke7Zcvg8vP6g
 
 {
-  "codproducto": "CAF014",
-  "nombre": "Café prueba 2",
+  "codproducto": "CAF080",
+  "nombre": "Café prueba 3",
   "categoria": "Bebidas Calientes",
   "stock": 45,
   "preciocompra": 6.50,
@@ -69,8 +69,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tI
 
 
 ### Eliminar producto por ID (solo ADMIN)
-DELETE http://localhost:8080/products/eliminar/13
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNjk2NzYzLCJleHAiOjE3NjE3MDAzNjN9.HJq7WSySDKgYoc5R54ZuZJ8M0OfwhlfCOnu-GOwqaSE
+DELETE http://localhost:8080/products/eliminar/18
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYzMDgxNDUwLCJleHAiOjE3NjMwODUwNTB9.teMkyN8yf7X6DM1qElWJYrCSgUYzbDGke7Zcvg8vP6g
 
 ### Modificar parcialmente un producto (solo ADMIN)
 PATCH http://localhost:8080/products/modificar/12
@@ -90,11 +90,11 @@ GET http://localhost:8080/sucursales/listar
 ### Agregar una nueva sucursal
 POST http://localhost:8080/sucursales/agregar
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNzAwOTk5LCJleHAiOjE3NjE3MDQ1OTl9.5hdCmqxsBtK3uSC3Mnanmh6323vObbffNkZZ2yaEm7o
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYzMDgwNzY5LCJleHAiOjE3NjMwODQzNjl9.hAiSuGvKpkGMGlG03E9qEiJVgRbBWhtd41rEVS5QeMM
 
 {
-  "nombre": "Sucursal Pepito",
-  "direccion": "Calle Pepeeeee 123"
+  "nombre": "Sucursal Pepito 2",
+  "direccion": "Calle Pepeeeee 1234"
 }
 
 ### Eliminar sucursal por ID (solo ADMIN)
@@ -103,7 +103,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tI
 
 
 ### Modificar parcialmente una sucursal (solo ADMIN)
-PATCH http://localhost:8080/sucursales/modificar/11
+PATCH http://localhost:8080/sucursales/modificar/14
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNzAwOTk5LCJleHAiOjE3NjE3MDQ1OTl9.5hdCmqxsBtK3uSC3Mnanmh6323vObbffNkZZ2yaEm7o
 
@@ -113,8 +113,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tI
 
 ### Exportar Excel de cuentas (solo ADMIN)
 GET http://localhost:8080/accounts/export
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNzE5NDUxLCJleHAiOjE3NjE3MjMwNTF9.Y_keB46LgPY6n4EU3J1FMxXDCsmje3MKQTuEJ5vBh_g
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwcnVlYmluaUBnbWFpbC5jb20iLCJpYXQiOjE3NjMwODAzMzYsImV4cCI6MTc2MzA4MzkzNn0.nXV4bLBnm1eWoM0b5du27xcwroEdjgKz0H1HiPyOUt8
 
-### Exportar Excel de cuentas (solo ADMIN)
+### Listar cuentas (solo ADMIN)
 GET http://localhost:8080/accounts/listar
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzYxNzE5NDUxLCJleHAiOjE3NjE3MjMwNTF9.Y_keB46LgPY6n4EU3J1FMxXDCsmje3MKQTuEJ5vBh_g
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwcnVlYmluaUBnbWFpbC5jb20iLCJpYXQiOjE3NjMwODAzMzYsImV4cCI6MTc2MzA4MzkzNn0.nXV4bLBnm1eWoM0b5du27xcwroEdjgKz0H1HiPyOUt8
