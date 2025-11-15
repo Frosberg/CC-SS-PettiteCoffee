@@ -118,3 +118,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwcnVlYmluaUBnbWFpbC5jb20iL
 ### Listar cuentas (solo ADMIN)
 GET http://localhost:8080/accounts/listar
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwcnVlYmluaUBnbWFpbC5jb20iLCJpYXQiOjE3NjMwODAzMzYsImV4cCI6MTc2MzA4MzkzNn0.nXV4bLBnm1eWoM0b5du27xcwroEdjgKz0H1HiPyOUt8
+
+### Consultar a la IA
+POST http://localhost:8080/IA/consulta
+Content-Type: application/json
+
+{
+  "prompt": "HOLA!"
+}

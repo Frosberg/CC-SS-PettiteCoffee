@@ -27,7 +27,7 @@ public class SecurityConfig {
                                 "/auth/**",
                                 "/products/getAllProducts",
                                 "/images/**",
-                                "/sucursales/listar")
+                                "/sucursales/listar", "/IA/**")
                         .permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

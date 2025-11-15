@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.cursoIntegrador.lePettiteCoffe.Util.PdfGenerator;
 
 @Service
-@PropertySource("classpath:email-credentials.properties")
+@PropertySource("classpath:secret-credentials.properties")
 public class EmailService {
 
     @Value("${email.sender}")
