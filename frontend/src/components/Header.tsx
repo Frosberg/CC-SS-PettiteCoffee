@@ -7,7 +7,6 @@ import "./Header.css";
 const routesPaths = [
     { path: "/", name: "Inicio" },
     { path: "/menus", name: "Menús" },
-    { path: "/services", name: "Servicios" },
     { path: "/reviews", name: "Reseñas" },
 ];
 

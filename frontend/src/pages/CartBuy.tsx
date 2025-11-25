@@ -41,7 +41,7 @@ function CartBuy() {
                                             <button
                                                 onClick={() => decreaseQuantity(item.codproducto)}
                                             >
-                                                −
+                                                -
                                             </button>
                                             <span>{item.quantity.toString().padStart(2, "0")}</span>
                                             <button
@@ -66,7 +66,7 @@ function CartBuy() {
                                             className="cartbuy__remove"
                                             onClick={() => removeFromCart(item.codproducto)}
                                         >
-                                            ×
+                                            x
                                         </button>
                                     </div>
                                 ))}
@@ -83,7 +83,7 @@ function CartBuy() {
 
                     <section className="cartbuy__actions">
                         <Link to="/menus">CONTINUAR COMPRANDO</Link>
-                        <Link to="/login">IR A PAGAR</Link>
+                        <Link to="/payment">IR A PAGAR</Link>
                     </section>
                 </article>
             </div>
