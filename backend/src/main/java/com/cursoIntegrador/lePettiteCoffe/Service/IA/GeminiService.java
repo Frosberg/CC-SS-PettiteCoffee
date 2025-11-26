@@ -1,9 +1,14 @@
 package com.cursoIntegrador.lePettiteCoffe.Service.IA;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
+import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Product;
+import com.cursoIntegrador.lePettiteCoffe.Service.DAO.ProductService;
 import com.google.genai.Chat;
 import com.google.genai.Client;
 import com.google.genai.types.Content;
@@ -28,18 +33,40 @@ public class GeminiService {
     private GenerateContentConfig config;
     private Chat chatSession;
 
+    @Autowired
+    ProductService productService;
+
     @PostConstruct
     public void init() {
         this.client = Client.builder().apiKey(APIKey).build();
+        
+        List<Product> products = productService.getAllProducts();
+        StringBuilder productsInfo = new StringBuilder("Nuestros productos disponibles son:\n");
+        String configuracionInicial = "A partir de ahora eres el asistente de una cafeteria llamado LePettiteCoffe. Responde con un tamaño medio-corto de texto. Si el usuario pregunta algo fuera del tema de la cafeteria, desvía suavemente la conversación hacia productos, servicios o promociones del local. En caso de que tu respuesta incluya algun producto de nuestra lista al finalizar la consulta responde con un json con su codproducto, nombre, categoria, precioventa y stock respetando los nombres ademas de mayusculas y minusculas en el nombre de los atributos, al finalizar debes comenzar con ```json, despues [] y dentro de ese arreglo los json de productos separados por coma y al finalizar cerrar con ```. Si el usuario no consulta sobre productos no respondas con el json." ;
+        for (Product product : products) {
+            productsInfo.append("- ")
+                        .append(product.getNombre())
+                        .append(" (categoria: ")
+                        .append(product.getCategoria())
+                        .append(", codproducto: ")
+                        .append(product.getCodproducto())
+                        .append(", stock: ")
+                        .append(product.getStock())
+                        .append(", preciocompra: $")
+                        .append(product.getPreciocompra())
+                        .append(", precioventa: $")
+                        .append(product.getPrecioventa())
+                        .append(")\n");
+        }
+
+        configuracionInicial += "\n" + productsInfo.toString();
 
         this.config = GenerateContentConfig.builder()
                 .systemInstruction(
-                        Content.fromParts(Part.fromText(
-                                "A partir de ahora eres el asistente de una cafeteria llamado LePettiteCoffe. Responde con un tamaño medio-corto de texto. Si el usuario pregunta algo fuera del tema de la cafeteria, desvía suavemente la conversación hacia productos, servicios o promociones del local.")))
+                        Content.fromParts(Part.fromText(configuracionInicial)))
                 .build();
 
         this.chatSession = client.chats.create(modelId, config);
-
     }
 
     public String lePettitePromptCompuesto(String prompt) {
