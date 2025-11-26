@@ -52,4 +52,8 @@ public class CustomUserDetails implements UserDetails {
         return "ACTIVO".equalsIgnoreCase(cuenta.getEstado());
     }
 
+    public String getAlias() {
+        return cuenta.getAlias();
+    }
+
 }

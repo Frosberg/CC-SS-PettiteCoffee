@@ -29,7 +29,9 @@ public class SecurityConfig {
                                 "/images/**",
                                 "/sucursales/listar",
                                 "/IA/**",
-                                "/actuator/prometheus")
+                                "/actuator/prometheus",
+                                "/reviews/addReviewGuest",
+                                "/reviews/getReviews")
                         .permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
