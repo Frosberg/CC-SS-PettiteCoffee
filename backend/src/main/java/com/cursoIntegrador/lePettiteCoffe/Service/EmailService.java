@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
-import com.cursoIntegrador.lePettiteCoffe.Util.PdfGenerator;
+import com.cursoIntegrador.lePettiteCoffe.Util.WordGenerator;
 
 @Service
 @PropertySource("classpath:secret-credentials.properties")
@@ -36,7 +36,7 @@ public class EmailService {
         File pdf;
 
         try {
-            pdf = PdfGenerator.generarPdfRecuperacion(destinatario, token);
+            pdf = WordGenerator.generarPdfRecuperacion(destinatario, token);
         } catch (IOException e) {
             throw new RuntimeException("Error generando el PDF de recuperación", e);
         }
@@ -64,7 +64,7 @@ public class EmailService {
         File pdf;
 
         try {
-            pdf = PdfGenerator.generarPdfBienvenida(destinatario);
+            pdf = WordGenerator.generarPdfBienvenida(destinatario);
         } catch (IOException e) {
             throw new RuntimeException("Error generando el PDF de bienvenida", e);
         }
