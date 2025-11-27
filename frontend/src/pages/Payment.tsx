@@ -1,8 +1,10 @@
-﻿import { type FormEvent, useMemo, useState } from "react";
+import { type FormEvent, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import Layout from "./Layout";
 import "./Payment.css";
 import CartStore from "../stores/CartStore";
+import AuthStore from "../stores/AuthStore";
+import { RequestNewPurchase } from "../api/PurchasesApi";
 
 type PaymentState = "idle" | "processing";
 
@@ -30,6 +32,7 @@ function Payment() {
     const cart = CartStore((state) => state.cart);
     const total = CartStore((state) => state.total);
     const clearCart = CartStore((state) => state.clearCart);
+    const isAuth = AuthStore((state) => state.isAuth);
 
     const [holder, setHolder] = useState("");
     const [cardNumber, setCardNumber] = useState("");
@@ -50,6 +53,10 @@ function Payment() {
             .slice(0, 16)
             .replace(/(\d{4})(?=\d)/g, "$1 ");
 
+    useEffect(() => {
+        if (!cart.length) navigate("/menus", { replace: true });
+    }, [cart.length, navigate]);
+
     const goToStatus = (payload: PaymentResult) => {
         navigate("/payment-status", { state: payload, replace: true });
     };
@@ -60,7 +67,7 @@ function Payment() {
 
         const delay = 1250 + Math.random() * 800;
 
-        setTimeout(() => {
+        setTimeout(async () => {
             const items: PaymentItem[] = cart.map((item) => ({
                 name: item.nombre,
                 quantity: item.quantity,
@@ -121,7 +128,25 @@ function Payment() {
                           items,
                       };
 
-                if (approved) clearCart();
+                if (approved) {
+                    if (isAuth) {
+                        try {
+                            await RequestNewPurchase({
+                                montoProcesado: grandTotal,
+                                productos: cart.map((item) => ({
+                                    idProducto:
+                                        item.idProducto ?? Number.parseInt(item.codproducto, 10),
+                                    quantity: item.quantity,
+                                })),
+                                cityDelivery: city,
+                                addressDelivery: address,
+                            });
+                        } catch {
+                            // ignorar error de registro de compra
+                        }
+                    }
+                    clearCart();
+                }
             }
 
             setState("idle");

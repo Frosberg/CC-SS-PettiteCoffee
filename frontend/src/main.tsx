@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router";
 import App from "./App.tsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
+import "@google/model-viewer";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();

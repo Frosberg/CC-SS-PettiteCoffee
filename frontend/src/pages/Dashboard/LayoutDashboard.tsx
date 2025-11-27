@@ -28,11 +28,6 @@ const routesPaths = {
     ],
     manage: [
         {
-            path: "/dashboard/manage/configuration",
-            name: "Configuracion",
-            icon: "fa-solid fa-gear",
-        },
-        {
             path: "/dashboard/manage/reports",
             name: "Reportes",
             icon: "fa-solid fa-book",
