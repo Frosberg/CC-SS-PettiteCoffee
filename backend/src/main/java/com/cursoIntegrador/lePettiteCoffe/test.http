@@ -150,3 +150,35 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tI
 
 ### Obtener todas las reseñas
 GET http://localhost:8080/reviews/getReviews
+
+
+### Solicitar historial de compras
+GET http://localhost:8080/purchases/getPurchases
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzY0MjExODcwLCJleHAiOjE3NjQyMTU0NzB9.qbnBrk_CV5lMG66Yl5Pj8g07wGyEuWotcHssVYdLgA0
+
+
+### Registrar nueva compra
+POST http://localhost:8080/purchases/newPurchase
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzY0MjEyNDM0LCJleHAiOjE3NjQyMTYwMzR9.cQmRzTkGoQ-Kt9nWwGulBrYXxdFq-Dq0VfL71jdefdU
+
+{
+  "montoProcesado": 80.5,
+  "productos": [
+    {
+      "idProducto" : 3,
+      "quantity" : 5
+    },
+    {
+      "idProducto" : 2,
+      "quantity" : 5
+    }
+    ,
+    {
+      "idProducto" : 1,
+      "quantity" : 3
+    }
+  ],
+  "cityDelivery" : "Lima",
+  "addressDelivery" : "Los Olivos"
+}

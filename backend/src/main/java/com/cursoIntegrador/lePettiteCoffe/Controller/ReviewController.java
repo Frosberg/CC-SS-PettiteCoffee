@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cursoIntegrador.lePettiteCoffe.Model.DTO.ReviewDTO;
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Reviews;
+import com.cursoIntegrador.lePettiteCoffe.Model.Security.CustomUserDetails;
 import com.cursoIntegrador.lePettiteCoffe.Service.DAO.ReviewService;
 
 import lombok.RequiredArgsConstructor;
@@ -47,7 +48,8 @@ public class ReviewController {
     }
 
     @PostMapping("/addReview")
-    public ResponseEntity<?> addReview(@RequestBody Reviews review, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> addReview(@RequestBody Reviews review,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         logger.info("Intento de agregar reseña de: {}", review.getEmail());
 

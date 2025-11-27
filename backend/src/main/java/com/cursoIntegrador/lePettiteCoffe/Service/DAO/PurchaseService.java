@@ -1,0 +1,79 @@
+package com.cursoIntegrador.lePettiteCoffe.Service.DAO;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.PurchaseProductDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.PurchaseRequestDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.PurhcaseHistoryDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Cuenta;
+import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Purchase;
+import com.cursoIntegrador.lePettiteCoffe.Model.Entity.PurchaseDetails;
+import com.cursoIntegrador.lePettiteCoffe.Model.Security.CustomUserDetails;
+import com.cursoIntegrador.lePettiteCoffe.Repository.AccountRepository;
+import com.cursoIntegrador.lePettiteCoffe.Repository.ProductRepository;
+import com.cursoIntegrador.lePettiteCoffe.Repository.PurchaseRepository;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class PurchaseService {
+
+    @Autowired
+    private PurchaseRepository purchaseRepository;
+
+    @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    public PurchaseRequestDTO savePurchase(UserDetails userDetails, PurchaseRequestDTO purchaseDTO) {
+
+        Cuenta cuenta = accountRepository.findByEmail(userDetails.getUsername());
+
+        List<PurchaseDetails> realDetails = new ArrayList<>();
+
+        Purchase purchase = new Purchase();
+        purchase.setCuenta(cuenta);
+        purchase.setCityDelivery(purchaseDTO.getCityDelivery());
+        purchase.setAddressDelivery(purchaseDTO.getAddressDelivery());
+        purchase.setTotalAmount(purchaseDTO.getMontoProcesado());
+
+        for (PurchaseProductDTO dtoProduct : purchaseDTO.getProductos()) {
+            var product = productRepository.findById(dtoProduct.getIdProducto())
+                    .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + dtoProduct.getIdProducto()));
+
+            PurchaseDetails detail = new PurchaseDetails();
+            detail.setProduct(product);
+            detail.setQuantity(dtoProduct.getQuantity());
+            detail.setPurchase(purchase);
+
+            realDetails.add(detail);
+        }
+
+        purchase.setDetails(realDetails);
+
+        purchaseRepository.save(purchase);
+
+        return purchaseDTO;
+    }
+
+    public List<PurhcaseHistoryDTO> getHistory(CustomUserDetails userDetails) {
+
+        List<Purchase> purchases = purchaseRepository.findAllByCuentaIdcuenta(userDetails.getCuenta().getIdcuenta());
+        List<PurhcaseHistoryDTO> dtos = new ArrayList<>();
+
+        for (Purchase purchase : purchases) {
+            dtos.add(new PurhcaseHistoryDTO(purchase));
+        }
+
+        return dtos;
+    }
+
+}
