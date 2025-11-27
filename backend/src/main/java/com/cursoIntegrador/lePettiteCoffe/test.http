@@ -141,11 +141,11 @@ Content-Type: application/json
 ### Ingresar review | EndPoint con token
 POST http://localhost:8080/reviews/addReview
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzY0MTM5ODQxLCJleHAiOjE3NjQxNDM0NDF9.-ljMiQ7rG08ah7YaHcfOlJvTEwa280LC1MdG6BZKpNw
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzY0MjU2NzE4LCJleHAiOjE3NjQyNjAzMTh9.WuDitlzSm0jqVRvymJ90MGy85k-rjhUH1nuuuZf4qB0
 
 {
-  "cuerpo": "Buen lugar para cafe",
-  "puntuacion": 5
+  "cuerpo": "Tengo sueño",
+  "puntuacion": 2
 }
 
 ### Obtener todas las reseñas
@@ -181,4 +181,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tI
   ],
   "cityDelivery" : "Lima",
   "addressDelivery" : "Los Olivos"
+}
+
+### Actualizar perfil del usuario autenticado
+PUT http://localhost:8080/accounts/update-profile
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzY0MjU2NTI5LCJleHAiOjE3NjQyNjAxMjl9.evrYjNO_mD7HspfkkcDOBHH4QKtoDiIuqGnK9LVhAt4
+
+{
+  "alias": "Aylin",
+  "direccion": "Av. Principal 123",
+  "pais": "Perú",
+  "fechaNacimiento": "1990-05-12"
 }

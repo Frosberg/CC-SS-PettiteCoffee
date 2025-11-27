@@ -10,14 +10,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cursoIntegrador.lePettiteCoffe.Model.DTO.AccountListDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.AccountUpdateDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.Security.CustomUserDetails;
 import com.cursoIntegrador.lePettiteCoffe.Service.DAO.AccountService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -55,6 +61,18 @@ public class AccountController {
         }
 
         return ResponseEntity.ok(cuentas);
+    }
+
+    @PutMapping("/update-profile")
+    public ResponseEntity<?> actualizarPerfil(@AuthenticationPrincipal CustomUserDetails userDetails,
+            @Valid @RequestBody AccountUpdateDTO dto) {
+
+        if (userDetails == null) {
+            return ResponseEntity.status(401).body("Usuario no autenticado");
+        }
+
+        accountService.updateAccountData(userDetails, dto);
+        return ResponseEntity.ok("Perfil actualizado correctamente");
     }
 
 }
