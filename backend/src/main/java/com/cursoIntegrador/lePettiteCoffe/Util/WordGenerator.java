@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.net.URI;
 import java.time.format.DateTimeFormatter;
 
-public class PdfGenerator {
+public class WordGenerator {
 
     public static File generarPdfBienvenida(String email) throws IOException {
         File pdfFile = File.createTempFile("Bienvenida_", ".docx");

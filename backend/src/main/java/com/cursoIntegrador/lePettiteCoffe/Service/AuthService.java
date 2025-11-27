@@ -5,6 +5,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,16 +30,34 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final Set<String> invalidatedTokens = ConcurrentHashMap.newKeySet();
 
+    @Autowired
+    private final AuthenticationManager authenticationManager;
+
+    // public Map<String, Object> login(String username, String password) {
+    // Cuenta user = accountService.findByEmail(username);
+    // if (this.userExists(username) && passwordEncoder.matches(password,
+    // user.getPassword())) {
+    // Map<String, Object> respuesta = new ConcurrentHashMap<>();
+    // String token = jwtUtil.generateToken(user.getEmail());
+    // Cuenta cuenta = accountService.findByEmail(username);
+    // respuesta.put("loginData", new AccountLoginDTO(cuenta, token));
+    // return respuesta;
+    // }
+    // throw new RuntimeException("Credenciales inválidas");
+    // }
+
     public Map<String, Object> login(String username, String password) {
-        Cuenta user = accountService.findByEmail(username);
-        if (this.userExists(username) && passwordEncoder.matches(password, user.getPassword())) {
-            Map<String, Object> respuesta = new ConcurrentHashMap<>();
-            String token = jwtUtil.generateToken(user.getEmail());
-            Cuenta cuenta = accountService.findByEmail(username);
-            respuesta.put("loginData", new AccountLoginDTO(cuenta, token));
-            return respuesta;
-        }
-        throw new RuntimeException("Credenciales inválidas");
+        Authentication auth = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(username, password));
+
+        UserDetails user = (UserDetails) auth.getPrincipal();
+        String token = jwtUtil.generateToken(user.getUsername());
+
+        Cuenta cuenta = accountService.findByEmail(username);
+        Map<String, Object> respuesta = new ConcurrentHashMap<>();
+        respuesta.put("loginData", new AccountLoginDTO(cuenta, token));
+
+        return respuesta;
     }
 
     public String extractUsername(String token) {

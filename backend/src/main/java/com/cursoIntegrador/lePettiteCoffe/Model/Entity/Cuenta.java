@@ -11,7 +11,6 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,7 +18,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "cuenta")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class Cuenta {
 
     @Id
@@ -45,5 +43,19 @@ public class Cuenta {
 
     @Column(name = "fecharegistro")
     private LocalDateTime fechaRegistro;
+
+    @Column(name = "alias", nullable = true)
+    private String alias;
+
+    public Cuenta(Integer idcuenta, String email, String password, String rol, String estado,
+            LocalDateTime fechaRegistro) {
+        this.idcuenta = idcuenta;
+        this.email = email;
+        this.password = password;
+        this.rol = rol;
+        this.estado = estado;
+        this.fechaRegistro = fechaRegistro;
+        this.alias = "Nameless User";
+    }
 
 }

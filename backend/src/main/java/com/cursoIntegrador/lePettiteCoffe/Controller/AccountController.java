@@ -9,14 +9,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cursoIntegrador.lePettiteCoffe.Model.DTO.AccountListDTO;
-import com.cursoIntegrador.lePettiteCoffe.Service.AuthService;
 import com.cursoIntegrador.lePettiteCoffe.Service.DAO.AccountService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,54 +28,33 @@ public class AccountController {
     @Autowired
     private final AccountService accountService;
 
-    @Autowired
-    private final AuthService authService;
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/export")
-    public ResponseEntity<?> exportarExcel(@RequestHeader("Authorization") String authHeader) throws IOException {
-        try {
-            String token = authHeader.replace("Bearer ", "");
+    public ResponseEntity<?> exportarExcel() throws IOException {
 
-            if (!authService.validateTokenAndRole(token, "ADMIN")) {
-                return ResponseEntity.status(403).body("No tienes permisos para exportar un excel de usuarios.");
-            }
+        ByteArrayInputStream excelStream = accountService.exportarExcel();
 
-            ByteArrayInputStream excelStream = accountService.exportarExcel();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=cuentas.xlsx");
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-Disposition", "attachment; filename=cuentas.xlsx");
-
-            return ResponseEntity.ok().headers(headers)
-                    .contentType(MediaType
-                            .parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-                    .body(new InputStreamResource(excelStream));
-
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body("Error al generar el archivo Excel: " + e.getMessage());
-        }
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.parseMediaType(
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(new InputStreamResource(excelStream));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/listar")
-    public ResponseEntity<?> listarUsuarios(@RequestHeader("Authorization") String authHeader) {
-        try {
-            String token = authHeader.replace("Bearer ", "");
-            if (!authService.validateTokenAndRole(token, "ADMIN")) {
-                return ResponseEntity.status(403).body("No tienes permisos para ver las cuentas.");
-            }
+    public ResponseEntity<?> listarUsuarios() {
 
-            List<AccountListDTO> cuentas = accountService.listarUsuarios();
+        List<AccountListDTO> cuentas = accountService.listarUsuarios();
 
-            if (cuentas.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            }
-
-            return ResponseEntity.ok(cuentas);
-
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body("Error al obtener las cuentas: " + e.getMessage());
+        if (cuentas.isEmpty()) {
+            return ResponseEntity.noContent().build();
         }
+
+        return ResponseEntity.ok(cuentas);
     }
 
 }

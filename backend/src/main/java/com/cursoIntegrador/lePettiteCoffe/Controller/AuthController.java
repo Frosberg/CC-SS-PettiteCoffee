@@ -17,6 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -53,23 +55,10 @@ public class AuthController {
     }
 
     @GetMapping("/protectedTest")
-    public ResponseEntity<?> protectedTest(@RequestHeader("Authorization") String authHeader) {
-        try {
-            String token = authHeader.replace("Bearer ", "");
-            String username = authService.extractUsername(token);
-
-            if (!authService.isTokenValid(token)) {
-                return ResponseEntity.status(401).body("Token inválido o cerrado sesión");
-            }
-
-            if (authService.userExists(username)) {
-                return ResponseEntity.ok("USUARIO : " + username + " ENTRO AL ENDPOINT PROTEGIDO");
-            } else {
-                return ResponseEntity.status(401).body("Usuario no existe o fue eliminado");
-            }
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(401).body("Token inválido o expirado");
-        }
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> protectedTest() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return ResponseEntity.ok("USUARIO : " + username + " ENTRO AL ENDPOINT PROTEGIDO");
     }
 
     @PostMapping("/register")

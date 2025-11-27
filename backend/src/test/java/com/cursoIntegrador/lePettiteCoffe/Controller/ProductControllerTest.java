@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 
 import com.cursoIntegrador.lePettiteCoffe.Model.DTO.ProductDTO;
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Product;
-import com.cursoIntegrador.lePettiteCoffe.Service.AuthService;
 import com.cursoIntegrador.lePettiteCoffe.Service.DAO.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,10 +20,9 @@ public class ProductControllerTest {
     @Test
     void testGetAllProductsWithImage() {
         ProductService mockProductService = Mockito.mock(ProductService.class);
-        AuthService mockAuthService = Mockito.mock(AuthService.class);
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 
-        ProductController controller = new ProductController(mockProductService, mockAuthService);
+        ProductController controller = new ProductController(mockProductService);
 
         Product p = new Product();
         p.setCodproducto("1");
