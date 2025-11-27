@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import Layout from "./Layout";
 import "./Home.css";
+import AgentIA from "../components/AgentIA";
 
 function Home() {
     return (
@@ -148,6 +149,7 @@ function Home() {
                     </section>
                 </div>
             </article>
+            <AgentIA />
         </Layout>
     );
 }

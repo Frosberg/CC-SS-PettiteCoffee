@@ -1,4 +1,4 @@
-import { use, useEffect } from "react";
+﻿import { useEffect } from "react";
 import { Navigate, Outlet, Route, Routes, useLocation, useNavigate } from "react-router";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -9,6 +9,8 @@ import Reviews from "./pages/Reviews";
 import CartBuy from "./pages/CartBuy";
 import AboutUs from "./pages/AboutUs";
 import Recovery from "./pages/Recovery";
+import Payment from "./pages/Payment";
+import PaymentStatus from "./pages/PaymentStatus";
 import LayoutDashboard from "./pages/Dashboard/LayoutDashboard";
 import Main from "./pages/Dashboard/Main";
 import Products from "./pages/Dashboard/Products";
@@ -36,7 +38,7 @@ function App() {
 
     useEffect(() => {
         AuthVerifySession();
-    }, []);
+    }, [AuthVerifySession]);
 
     useEffect(() => {
         if (isAuth && ["/login", "/register"].includes(pathname)) navigate("/perfil");
@@ -55,6 +57,8 @@ function App() {
                 <Route path="/menus" element={<Menus />} />
                 <Route path="/reviews" element={<Reviews />} />
                 <Route path="/cartbuy" element={<CartBuy />} />
+                <Route path="/payment" element={<Payment />} />
+                <Route path="/payment-status" element={<PaymentStatus />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/recovery" element={<Recovery />} />

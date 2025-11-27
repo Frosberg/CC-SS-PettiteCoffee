@@ -16,8 +16,8 @@
 }
 
 body {
-    color: var(--color-light);
-    --bs-link-color-rgb: var(--color-light);
+    color: var(--color-dark);
+    --bs-link-color-rgb: var(--color-dark);
     overflow: auto;
 }
 
@@ -38,6 +38,21 @@ body {
     flex-direction: column;
     align-items: center;
     width: 100%;
+}
+
+.page-fade {
+    animation: page-fade-in 0.25s ease-in-out;
+}
+
+@keyframes page-fade-in {
+    from {
+        transform: translateY(4px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 /* Layouts Repeats */

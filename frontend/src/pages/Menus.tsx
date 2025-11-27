@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { TabItem, TabNavbar, TabPanel, TabsContent, TabsCustom } from "../components/TabsCustom";
 import CardProduct from "../components/CardProduct";
 import Layout from "./Layout";
@@ -6,10 +7,24 @@ import { useQuery } from "@tanstack/react-query";
 import "./Menus.css";
 
 function Menus() {
+    const [search, setSearch] = useState("");
+
     const { data: products, isLoading } = useQuery({
         queryKey: ["products"],
         queryFn: () => RequestProducts().then((res) => res.data),
     });
+
+    const filteredProducts =
+        !products || !search.trim()
+            ? products
+            : products.filter((product) => {
+                  const term = search.toLowerCase();
+                  return (
+                      product.nombre.toLowerCase().includes(term) ||
+                      product.categoria.toLowerCase().includes(term) ||
+                      product.codproducto.toLowerCase().includes(term)
+                  );
+              });
 
     return (
         <Layout className="wrapper">
@@ -26,6 +41,18 @@ function Menus() {
                         <TabItem eventKey="panes" title="Panes" />
                     </TabNavbar>
 
+                    <div className="menus__search">
+                        <div className="menus__search-input">
+                            <input
+                                id="menus-search"
+                                type="text"
+                                placeholder="Ej. Capuccino, Muffin, CAF003..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
+                        </div>
+                    </div>
+
                     <TabsContent>
                         <TabPanel
                             eventKey="novedosos"
@@ -39,19 +66,32 @@ function Menus() {
                             className="d-flex justify-content-center flex-wrap gap-5"
                         >
                             {isLoading && <p>Cargando productos...</p>}
-                            {!products || products.length === 0 ? (
+                            {!isLoading && (!products || products.length === 0) ? (
                                 <p>No hay productos</p>
-                            ) : (
-                                products.map((product) => (
+                            ) : null}
+
+                            {!isLoading &&
+                                products &&
+                                products.length > 0 &&
+                                filteredProducts &&
+                                filteredProducts.length === 0 &&
+                                search.trim() && (
+                                    <p>No se encontraron productos para tu búsqueda.</p>
+                                )}
+
+                            {!isLoading &&
+                                filteredProducts &&
+                                filteredProducts.length > 0 &&
+                                filteredProducts.map((product) => (
                                     <CardProduct
                                         key={product.codproducto}
                                         codproducto={product.codproducto}
+                                        idProducto={product.id}
                                         image={product.imageUrl}
                                         title={product.nombre}
                                         price={product.precioventa}
                                     />
-                                ))
-                            )}
+                                ))}
                         </TabPanel>
 
                         <TabPanel

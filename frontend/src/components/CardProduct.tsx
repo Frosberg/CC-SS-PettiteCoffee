@@ -6,13 +6,15 @@ type Props = {
     title: string;
     price: number;
     codproducto: string;
+    idProducto: number;
 };
 
-function CardProduct({ image, title, price, codproducto }: Props) {
+function CardProduct({ image, title, price, codproducto, idProducto }: Props) {
     const addToCart = CartStore((state) => state.addToCart);
 
     const handleAddToCart = () => {
         addToCart({
+            idProducto,
             codproducto,
             nombre: title,
             precioventa: price,

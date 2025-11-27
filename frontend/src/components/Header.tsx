@@ -1,35 +1,28 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router";
 import NavbarCanvas from "./NavbarCanvas";
 import AuthStore from "../stores/AuthStore";
+import CartStore from "../stores/CartStore";
 import "./Header.css";
 
 const routesPaths = [
     { path: "/", name: "Inicio" },
     { path: "/menus", name: "Menús" },
-    { path: "/services", name: "Servicios" },
     { path: "/reviews", name: "Reseñas" },
 ];
 
 function Header() {
     const [show, setShow] = useState(false);
-    const [isScrolled, setIsScrolled] = useState(false);
     const { pathname } = useLocation();
 
     const isAuth = AuthStore((state) => state.isAuth);
     const AuthUserStore = AuthStore((state) => state.user);
+    const cartItems = CartStore((state) => state.cart);
+    const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
     const styleExpand = show ? "active" : "";
 
-    useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 0);
-        };
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
-
     return (
-        <header className={`header ${isScrolled ? "scrolled" : ""}`}>
+        <header className="header">
             <div className="header__container">
                 <h1 className="header__title">
                     <Link to="/">LE PETTITE COFFEE</Link>
@@ -49,8 +42,13 @@ function Header() {
                 </nav>
 
                 <div className={`header__actions ${styleExpand}`}>
-                    <Link to="/cartbuy">
+                    <Link to="/cartbuy" className="header__cart">
                         <i className="fa-solid fa-cart-shopping"></i>
+                        {cartCount > 0 && (
+                            <span className="header__cart-badge">
+                                {cartCount > 99 ? "99+" : cartCount}
+                            </span>
+                        )}
                     </Link>
                     {isAuth && AuthUserStore ? (
                         <Link to="/perfil">{AuthUserStore.email}</Link>
@@ -70,8 +68,13 @@ function Header() {
                         routesPaths={routesPaths}
                         pathname={pathname}
                     >
-                        <Link to="/cartbuy">
+                        <Link to="/cartbuy" className="header__cart">
                             <i className="fa-solid fa-cart-shopping"></i>
+                            {cartCount > 0 && (
+                                <span className="header__cart-badge">
+                                    {cartCount > 99 ? "99+" : cartCount}
+                                </span>
+                            )}
                         </Link>
                         {isAuth && AuthUserStore ? (
                             <Link to="/perfil">{AuthUserStore.email}</Link>

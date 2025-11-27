@@ -14,7 +14,7 @@ function TabsCustom({
     children: ReactNode;
 }) {
     return (
-        <Tab.Container id={id} defaultActiveKey={defaultActiveKey}>
+        <Tab.Container id={id} defaultActiveKey={defaultActiveKey} mountOnEnter unmountOnExit>
             <TabsContext.Provider value={{ containerId: id }}>
                 <div className="tabs-container">{children}</div>
             </TabsContext.Provider>
@@ -29,7 +29,7 @@ function TabNavbar({ children }: { children: ReactNode }) {
 function TabItem({ eventKey, title }: { eventKey: string; title: string }) {
     return (
         <Nav.Item>
-            <Nav.Link className="nav-link" eventKey={eventKey}>
+            <Nav.Link eventKey={eventKey} className="nav-link">
                 {title}
             </Nav.Link>
         </Nav.Item>
@@ -50,7 +50,7 @@ function TabPanel({
     children: ReactNode;
 }) {
     return (
-        <Tab.Pane className={`tab-pane ${className}`} eventKey={eventKey}>
+        <Tab.Pane eventKey={eventKey} className={`tab-pane ${className}`}>
             {children}
         </Tab.Pane>
     );

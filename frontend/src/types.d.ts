@@ -24,6 +24,7 @@ interface Product {
 }
 
 interface CartItem {
+    idProducto?: number;
     codproducto: string;
     nombre: string;
     precioventa: number;
@@ -44,10 +45,49 @@ interface Notify {
     fechaHoraEnvio: string;
 }
 
+interface PurchaseProduct {
+    productId: number;
+    productName: string;
+    quantity: number;
+    price: number;
+}
+
+interface Purchase {
+    id?: number;
+    cityDelivery?: string;
+    addressDelivery: number;
+    total: string;
+    detalles: PurchaseProduct[];
+}
+
+interface Review {
+    idReview: number;
+    nombre: string;
+    email: string;
+    cuerpo: string;
+    puntuacion: number;
+    verified: boolean;
+}
+
 interface ChangePasswordResponse {
     valido: boolean;
     mensaje: string;
 }
+
+type IAProduct = {
+    codproducto: string;
+    nombre: string;
+    categoria?: string;
+    precioventa: string | number;
+    stock?: number;
+};
+
+type ChatMessage = {
+    id: string;
+    role: "user" | "assistant";
+    content: string;
+    products?: IAProduct[];
+};
 
 // ApiRequest
 type HttpMethod = "get" | "post" | "put" | "patch" | "delete";
@@ -81,6 +121,32 @@ type ChangePasswordProps = {
     email: string;
     token: string;
     nuevaPassword: string;
+};
+
+// Purchase Api
+type NewPurchaseProduct = {
+    idProducto: number;
+    quantity: number;
+};
+
+type NewPurchasePayload = {
+    montoProcesado: number;
+    productos: NewPurchaseProduct[];
+    cityDelivery: string;
+    addressDelivery: string;
+};
+
+// Review Api
+type ReviewGuestPayload = {
+    nombre: string;
+    email: string;
+    cuerpo: string;
+    puntuacion: number;
+};
+
+type ReviewPayload = {
+    cuerpo: string;
+    puntuacion: number;
 };
 
 // Stores

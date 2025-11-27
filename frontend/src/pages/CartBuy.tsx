@@ -41,12 +41,13 @@ function CartBuy() {
                                             <button
                                                 onClick={() => decreaseQuantity(item.codproducto)}
                                             >
-                                                −
+                                                -
                                             </button>
                                             <span>{item.quantity.toString().padStart(2, "0")}</span>
                                             <button
                                                 onClick={() =>
                                                     addToCart({
+                                                        idProducto: item.idProducto,
                                                         codproducto: item.codproducto,
                                                         nombre: item.nombre,
                                                         precioventa: item.precioventa,
@@ -66,7 +67,7 @@ function CartBuy() {
                                             className="cartbuy__remove"
                                             onClick={() => removeFromCart(item.codproducto)}
                                         >
-                                            ×
+                                            x
                                         </button>
                                     </div>
                                 ))}
@@ -83,7 +84,15 @@ function CartBuy() {
 
                     <section className="cartbuy__actions">
                         <Link to="/menus">CONTINUAR COMPRANDO</Link>
-                        <Link to="/login">IR A PAGAR</Link>
+                        <Link
+                            to={cart.length === 0 ? "#" : "/payment"}
+                            onClick={(e) => {
+                                if (cart.length === 0) e.preventDefault();
+                            }}
+                            className={cart.length === 0 ? "cartbuy__pay--disabled" : ""}
+                        >
+                            IR A PAGAR
+                        </Link>
                     </section>
                 </article>
             </div>
