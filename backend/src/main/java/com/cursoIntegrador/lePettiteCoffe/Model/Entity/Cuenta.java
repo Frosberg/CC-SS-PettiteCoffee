@@ -1,5 +1,6 @@
 package com.cursoIntegrador.lePettiteCoffe.Model.Entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
@@ -47,6 +48,15 @@ public class Cuenta {
     @Column(name = "alias", nullable = true)
     private String alias;
 
+    @Column(name = "direccion", length = 200, nullable = true)
+    private String direccion = "No establecida";
+
+    @Column(name = "fechanacimiento", nullable = true)
+    private LocalDate fechaNacimiento;
+
+    @Column(name = "pais", length = 100, nullable = true)
+    private String pais = "No establecido";
+
     public Cuenta(Integer idcuenta, String email, String password, String rol, String estado,
             LocalDateTime fechaRegistro) {
         this.idcuenta = idcuenta;
@@ -56,6 +66,9 @@ public class Cuenta {
         this.estado = estado;
         this.fechaRegistro = fechaRegistro;
         this.alias = "Nameless User";
+        this.direccion = "No establecida";
+        this.pais = "No establecido";
+        this.fechaNacimiento = null;
     }
 
 }
