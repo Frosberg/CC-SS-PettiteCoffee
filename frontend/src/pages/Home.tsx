@@ -1,14 +1,60 @@
 import { Link } from "react-router";
+import { useEffect, useRef } from "react";
 import Layout from "./Layout";
 import "./Home.css";
 import AgentIA from "../components/AgentIA";
 
 function Home() {
+    const bgRef = useRef<HTMLImageElement | null>(null);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const y = window.scrollY;
+
+            if (bgRef.current) {
+                bgRef.current.style.transform = `translateY(${y * 0.3}px)`;
+            }
+        };
+
+        handleScroll();
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    useEffect(() => {
+        const elements = document.querySelectorAll<HTMLElement>(".details");
+        if (!elements.length) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    const el = entry.target as HTMLElement;
+                    if (entry.isIntersecting) {
+                        el.classList.add("details--visible");
+                        el.classList.remove("details--hidden");
+                    } else {
+                        el.classList.remove("details--visible");
+                        el.classList.add("details--hidden");
+                    }
+                });
+            },
+            { threshold: 0.2 }
+        );
+
+        elements.forEach((el) => {
+            el.classList.add("details--hidden");
+            observer.observe(el);
+        });
+
+        return () => observer.disconnect();
+    }, []);
+
     return (
         <Layout>
             <img
+                ref={bgRef}
                 className="background-home"
-                src="/assets/HeroLess.jpg"
+                src="https://plus.unsplash.com/premium_photo-1668472273029-ba03dfaf5c45?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt="background le pettite coffee"
             />
 

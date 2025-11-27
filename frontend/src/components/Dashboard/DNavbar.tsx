@@ -36,7 +36,7 @@ function DNavbar({ routesPaths }: Props) {
                             </Link>
                         </li>
                     ))}
-                    <li className="nav-title">Mantenimiento</li>
+                    {/* <li className="nav-title">Mantenimiento</li> */}
                     {routesPaths.manage.map((route) => (
                         <li
                             key={route.path}

@@ -6,6 +6,9 @@ import { RequestProducts } from "../api/ProductApi";
 import { useQuery } from "@tanstack/react-query";
 import "./Menus.css";
 
+const CATEGORY_KEYS = ["cafes", "tortas", "muffins", "pasteles", "panes"] as const;
+type CategoryKey = (typeof CATEGORY_KEYS)[number] | "novedosos";
+
 function Menus() {
     const [search, setSearch] = useState("");
 
@@ -26,10 +29,46 @@ function Menus() {
                   );
               });
 
+    const getCategoryKey = (product: Product): CategoryKey => {
+        const raw = (product.categoria || "").toLowerCase();
+        return CATEGORY_KEYS.includes(raw as CategoryKey) ? (raw as CategoryKey) : "novedosos";
+    };
+
+    const getFilteredByCategory = (category: CategoryKey) =>
+        (filteredProducts || []).filter((product) => getCategoryKey(product) === category);
+
+    const CategoryList = ({ category }: { category: CategoryKey }) => {
+        if (isLoading) return <p>Cargando productos...</p>;
+
+        if (!products || products.length === 0) return <p>No hay productos</p>;
+
+        const categoryProducts = getFilteredByCategory(category);
+
+        if (!categoryProducts.length) {
+            if (search.trim()) return <p>No se encontraron productos para tu búsqueda.</p>;
+            return <p>No hay productos en esta categoría.</p>;
+        }
+
+        return (
+            <>
+                {categoryProducts.map((product) => (
+                    <CardProduct
+                        key={product.codproducto}
+                        codproducto={product.codproducto}
+                        idProducto={product.id}
+                        image={product.imageUrl}
+                        title={product.nombre}
+                        price={product.precioventa}
+                    />
+                ))}
+            </>
+        );
+    };
+
     return (
         <Layout className="wrapper">
             <div className="wrapper__container">
-                <h2 className="wrapper__title">MenÃºs - Novedosos</h2>
+                <h2 className="wrapper__title">Menús - Novedosos</h2>
 
                 <TabsCustom defaultActiveKey="cafes">
                     <TabNavbar>
@@ -58,68 +97,42 @@ function Menus() {
                             eventKey="novedosos"
                             className="d-flex justify-content-center flex-wrap gap-5"
                         >
-                            <p>Novedosos</p>
+                            <CategoryList category="novedosos" />
                         </TabPanel>
 
                         <TabPanel
                             eventKey="cafes"
                             className="d-flex justify-content-center flex-wrap gap-5"
                         >
-                            {isLoading && <p>Cargando productos...</p>}
-                            {!isLoading && (!products || products.length === 0) ? (
-                                <p>No hay productos</p>
-                            ) : null}
-
-                            {!isLoading &&
-                                products &&
-                                products.length > 0 &&
-                                filteredProducts &&
-                                filteredProducts.length === 0 &&
-                                search.trim() && (
-                                    <p>No se encontraron productos para tu bÃºsqueda.</p>
-                                )}
-
-                            {!isLoading &&
-                                filteredProducts &&
-                                filteredProducts.length > 0 &&
-                                filteredProducts.map((product) => (
-                                    <CardProduct
-                                        key={product.codproducto}
-                                        codproducto={product.codproducto}
-                                        idProducto={product.id}
-                                        image={product.imageUrl}
-                                        title={product.nombre}
-                                        price={product.precioventa}
-                                    />
-                                ))}
+                            <CategoryList category="cafes" />
                         </TabPanel>
 
                         <TabPanel
                             eventKey="tortas"
                             className="d-flex justify-content-center flex-wrap gap-5"
                         >
-                            <p>Tortas</p>
+                            <CategoryList category="tortas" />
                         </TabPanel>
 
                         <TabPanel
                             eventKey="muffins"
                             className="d-flex justify-content-center flex-wrap gap-5"
                         >
-                            <p>Muffins</p>
+                            <CategoryList category="muffins" />
                         </TabPanel>
 
                         <TabPanel
                             eventKey="pasteles"
                             className="d-flex justify-content-center flex-wrap gap-5"
                         >
-                            <p>Pasteles</p>
+                            <CategoryList category="pasteles" />
                         </TabPanel>
 
                         <TabPanel
                             eventKey="panes"
                             className="d-flex justify-content-center flex-wrap gap-5"
                         >
-                            <p>Panes</p>
+                            <CategoryList category="panes" />
                         </TabPanel>
                     </TabsContent>
                 </TabsCustom>

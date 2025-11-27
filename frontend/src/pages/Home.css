@@ -3,8 +3,10 @@
     top: 0;
     left: 0;
     z-index: -1;
+    filter: brightness(0.2);
+    will-change: transform;
     width: 100%;
-    height: 800px;
+    height: 100vh;
     object-fit: cover;
     object-position: center;
 }
@@ -179,6 +181,9 @@
     gap: 1.25rem;
     padding: 5rem 1rem;
     color: var(--color-dark);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: faq-fade-in 0.5s ease-out 0.1s forwards;
 }
 
 .faq__display .faq__title {
@@ -207,6 +212,9 @@
     background-color: var(--color-1);
     padding: 1.5rem;
     color: var(--color-dark);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.35s ease-out, transform 0.35s ease-out;
 }
 
 .details__summary {
@@ -237,6 +245,27 @@ details[open] .details__summary i {
     margin-top: 1rem;
     color: var(--color-dark);
     line-height: 1.5;
+}
+
+.details.details--visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.details.details--hidden {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+@keyframes faq-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* RESPONSIVE DESIGN */
