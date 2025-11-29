@@ -2,7 +2,6 @@ import { Link } from "react-router";
 import { useEffect, useRef } from "react";
 import Layout from "./Layout";
 import "./Home.css";
-import AgentIA from "../components/AgentIA";
 
 function Home() {
     const bgRef = useRef<HTMLImageElement | null>(null);
@@ -50,7 +49,7 @@ function Home() {
     }, []);
 
     return (
-        <Layout>
+        <Layout agentMode="recommendations">
             <img
                 ref={bgRef}
                 className="background-home"
@@ -195,7 +194,6 @@ function Home() {
                     </section>
                 </div>
             </article>
-            <AgentIA />
         </Layout>
     );
 }

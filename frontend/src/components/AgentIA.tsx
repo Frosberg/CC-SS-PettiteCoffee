@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type FormEvent, type JSX } from "react";
 import { OverlayTrigger, Popover } from "react-bootstrap";
 import "./AgentIA.css";
 import "@google/model-viewer";
-import { RequestIAConsulta } from "../api/IAApi";
+import { RequestIAConsulta, type AgentIAMode } from "../api/IAApi";
 import CartStore from "../stores/CartStore";
 
 type IAProduct = {
@@ -32,7 +32,7 @@ function extractProductsFromAnswer(text: string): { cleanText: string; products?
     const jsonText = match[1].trim();
     try {
         const parsed = JSON.parse(jsonText);
-        const arr: Product[] = Array.isArray(parsed) ? parsed : [parsed];
+        const arr = Array.isArray(parsed) ? parsed : [parsed];
         const products = arr.filter(
             (p) => p && typeof p === "object" && typeof p.codproducto === "string"
         ) as IAProduct[];
@@ -65,13 +65,23 @@ function renderFormattedText(text: string) {
     return parts;
 }
 
-function AgentIA() {
+type AgentIAProps = {
+    mode?: AgentIAMode;
+};
+
+const WELCOME_MESSAGES: Record<AgentIAMode, string> = {
+    recommendations:
+        "Hola, soy Pochi 🧁. Puedo sugerirte productos según lo que se te antoje o lo que ya tienes en el carrito. Cuéntame qué te provoca.",
+    support:
+        "Hola, soy Pochi 🧁. Estoy aquí para ayudarte con dudas sobre tu pedido, el estado de tu compra o el uso de la página.",
+};
+
+function AgentIA({ mode = "recommendations" }: AgentIAProps) {
     const [messages, setMessages] = useState<ChatMessage[]>([
         {
             id: "welcome",
             role: "assistant",
-            content:
-                "Hola, soy Pochi. ¿Cuentame como te encuentras? ¿En qué te gustaria que te ayude?",
+            content: WELCOME_MESSAGES[mode],
         },
     ]);
 
@@ -127,13 +137,17 @@ function AgentIA() {
         setInput("");
         setIsSending(true);
 
-        const res = await RequestIAConsulta(text);
+        const res = await RequestIAConsulta(text, mode);
         let answer = "Lo siento, no pude procesar tu consulta en este momento.";
 
         if (res.ok) {
             const data = res.data;
             if (typeof data === "string") answer = data;
             else if (data) answer = data.respuesta || data.answer || data.message || answer;
+        } else if (mode === "support") {
+            answer =
+                res.message ??
+                "Nuestro canal de soporte está en construcción. Pronto podremos ayudarte desde aquí.";
         }
 
         const { cleanText, products } = extractProductsFromAnswer(answer);
@@ -247,9 +261,10 @@ function AgentIA() {
                     <div
                         className="agentia__model"
                         onClick={() => {
-                            const el = muffinRef.current.parentElement;
-                            el.classList.add("pop");
-                            setTimeout(() => el.classList.remove("pop"), 180);
+                            const wrapper = muffinRef.current?.parentElement;
+                            if (!wrapper) return;
+                            wrapper.classList.add("pop");
+                            setTimeout(() => wrapper.classList.remove("pop"), 180);
                         }}
                     >
                         <model-viewer
