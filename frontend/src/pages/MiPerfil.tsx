@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { TabItem, TabNavbar, TabPanel, TabsContent, TabsCustom } from "../components/TabsCustom";
 import useAuthStore from "../stores/AuthStore";
@@ -23,6 +23,8 @@ function MiPerfil() {
 
     const [purchases, setPurchases] = useState<Purchase[]>([]);
     const [isLoadingPurchases, setIsLoadingPurchases] = useState(false);
+    const [cancelingOrders, setCancelingOrders] = useState<Record<string, boolean>>({});
+    const cancelTimeoutsRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 
     useEffect(() => {
         if (!userStore) return;
@@ -37,6 +39,15 @@ function MiPerfil() {
         void load();
     }, [userStore]);
 
+    useEffect(() => {
+        return () => {
+            cancelTimeoutsRef.current.forEach((timeoutId) => {
+                clearTimeout(timeoutId);
+            });
+            cancelTimeoutsRef.current.clear();
+        };
+    }, []);
+
     const handleLogout = async () => {
         await LogoutStore();
         navigate("/login");
@@ -44,6 +55,35 @@ function MiPerfil() {
 
     const handleEditable = () => {
         setEditable(!editable);
+    };
+
+    const buildPurchaseKey = (purchase: Purchase, itemsCountParam?: number) => {
+        if (purchase.id !== undefined && purchase.id !== null) {
+            return String(purchase.id);
+        }
+        const itemsCount =
+            typeof itemsCountParam === "number"
+                ? itemsCountParam
+                : purchase.detalles.reduce((acc, item) => acc + item.quantity, 0);
+        return `${purchase.total}-${itemsCount}`;
+    };
+
+    const handleCancelPurchase = (purchaseKey: string) => {
+        if (cancelingOrders[purchaseKey]) return;
+
+        setCancelingOrders((prev) => ({ ...prev, [purchaseKey]: true }));
+
+        const timeoutId = setTimeout(() => {
+            setPurchases((prev) => prev.filter((purchase) => buildPurchaseKey(purchase) !== purchaseKey));
+            setCancelingOrders((prev) => {
+                const next = { ...prev };
+                delete next[purchaseKey];
+                return next;
+            });
+            cancelTimeoutsRef.current.delete(purchaseKey);
+        }, 1500);
+
+        cancelTimeoutsRef.current.set(purchaseKey, timeoutId);
     };
 
     return (
@@ -106,14 +146,10 @@ function MiPerfil() {
                                         );
 
                                         const totalFormatted = Number(purchase.total).toFixed(2);
+                                        const purchaseKey = buildPurchaseKey(purchase, itemsCount);
 
                                         return (
-                                            <article
-                                                key={
-                                                    purchase.id ?? `${purchase.total}-${itemsCount}`
-                                                }
-                                                className="perfil__orders__item"
-                                            >
+                                            <article key={purchaseKey} className="perfil__orders__item">
                                                 <div className="perfil__orders__header">
                                                     <div>
                                                         <p className="perfil__orders__total">
@@ -167,6 +203,18 @@ function MiPerfil() {
                                                         </p>
                                                     </div>
                                                 ))}
+                                                <div className="perfil__orders__actions">
+                                                    <button
+                                                        type="button"
+                                                        className="perfil__orders__cancel"
+                                                        onClick={() => handleCancelPurchase(purchaseKey)}
+                                                        disabled={cancelingOrders[purchaseKey] === true}
+                                                    >
+                                                        {cancelingOrders[purchaseKey]
+                                                            ? "Cancelando..."
+                                                            : "Cancelar Pedido"}
+                                                    </button>
+                                                </div>
                                             </article>
                                         );
                                     })}
