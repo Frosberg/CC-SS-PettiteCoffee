@@ -32,7 +32,7 @@ public class PurchaseController {
     PurchaseService purchaseService;
 
     @GetMapping("/getPurchases")
-    public ResponseEntity<?> getMethodName(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<?> getPurchases(@AuthenticationPrincipal CustomUserDetails userDetails) {
 
         logger.info("Intento de solicitar historial de compras de usuario: {}", userDetails.getUsername());
 

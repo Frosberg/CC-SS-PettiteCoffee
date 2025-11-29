@@ -21,13 +21,13 @@ function Menus() {
         !products || !search.trim()
             ? products
             : products.filter((product) => {
-                  const term = search.toLowerCase();
-                  return (
-                      product.nombre.toLowerCase().includes(term) ||
-                      product.categoria.toLowerCase().includes(term) ||
-                      product.codproducto.toLowerCase().includes(term)
-                  );
-              });
+                const term = search.toLowerCase();
+                return (
+                    product.nombre.toLowerCase().includes(term) ||
+                    product.categoria.toLowerCase().includes(term) ||
+                    product.codproducto.toLowerCase().includes(term)
+                );
+            });
 
     const getCategoryKey = (product: Product): CategoryKey => {
         const raw = (product.categoria || "").toLowerCase();
@@ -45,8 +45,8 @@ function Menus() {
         const categoryProducts = getFilteredByCategory(category);
 
         if (!categoryProducts.length) {
-            if (search.trim()) return <p>No se encontraron productos para tu búsqueda.</p>;
-            return <p>No hay productos en esta categoría.</p>;
+            if (search.trim()) return <p>No se encontraron productos para tu bÃºsqueda.</p>;
+            return <p>No hay productos en esta categorÃ­a.</p>;
         }
 
         return (
@@ -68,15 +68,13 @@ function Menus() {
     return (
         <Layout className="wrapper">
             <div className="wrapper__container">
-                <h2 className="wrapper__title">Menús - Novedosos</h2>
+                <h2 className="wrapper__title">MenÃºs - Novedosos</h2>
 
-                <TabsCustom defaultActiveKey="cafes">
+                <TabsCustom defaultActiveKey="novedosos">
                     <TabNavbar>
-                        <TabItem eventKey="novedosos" title="Novedosos" />
-                        <TabItem eventKey="cafes" title="Cafes" />
+                        <TabItem eventKey="novedosos" title="Bebidas" />
                         <TabItem eventKey="tortas" title="Tortas" />
                         <TabItem eventKey="muffins" title="Muffins" />
-                        <TabItem eventKey="pasteles" title="Pasteles" />
                         <TabItem eventKey="panes" title="Panes" />
                     </TabNavbar>
 

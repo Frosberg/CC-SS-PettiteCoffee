@@ -154,20 +154,21 @@ GET http://localhost:8080/reviews/getReviews
 
 ### Solicitar historial de compras
 GET http://localhost:8080/purchases/getPurchases
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzY0MjExODcwLCJleHAiOjE3NjQyMTU0NzB9.qbnBrk_CV5lMG66Yl5Pj8g07wGyEuWotcHssVYdLgA0
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzY0Mzg3OTIxLCJleHAiOjE3NjQzOTE1MjF9.JOedHlXrcDMNi8tW3ifK-gf-ernGfTlZdCSzyRbajVw
 
 
 ### Registrar nueva compra
 POST http://localhost:8080/purchases/newPurchase
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzY0MjEyNDM0LCJleHAiOjE3NjQyMTYwMzR9.cQmRzTkGoQ-Kt9nWwGulBrYXxdFq-Dq0VfL71jdefdU
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzY0Mzg3OTIxLCJleHAiOjE3NjQzOTE1MjF9.JOedHlXrcDMNi8tW3ifK-gf-ernGfTlZdCSzyRbajVw
 
 {
   "montoProcesado": 80.5,
   "productos": [
     {
       "idProducto" : 3,
-      "quantity" : 5
+      "quantity" : 5,
+      "instructions" : "Descafeinado"
     },
     {
       "idProducto" : 2,
@@ -176,7 +177,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tI
     ,
     {
       "idProducto" : 1,
-      "quantity" : 3
+      "quantity" : 3,
+      "instructions" : "Sin azucar"
     }
   ],
   "cityDelivery" : "Lima",
