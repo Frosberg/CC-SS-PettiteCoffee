@@ -7,7 +7,24 @@ import Layout from "./Layout";
 import "./MiPerfil.css";
 import { RequestPurchases } from "../api/PurchasesApi";
 import { RequestProducts } from "../api/ProductApi";
+import { RequestUpdateProfile } from "../api/AccountApi";
 import { useQuery } from "@tanstack/react-query";
+
+const createEmptyProfileData = (): UpdateProfilePayload => ({
+    alias: "",
+    direccion: "",
+    pais: "",
+    fechaNacimiento: "",
+});
+
+const formatDateForInput = (value?: string | null) => {
+    if (!value) return "";
+    const raw = value.split("T")[0] ?? value;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) return raw;
+    return parsed.toISOString().split("T")[0];
+};
 
 function MiPerfil() {
     const navigate = useNavigate();
@@ -15,6 +32,7 @@ function MiPerfil() {
 
     const LogoutStore = useAuthStore((state) => state.logout);
     const userStore = useAuthStore((state) => state.user);
+    const updateUserData = useAuthStore((state) => state.updateUserData);
 
     const { data: products } = useQuery({
         queryKey: ["products"],
@@ -23,6 +41,10 @@ function MiPerfil() {
 
     const [purchases, setPurchases] = useState<Purchase[]>([]);
     const [isLoadingPurchases, setIsLoadingPurchases] = useState(false);
+    const [profileData, setProfileData] = useState<UpdateProfilePayload>(() =>
+        createEmptyProfileData()
+    );
+    const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
     const [cancelingOrders, setCancelingOrders] = useState<Record<string, boolean>>({});
     const cancelTimeoutsRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 
@@ -48,13 +70,36 @@ function MiPerfil() {
         };
     }, []);
 
+    useEffect(() => {
+        if (!userStore) {
+            setProfileData(createEmptyProfileData());
+            return;
+        }
+
+        setProfileData({
+            alias: userStore.alias ?? "",
+            direccion: userStore.direccion ?? "",
+            pais: userStore.pais ?? "",
+            fechaNacimiento: formatDateForInput(userStore.fechaNacimiento),
+        });
+    }, [userStore]);
+
     const handleLogout = async () => {
         await LogoutStore();
         navigate("/login");
     };
 
-    const handleEditable = () => {
-        setEditable(!editable);
+    const handleProfileButtonClick = () => {
+        if (!editable) {
+            setEditable(true);
+            return;
+        }
+
+        void handleSaveProfile();
+    };
+
+    const handleProfileFieldChange = (field: keyof UpdateProfilePayload) => (newValue: string) => {
+        setProfileData((prev) => ({ ...prev, [field]: newValue }));
     };
 
     const buildPurchaseKey = (purchase: Purchase, itemsCountParam?: number) => {
@@ -74,7 +119,9 @@ function MiPerfil() {
         setCancelingOrders((prev) => ({ ...prev, [purchaseKey]: true }));
 
         const timeoutId = setTimeout(() => {
-            setPurchases((prev) => prev.filter((purchase) => buildPurchaseKey(purchase) !== purchaseKey));
+            setPurchases((prev) =>
+                prev.filter((purchase) => buildPurchaseKey(purchase) !== purchaseKey)
+            );
             setCancelingOrders((prev) => {
                 const next = { ...prev };
                 delete next[purchaseKey];
@@ -84,6 +131,47 @@ function MiPerfil() {
         }, 1500);
 
         cancelTimeoutsRef.current.set(purchaseKey, timeoutId);
+    };
+
+    const handleSaveProfile = async () => {
+        if (isUpdatingProfile) return;
+
+        const payload: UpdateProfilePayload = {
+            alias: profileData.alias.trim(),
+            direccion: profileData.direccion.trim(),
+            pais: profileData.pais.trim(),
+            fechaNacimiento: profileData.fechaNacimiento,
+        };
+
+        if (!payload.alias) {
+            alert("Por favor ingresa tu nombre y apellido.");
+            return;
+        }
+        if (!payload.direccion) {
+            alert("Por favor ingresa una dirección.");
+            return;
+        }
+        if (!payload.pais) {
+            alert("Por favor ingresa tu país.");
+            return;
+        }
+        if (!payload.fechaNacimiento) {
+            alert("Por favor selecciona tu fecha de nacimiento.");
+            return;
+        }
+
+        setIsUpdatingProfile(true);
+        const res = await RequestUpdateProfile(payload);
+        setIsUpdatingProfile(false);
+
+        if (!res.ok) {
+            alert(res.message || "No se pudo actualizar el perfil. Intenta nuevamente.");
+            return;
+        }
+
+        updateUserData(payload);
+        setEditable(false);
+        alert("Perfil actualizado correctamente.");
     };
 
     return (
@@ -101,30 +189,54 @@ function MiPerfil() {
                             eventKey="datos"
                             className="d-flex flex-column justify-content-center gap-2"
                         >
+                            <ViewInfoUser title="Correo Electrónico" value={userStore?.email} />
                             <ViewInfoUser
-                                title="Correo Electrónico"
-                                value={userStore?.email}
+                                title="Nombre y Apellido"
+                                value={profileData.alias}
                                 editable={editable}
+                                onChange={handleProfileFieldChange("alias")}
                             />
-                            <ViewInfoUser title="Nombre y Apellido" value="" editable={editable} />
-                            <ViewInfoUser title="Dirección" value="" editable={editable} />
+                            <ViewInfoUser
+                                title="Dirección"
+                                value={profileData.direccion}
+                                editable={editable}
+                                onChange={handleProfileFieldChange("direccion")}
+                            />
+                            {/* TODO: Habilitar el campo de teléfono cuando el backend lo soporte.
                             <ViewInfoUser title="Teléfono" value="" editable={editable} />
+                            */}
                             <ViewInfoUser
                                 title="Fecha de Nacimiento"
-                                value=""
+                                value={profileData.fechaNacimiento}
                                 editable={editable}
+                                onChange={handleProfileFieldChange("fechaNacimiento")}
+                                inputType="date"
                             />
-                            <ViewInfoUser title="País" value="" editable={editable} />
+                            <ViewInfoUser
+                                title="País"
+                                value={profileData.pais}
+                                editable={editable}
+                                onChange={handleProfileFieldChange("pais")}
+                            />
                             <div className="perfil__content__data__actions">
                                 {userStore?.rol === "ADMIN" && (
                                     <Link to="/dashboard" className="btn-filled">
                                         Ir Panel de Control
                                     </Link>
                                 )}
-                                <button className="btn-filled" onClick={handleEditable}>
-                                    {editable ? "Guardar" : "Editar Datos"}
+                                <button
+                                    type="button"
+                                    className="btn-filled"
+                                    onClick={handleProfileButtonClick}
+                                    disabled={editable && isUpdatingProfile}
+                                >
+                                    {editable
+                                        ? isUpdatingProfile
+                                            ? "Guardando..."
+                                            : "Guardar"
+                                        : "Editar Datos"}
                                 </button>
-                                <button className="btn-filled" onClick={handleLogout}>
+                                <button className="btn-filled" type="button" onClick={handleLogout}>
                                     Cerrar Sesion
                                 </button>
                             </div>
@@ -149,7 +261,10 @@ function MiPerfil() {
                                         const purchaseKey = buildPurchaseKey(purchase, itemsCount);
 
                                         return (
-                                            <article key={purchaseKey} className="perfil__orders__item">
+                                            <article
+                                                key={purchaseKey}
+                                                className="perfil__orders__item"
+                                            >
                                                 <div className="perfil__orders__header">
                                                     <div>
                                                         <p className="perfil__orders__total">
@@ -207,8 +322,12 @@ function MiPerfil() {
                                                     <button
                                                         type="button"
                                                         className="perfil__orders__cancel"
-                                                        onClick={() => handleCancelPurchase(purchaseKey)}
-                                                        disabled={cancelingOrders[purchaseKey] === true}
+                                                        onClick={() =>
+                                                            handleCancelPurchase(purchaseKey)
+                                                        }
+                                                        disabled={
+                                                            cancelingOrders[purchaseKey] === true
+                                                        }
                                                     >
                                                         {cancelingOrders[purchaseKey]
                                                             ? "Cancelando..."

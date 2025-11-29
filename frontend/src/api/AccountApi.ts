@@ -3,6 +3,7 @@ import { handleRequest, HTTP_METHODS } from "./ApiRequest";
 const ACCOUNT_URLS = {
     LIST: "/accounts/listar",
     EXPORT: "/accounts/export",
+    UPDATE_PROFILE: "/accounts/update-profile",
 };
 
 export const RequestAccounts = () => handleRequest<User[]>(HTTP_METHODS.GET, ACCOUNT_URLS.LIST);
@@ -21,3 +22,6 @@ export const RequestExportAccounts = async () => {
     a.click();
     URL.revokeObjectURL(url);
 };
+
+export const RequestUpdateProfile = (payload: UpdateProfilePayload) =>
+    handleRequest<void>(HTTP_METHODS.PUT, ACCOUNT_URLS.UPDATE_PROFILE, payload);

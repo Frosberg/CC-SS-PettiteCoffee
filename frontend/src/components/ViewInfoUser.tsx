@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { type HTMLInputTypeAttribute, useEffect, useState } from "react";
 import "./ViewInfoUser.css";
 
 type Props = {
@@ -6,10 +6,15 @@ type Props = {
     value: string | undefined;
     editable?: boolean;
     onChange?: (newValue: string) => void;
+    inputType?: HTMLInputTypeAttribute;
 };
 
-function ViewInfoUser({ title, value, editable = false, onChange }: Props) {
+function ViewInfoUser({ title, value, editable = false, onChange, inputType = "text" }: Props) {
     const [localValue, setLocalValue] = useState(value || "");
+
+    useEffect(() => {
+        setLocalValue(value || "");
+    }, [value]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setLocalValue(e.target.value);
@@ -21,7 +26,7 @@ function ViewInfoUser({ title, value, editable = false, onChange }: Props) {
             <h4 className="perfil_input__title">{title}</h4>
             {editable ? (
                 <input
-                    type="text"
+                    type={inputType}
                     className="perfil_input__input"
                     value={localValue}
                     onChange={handleChange}

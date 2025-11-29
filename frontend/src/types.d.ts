@@ -5,6 +5,11 @@ interface User {
     fechaRegistro: string;
     rol: string;
     token: string;
+    alias?: string;
+    direccion?: string;
+    pais?: string;
+    fechaNacimiento?: string;
+    telefono?: string;
 }
 
 interface UserDataResponse {
@@ -123,6 +128,13 @@ type ChangePasswordProps = {
     nuevaPassword: string;
 };
 
+type UpdateProfilePayload = {
+    alias: string;
+    direccion: string;
+    pais: string;
+    fechaNacimiento: string;
+};
+
 // Purchase Api
 type NewPurchaseProduct = {
     idProducto: number;
@@ -173,6 +185,7 @@ interface AuthStore {
     setRecoveryPassword: (email: string) => Promise<boolean>;
     setChangePassword: (email: string, password: string, uuid: string) => Promise<boolean>;
     setLoading: (loading: boolean) => void;
+    updateUserData: (data: Partial<User>) => void;
 }
 
 interface CartStore {
