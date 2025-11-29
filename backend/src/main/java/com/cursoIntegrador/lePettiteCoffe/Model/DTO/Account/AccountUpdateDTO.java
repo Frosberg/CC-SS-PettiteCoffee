@@ -1,4 +1,4 @@
-package com.cursoIntegrador.lePettiteCoffe.Model.DTO;
+package com.cursoIntegrador.lePettiteCoffe.Model.DTO.Account;
 
 import java.time.LocalDate;
 
@@ -12,4 +12,5 @@ public class AccountUpdateDTO {
     private String direccion;
     private String pais;
     private LocalDate fechaNacimiento;
+    private String telefono;
 }

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cursoIntegrador.lePettiteCoffe.Model.DTO.PromptRequest;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.IA.PromptRequest;
 import com.cursoIntegrador.lePettiteCoffe.Service.IA.GeminiService;
 
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class IAController {
 
     @PostMapping("/consulta")
     public String consulta(@RequestBody PromptRequest request) {
-        return gemservice.lePettitePromptCompuesto(request.getPrompt());
+        return gemservice.lePettitePromptCompuesto(request.getPrompt(), request.getMode());
     }
 
 }

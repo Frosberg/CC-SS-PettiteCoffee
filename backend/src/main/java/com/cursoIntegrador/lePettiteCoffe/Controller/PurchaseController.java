@@ -3,8 +3,8 @@ package com.cursoIntegrador.lePettiteCoffe.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cursoIntegrador.lePettiteCoffe.Model.DTO.PurchaseRequestDTO;
-import com.cursoIntegrador.lePettiteCoffe.Model.DTO.PurhcaseHistoryDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Purchase.PurchaseRequestDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Purchase.PurhcaseHistoryDTO;
 import com.cursoIntegrador.lePettiteCoffe.Model.Security.CustomUserDetails;
 import com.cursoIntegrador.lePettiteCoffe.Service.DAO.PurchaseService;
 

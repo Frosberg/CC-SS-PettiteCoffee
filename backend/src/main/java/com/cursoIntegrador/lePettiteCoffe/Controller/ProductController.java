@@ -2,7 +2,7 @@ package com.cursoIntegrador.lePettiteCoffe.Controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cursoIntegrador.lePettiteCoffe.Model.DTO.ProductDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Product.ProductDTO;
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Product;
 import com.cursoIntegrador.lePettiteCoffe.Service.DAO.ProductService;
 

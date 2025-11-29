@@ -13,8 +13,8 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cursoIntegrador.lePettiteCoffe.Model.DTO.AccountListDTO;
-import com.cursoIntegrador.lePettiteCoffe.Model.DTO.AccountUpdateDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Account.AccountListDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Account.AccountUpdateDTO;
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Cuenta;
 import com.cursoIntegrador.lePettiteCoffe.Model.Security.CustomUserDetails;
 import com.cursoIntegrador.lePettiteCoffe.Repository.AccountRepository;

@@ -1,4 +1,4 @@
-package com.cursoIntegrador.lePettiteCoffe.Model.DTO;
+package com.cursoIntegrador.lePettiteCoffe.Model.DTO.Account;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,6 +19,7 @@ public class AccountLoginDTO {
     private String direccion;
     private String pais;
     private LocalDate fechaNacimiento;
+    private String telefono;
 
     private String token;
 
@@ -32,6 +33,7 @@ public class AccountLoginDTO {
         this.direccion = cuenta.getDireccion();
         this.pais = cuenta.getPais();
         this.fechaNacimiento = cuenta.getFechaNacimiento();
+        this.telefono = cuenta.getTelefono();
 
         this.token = token;
     }
