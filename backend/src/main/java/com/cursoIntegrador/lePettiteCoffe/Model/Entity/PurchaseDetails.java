@@ -33,4 +33,7 @@ public class PurchaseDetails {
 
     @Column(nullable = false)
     private Integer quantity;
+
+    @Column(nullable = true)
+    private String instructions;
 }

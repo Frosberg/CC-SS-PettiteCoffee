@@ -12,12 +12,14 @@ public class PurchaseHistoryDetailDTO {
     private String productName;
     private Integer quantity;
     private BigDecimal price;
+    private String instructions;
 
     public PurchaseHistoryDetailDTO(PurchaseDetails purchaseDetail) {
         this.productId = purchaseDetail.getProduct().getIdproducto();
         this.productName = purchaseDetail.getProduct().getNombre();
         this.quantity = purchaseDetail.getQuantity();
         this.price = purchaseDetail.getProduct().getPrecioventa();
+        this.instructions = purchaseDetail.getInstructions();
     }
 
 }

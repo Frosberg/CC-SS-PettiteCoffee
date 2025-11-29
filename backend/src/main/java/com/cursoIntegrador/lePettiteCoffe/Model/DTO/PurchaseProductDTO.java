@@ -8,4 +8,5 @@ import lombok.Data;
 public class PurchaseProductDTO {
     private Integer idProducto;
     private Integer quantity;
+    private String instructions;
 }

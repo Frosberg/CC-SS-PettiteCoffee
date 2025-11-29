@@ -52,6 +52,7 @@ public class PurchaseService {
             detail.setProduct(product);
             detail.setQuantity(dtoProduct.getQuantity());
             detail.setPurchase(purchase);
+            detail.setInstructions(dtoProduct.getInstructions());
 
             realDetails.add(detail);
         }
