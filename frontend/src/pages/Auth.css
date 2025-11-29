@@ -81,6 +81,33 @@
     color: var(--color-light);
 }
 
+.form__content__password {
+    position: relative;
+}
+
+.form__content__password input {
+    width: 100%;
+    padding-right: 45px;
+}
+
+.form__content__password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 100%;
+    border: none;
+    background: none;
+    color: var(--color-light);
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
 .form__content__inputs input::placeholder {
     opacity: 0.8;
     transition: opacity 0.2s ease;

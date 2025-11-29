@@ -8,6 +8,7 @@ function Login() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const isMounted = useRef(true);
 
     const AuthIsLoading = AuthStore((state) => state.isLoading);
@@ -61,13 +62,23 @@ function Login() {
                             placeholder="Correo Electrónico"
                             disabled={AuthIsLoading}
                         />
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="Contraseña"
-                            disabled={AuthIsLoading}
-                        />
+                        <div className="form__content__password">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="Contraseña"
+                                disabled={AuthIsLoading}
+                            />
+                            <button
+                                type="button"
+                                className="form__content__password-toggle"
+                                aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                onClick={() => setShowPassword((prev) => !prev)}
+                            >
+                                <i className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
+                            </button>
+                        </div>
                     </div>
 
                     {AuthMessageError && <p>{AuthMessageError}</p>}
