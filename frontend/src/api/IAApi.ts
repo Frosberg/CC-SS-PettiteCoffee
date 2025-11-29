@@ -13,7 +13,7 @@ export const RequestIAConsulta = (prompt: string, mode: AgentIAMode = "recommend
     if (!endpoint) {
         return Promise.resolve({
             ok: false,
-            message: "El endpoint de soporte a\xfan no se encuentra disponible.",
+            message: "El endpoint de soporte aún no se encuentra disponible.",
         } satisfies ApiResponse<never>);
     }
 
