@@ -51,7 +51,7 @@ function Menus() {
 
         return (
             <>
-                {categoryProducts.map((product) => (
+                {categoryProducts.map((product, index) => (
                     <CardProduct
                         key={product.codproducto}
                         codproducto={product.codproducto}
@@ -60,6 +60,7 @@ function Menus() {
                         title={product.nombre}
                         price={product.precioventa}
                         category={getCategoryKey(product)}
+                        appearDelay={index * 100}
                     />
                 ))}
             </>

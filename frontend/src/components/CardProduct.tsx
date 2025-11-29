@@ -10,6 +10,7 @@ type Props = {
     codproducto: string;
     idProducto: number;
     category?: string;
+    appearDelay?: number;
 };
 
 type CustomizationField = {
@@ -168,7 +169,15 @@ const buildEmptySelections = (fields: CustomizationField[]) =>
         return acc;
     }, {});
 
-function CardProduct({ image, title, price, codproducto, idProducto, category }: Props) {
+function CardProduct({
+    image,
+    title,
+    price,
+    codproducto,
+    idProducto,
+    category,
+    appearDelay,
+}: Props) {
     const addToCart = CartStore((state) => state.addToCart);
     const normalizedCategory = (category || "novedosos").toLowerCase();
     const customizationFields = useMemo(
@@ -301,7 +310,10 @@ function CardProduct({ image, title, price, codproducto, idProducto, category }:
 
     return (
         <>
-            <div className="card_products">
+            <div
+                className={`card_products${appearDelay !== undefined ? " card_products--fade" : ""}`}
+                style={appearDelay !== undefined ? { animationDelay: `${appearDelay}ms` } : undefined}
+            >
                 <img className="card_products__image" src={image} alt={title} />
                 <section className="card_products__content">
                     <div className="card_products__price">
