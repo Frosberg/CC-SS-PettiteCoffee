@@ -31,7 +31,7 @@ function Menus() {
 
     const getCategoryKey = (product: Product): CategoryKey => {
         const raw = (product.categoria || "").toLowerCase();
-        return CATEGORY_KEYS.includes(raw as CategoryKey) ? (raw as CategoryKey) : "novedosos";
+        return CATEGORY_KEYS.includes(raw as any) ? (raw as any) : "novedosos";
     };
 
     const getFilteredByCategory = (category: CategoryKey) =>
@@ -72,9 +72,17 @@ function Menus() {
 
                 <TabsCustom defaultActiveKey="novedosos">
                     <TabNavbar>
+<<<<<<< HEAD
                         <TabItem eventKey="novedosos" title="Bebidas" />
                         <TabItem eventKey="tortas" title="Tortas" />
                         <TabItem eventKey="muffins" title="Muffins" />
+=======
+                        <TabItem eventKey="novedosos" title="Novedosos" />
+                        {/* <TabItem eventKey="cafes" title="Cafes" /> */}
+                        <TabItem eventKey="tortas" title="Tortas" />
+                        <TabItem eventKey="muffins" title="Muffins" />
+                        {/* <TabItem eventKey="pasteles" title="Pasteles" /> */}
+>>>>>>> 9c240906d238d3e5b2855fc81f3ccd7bfb76d461
                         <TabItem eventKey="panes" title="Panes" />
                     </TabNavbar>
 

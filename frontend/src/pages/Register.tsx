@@ -27,7 +27,7 @@ function Register() {
 
     return (
         <Layout className="auth">
-            <form className="form" onSubmit={handleRegister}>
+            <form className="form" noValidate onSubmit={handleRegister}>
                 <header className="form__header">
                     <h2>¿Una Mañana de Cafe?</h2>
                     <p>Únete a esta gran comunidad de amantes del café</p>
