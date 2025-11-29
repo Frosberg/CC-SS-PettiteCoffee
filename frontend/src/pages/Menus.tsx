@@ -59,6 +59,7 @@ function Menus() {
                         image={product.imageUrl}
                         title={product.nombre}
                         price={product.precioventa}
+                        category={getCategoryKey(product)}
                     />
                 ))}
             </>

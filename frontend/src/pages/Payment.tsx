@@ -1,4 +1,4 @@
-import { type FormEvent, useEffect, useMemo, useState } from "react";
+import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import Layout from "./Layout";
 import "./Payment.css";
@@ -53,9 +53,26 @@ function Payment() {
             .slice(0, 16)
             .replace(/(\d{4})(?=\d)/g, "$1 ");
 
+    const hasCheckedCartRef = useRef(false);
+
     useEffect(() => {
-        if (!cart.length) navigate("/menus", { replace: true });
-    }, [cart.length, navigate]);
+        if (hasCheckedCartRef.current) return;
+        hasCheckedCartRef.current = true;
+
+        if (!cart.length) {
+            const payload: PaymentResult = {
+                status: "rejected",
+                message: "Tu carrito está vacío. Agrega algo delicioso antes de pagar.",
+                reference: null,
+                total: 0,
+                email,
+                address,
+                city,
+                items: [],
+            };
+            navigate("/payment-status", { state: payload, replace: true });
+        }
+    }, [cart.length, navigate, email, address, city]);
 
     const goToStatus = (payload: PaymentResult) => {
         navigate("/payment-status", { state: payload, replace: true });
@@ -104,49 +121,33 @@ function Payment() {
                     items,
                 };
             } else {
-                const approved = Math.random() > 0.25;
-                payload = approved
-                    ? {
-                          status: "approved",
-                          message: "Pago aprobado. Tu pedido está por comenzar a tomar vida!",
-                          reference: createReference(),
-                          total: grandTotal,
-                          email,
-                          address,
-                          city,
-                          items,
-                      }
-                    : {
-                          status: "rejected",
-                          message:
-                              "La pasarela no pudo completar el pago. Puedes volver a intentarlo cuando gustes.",
-                          reference: null,
-                          total: grandTotal,
-                          email,
-                          address,
-                          city,
-                          items,
-                      };
+                payload = {
+                    status: "approved",
+                    message: "Pago aprobado. Tu pedido está por comenzar a tomar vida!",
+                    reference: createReference(),
+                    total: grandTotal,
+                    email,
+                    address,
+                    city,
+                    items,
+                };
 
-                if (approved) {
-                    if (isAuth) {
-                        try {
-                            await RequestNewPurchase({
-                                montoProcesado: grandTotal,
-                                productos: cart.map((item) => ({
-                                    idProducto:
-                                        item.idProducto ?? Number.parseInt(item.codproducto, 10),
-                                    quantity: item.quantity,
-                                })),
-                                cityDelivery: city,
-                                addressDelivery: address,
-                            });
-                        } catch {
-                            // ignorar error de registro de compra
-                        }
-                    }
-                    clearCart();
+                if (isAuth) {
+                    try {
+                        await RequestNewPurchase({
+                            montoProcesado: grandTotal,
+                            productos: cart.map((item) => ({
+                                idProducto:
+                                    item.idProducto ?? Number.parseInt(item.codproducto, 10),
+                                quantity: item.quantity,
+                            })),
+                            cityDelivery: city,
+                            addressDelivery: address,
+                        });
+                    } catch {}
                 }
+
+                clearCart();
             }
 
             setState("idle");
@@ -263,7 +264,25 @@ function Payment() {
                             <button
                                 type="button"
                                 className="payment__ghost"
-                                onClick={() => navigate("/cartbuy")}
+                                onClick={() =>
+                                    navigate("/payment-status", {
+                                        state: {
+                                            status: "rejected",
+                                            message:
+                                                "Has cancelado el proceso de pago. Puedes revisar tu carrito antes de continuar.",
+                                            reference: null,
+                                            total: grandTotal,
+                                            email,
+                                            address,
+                                            city,
+                                            items: cart.map((item) => ({
+                                                name: item.nombre,
+                                                quantity: item.quantity,
+                                                unitPrice: item.precioventa,
+                                            })),
+                                        } as PaymentResult,
+                                    })
+                                }
                                 disabled={state === "processing"}
                             >
                                 Volver al carrito
@@ -285,7 +304,10 @@ function Payment() {
                                 <p className="payment__empty">Tu carrito está vacío.</p>
                             ) : (
                                 cart.map((item) => (
-                                    <div key={item.codproducto} className="payment__summary__item">
+                                    <div
+                                        key={item.customKey ?? item.codproducto}
+                                        className="payment__summary__item"
+                                    >
                                         <div>
                                             <img
                                                 className="payment__summary__image"
@@ -296,6 +318,23 @@ function Payment() {
                                                 <p className="payment__summary__title">
                                                     {item.nombre}
                                                 </p>
+                                                {item.customizations &&
+                                                    item.customizations.length > 0 && (
+                                                        <ul className="payment__summary__customizations">
+                                                            {item.customizations.map((custom) => (
+                                                                <li
+                                                                    key={`${item.codproducto}-${custom.id}`}
+                                                                >
+                                                                    <span>
+                                                                        <strong>
+                                                                            {custom.label}:{" "}
+                                                                        </strong>
+                                                                        {custom.value}
+                                                                    </span>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    )}
                                                 <span className="payment__summary__meta">
                                                     x{item.quantity.toString().padStart(2, "0")}
                                                 </span>

@@ -23,14 +23,36 @@ function CartBuy() {
                         ) : (
                             <>
                                 {cart.map((item) => (
-                                    <div key={item.codproducto} className="cartbuy__row">
+                                    <div
+                                        key={item.customKey ?? item.codproducto}
+                                        className="cartbuy__row"
+                                    >
                                         <div className="cartbuy__info">
                                             <img
                                                 src={item.imageUrl}
                                                 alt={item.nombre}
                                                 className="cartbuy__image"
                                             />
-                                            <span className="cartbuy__name">{item.nombre}</span>
+                                            <div className="cartbuy__details">
+                                                <span className="cartbuy__name">{item.nombre}</span>
+                                                {item.customizations &&
+                                                    item.customizations.length > 0 && (
+                                                        <ul className="cartbuy__customizations">
+                                                            {item.customizations.map((custom) => (
+                                                                <li
+                                                                    key={`${item.codproducto}-${custom.id}`}
+                                                                >
+                                                                    <span>
+                                                                        <strong>
+                                                                            {custom.label}:{" "}
+                                                                        </strong>
+                                                                        {custom.value}
+                                                                    </span>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    )}
+                                            </div>
                                         </div>
 
                                         <span className="cartbuy__price">
@@ -39,7 +61,12 @@ function CartBuy() {
 
                                         <div className="cartbuy__quantity">
                                             <button
-                                                onClick={() => decreaseQuantity(item.codproducto)}
+                                                onClick={() =>
+                                                    decreaseQuantity(
+                                                        item.codproducto,
+                                                        item.customKey
+                                                    )
+                                                }
                                             >
                                                 -
                                             </button>
@@ -52,6 +79,8 @@ function CartBuy() {
                                                         nombre: item.nombre,
                                                         precioventa: item.precioventa,
                                                         imageUrl: item.imageUrl,
+                                                        customizations: item.customizations,
+                                                        customKey: item.customKey,
                                                     })
                                                 }
                                             >
@@ -65,7 +94,9 @@ function CartBuy() {
 
                                         <button
                                             className="cartbuy__remove"
-                                            onClick={() => removeFromCart(item.codproducto)}
+                                            onClick={() =>
+                                                removeFromCart(item.codproducto, item.customKey)
+                                            }
                                         >
                                             x
                                         </button>

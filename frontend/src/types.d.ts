@@ -35,7 +35,15 @@ interface CartItem {
     precioventa: number;
     imageUrl: string;
     quantity: number;
+    customizations?: CartItemCustomization[];
+    customKey?: string;
 }
+
+type CartItemCustomization = {
+    id: string;
+    label: string;
+    value: string;
+};
 
 interface Branch {
     idsucursal?: number;
@@ -191,8 +199,8 @@ interface AuthStore {
 interface CartStore {
     cart: CartItem[];
     addToCart: (item: Omit<CartItem, "quantity">) => void;
-    removeFromCart: (codproducto: string) => void;
-    decreaseQuantity: (codproducto: string) => void;
+    removeFromCart: (codproducto: string, customKey?: string) => void;
+    decreaseQuantity: (codproducto: string, customKey?: string) => void;
     clearCart: () => void;
     total: () => number;
 }

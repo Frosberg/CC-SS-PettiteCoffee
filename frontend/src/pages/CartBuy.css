@@ -28,6 +28,12 @@
     gap: 1rem;
 }
 
+.cartbuy__details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
 .cartbuy__image {
     border-radius: 6px;
     width: 60px;
@@ -39,6 +45,27 @@
     color: var(--color-dark);
     font-weight: 500;
     font-size: 1rem;
+    text-align: left;
+}
+
+.cartbuy__customizations {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0;
+    padding-left: 1.25rem;
+    color: hsl(from var(--color-dark) h s l / 0.8);
+    font-size: 0.85rem;
+    text-align: left;
+}
+
+.cartbuy__customizations li {
+    line-height: 1.2;
+    list-style: none;
+}
+
+.cartbuy__customizations li * {
+    color: var(--color-dark);
 }
 
 .cartbuy__price,
