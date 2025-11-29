@@ -21,13 +21,13 @@ function Menus() {
         !products || !search.trim()
             ? products
             : products.filter((product) => {
-                const term = search.toLowerCase();
-                return (
-                    product.nombre.toLowerCase().includes(term) ||
-                    product.categoria.toLowerCase().includes(term) ||
-                    product.codproducto.toLowerCase().includes(term)
-                );
-            });
+                  const term = search.toLowerCase();
+                  return (
+                      product.nombre.toLowerCase().includes(term) ||
+                      product.categoria.toLowerCase().includes(term) ||
+                      product.codproducto.toLowerCase().includes(term)
+                  );
+              });
 
     const getCategoryKey = (product: Product): CategoryKey => {
         const raw = (product.categoria || "").toLowerCase();
@@ -72,17 +72,11 @@ function Menus() {
 
                 <TabsCustom defaultActiveKey="novedosos">
                     <TabNavbar>
-<<<<<<< HEAD
-                        <TabItem eventKey="novedosos" title="Bebidas" />
-                        <TabItem eventKey="tortas" title="Tortas" />
-                        <TabItem eventKey="muffins" title="Muffins" />
-=======
                         <TabItem eventKey="novedosos" title="Novedosos" />
                         {/* <TabItem eventKey="cafes" title="Cafes" /> */}
                         <TabItem eventKey="tortas" title="Tortas" />
                         <TabItem eventKey="muffins" title="Muffins" />
                         {/* <TabItem eventKey="pasteles" title="Pasteles" /> */}
->>>>>>> 9c240906d238d3e5b2855fc81f3ccd7bfb76d461
                         <TabItem eventKey="panes" title="Panes" />
                     </TabNavbar>
 
