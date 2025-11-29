@@ -202,12 +202,19 @@ function MiPerfil() {
                                 editable={editable}
                                 onChange={handleProfileFieldChange("direccion")}
                             />
-                            {/* TODO: Habilitar el campo de teléfono cuando el backend lo soporte.
+                            {/* campo de teléfono para darle soporte mas adelante
                             <ViewInfoUser title="Teléfono" value="" editable={editable} />
                             */}
                             <ViewInfoUser
                                 title="Fecha de Nacimiento"
-                                value={profileData.fechaNacimiento}
+                                value={new Date(profileData.fechaNacimiento).toLocaleDateString(
+                                    "es-ES",
+                                    {
+                                        day: "2-digit",
+                                        month: "2-digit",
+                                        year: "numeric",
+                                    }
+                                )}
                                 editable={editable}
                                 onChange={handleProfileFieldChange("fechaNacimiento")}
                                 inputType="date"
