@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Product;
 import com.cursoIntegrador.lePettiteCoffe.Repository.ProductRepository;
+import com.cursoIntegrador.lePettiteCoffe.Service.ReportService;
 
 import org.springframework.beans.BeanWrapperImpl;
 
@@ -21,6 +22,9 @@ public class ProductService {
 
     @Autowired
     private final ProductRepository productRepository;
+
+    @Autowired
+    private final ReportService reportService;
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
@@ -52,6 +56,15 @@ public class ProductService {
                 .map(PropertyDescriptor::getName)
                 .filter(name -> src.getPropertyValue(name) == null)
                 .toArray(String[]::new);
+    }
+
+    public byte[] getReport() {
+        try {
+            return reportService.generateExampleReport(getAllProducts(), "PRODUCTOS");
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            return new byte[0];
+        }
     }
 
 }

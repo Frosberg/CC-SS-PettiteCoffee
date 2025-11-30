@@ -76,4 +76,15 @@ public class AccountController {
         return ResponseEntity.ok("Perfil actualizado correctamente");
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/getReport")
+    public ResponseEntity<?> getReportProduct() throws Exception {
+        byte[] pdf = accountService.getReport();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=reporte.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
+    }
+
 }

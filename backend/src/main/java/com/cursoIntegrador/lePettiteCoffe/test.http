@@ -206,3 +206,16 @@ Content-Type: application/json
   "prompt": "¿Cual es su numero de contacto?",
   "mode" : "Support"
 }
+
+### Obtener reporte de productos
+GET http://localhost:8080/products/getReport
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzY0NTI1MDc4LCJleHAiOjE3NjQ1Mjg2Nzh9.rkRfulLX6jIlbR9bFrZzMuCxK23fhF1HFVGE1xdHoEw
+
+### Obtener reporte de cuentas de usuario
+GET http://localhost:8080/accounts/getReport
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzY0NTI1MDc4LCJleHAiOjE3NjQ1Mjg2Nzh9.rkRfulLX6jIlbR9bFrZzMuCxK23fhF1HFVGE1xdHoEw
+
+
+### Obtener reporte de sucursales
+GET http://localhost:8080/sucursales/getReport
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzY0NTI1MDc4LCJleHAiOjE3NjQ1Mjg2Nzh9.rkRfulLX6jIlbR9bFrZzMuCxK23fhF1HFVGE1xdHoEw

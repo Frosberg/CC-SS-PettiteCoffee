@@ -11,14 +11,19 @@ import org.springframework.stereotype.Service;
 
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Branch;
 import com.cursoIntegrador.lePettiteCoffe.Repository.BranchRepository;
+import com.cursoIntegrador.lePettiteCoffe.Service.ReportService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class BranchService {
+
     @Autowired
     private final BranchRepository branchrepo;
+
+    @Autowired
+    private final ReportService reportService;
 
     public List<Branch> listarSucursales() {
         return branchrepo.findAll();
@@ -52,4 +57,12 @@ public class BranchService {
                 .toArray(String[]::new);
     }
 
+    public byte[] getReport() {
+        try {
+            return reportService.generateExampleReport(this.listarSucursales(), "SUCURSALES");
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            return new byte[0];
+        }
+    }
 }
