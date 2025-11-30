@@ -24,4 +24,4 @@ export const RequestExportAccounts = async () => {
 };
 
 export const RequestUpdateProfile = (payload: UpdateProfilePayload) =>
-    handleRequest<void>(HTTP_METHODS.PUT, ACCOUNT_URLS.UPDATE_PROFILE, payload);
+    handleRequest<void>(HTTP_METHODS.PATCH, ACCOUNT_URLS.UPDATE_PROFILE, payload);

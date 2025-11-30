@@ -5,17 +5,17 @@ const IA_URLS = {
     SOPORTE: "",
 };
 
-export type AgentIAMode = "recommendations" | "support";
+export type AgentIAMode = "recommendations" | "Support";
 
 export const RequestIAConsulta = (prompt: string, mode: AgentIAMode = "recommendations") => {
-    const endpoint = mode === "support" ? IA_URLS.SOPORTE : IA_URLS.CONSULTA;
+    const endpoint = mode === "Support" ? IA_URLS.SOPORTE : IA_URLS.CONSULTA;
 
-    if (!endpoint) {
-        return Promise.resolve({
-            ok: false,
-            message: "El endpoint de soporte aún no se encuentra disponible.",
-        } satisfies ApiResponse<never>);
-    }
+    // if (!endpoint) {
+    //     return Promise.resolve({
+    //         ok: false,
+    //         message: "El endpoint de soporte aún no se encuentra disponible.",
+    //     } satisfies ApiResponse<never>);
+    // }
 
     return handleRequest<any>(HTTP_METHODS.POST, endpoint, { prompt, mode });
 };

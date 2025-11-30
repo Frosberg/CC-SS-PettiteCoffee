@@ -20,6 +20,20 @@ type ChatMessage = {
     products?: IAProduct[];
 };
 
+type AgentIAProps = {
+    mode?: AgentIAMode | "Support";
+};
+
+type PochiMood = "idle" | "happy" | "emotional";
+type IdleVariant = "float" | "wiggle";
+
+const WELCOME_MESSAGES: Record<AgentIAMode, string> = {
+    recommendations:
+        "Hola, soy Pochi 🧁. Puedo sugerirte productos según lo que se te antoje o lo que ya tienes en el carrito. ¡Cuéntame qué te provoca!",
+    Support:
+        "Hola, soy Pochi 🧁. Estoy aquí para ayudarte con dudas sobre tu pedido, el estado de tu compra o el uso de la página.",
+};
+
 function getProductImage(product: IAProduct): string {
     return `http://localhost:8080/images/productos/${encodeURIComponent(product.codproducto)}.webp`;
 }
@@ -32,10 +46,8 @@ function extractProductsFromAnswer(text: string): { cleanText: string; products?
     const jsonText = match[1].trim();
     try {
         const parsed = JSON.parse(jsonText);
-        const arr = Array.isArray(parsed) ? parsed : [parsed];
-        const products = arr.filter(
-            (p) => p && typeof p === "object" && typeof p.codproducto === "string"
-        ) as IAProduct[];
+        const arr = (Array.isArray(parsed) ? parsed : [parsed]) as IAProduct[];
+        const products = arr.filter((p) => p && typeof p.codproducto === "string");
         const cleanText = text.replace(match[0], "").trim();
         return { cleanText, products };
     } catch {
@@ -47,74 +59,61 @@ function renderFormattedText(text: string) {
     const parts: JSX.Element[] = [];
     const regex = /\*\*(.+?)\*\*/g;
     let lastIndex = 0;
-    let match: RegExpExecArray | null;
     let key = 0;
+    let match: RegExpExecArray | null;
 
     while ((match = regex.exec(text)) !== null) {
-        if (match.index > lastIndex) {
+        if (match.index > lastIndex)
             parts.push(<span key={key++}>{text.slice(lastIndex, match.index)}</span>);
-        }
         parts.push(<strong key={key++}>{match[1]}</strong>);
         lastIndex = match.index + match[0].length;
     }
 
-    if (lastIndex < text.length) {
-        parts.push(<span key={key++}>{text.slice(lastIndex)}</span>);
-    }
+    if (lastIndex < text.length) parts.push(<span key={key++}>{text.slice(lastIndex)}</span>);
 
     return parts;
 }
 
-type AgentIAProps = {
-    mode?: AgentIAMode;
-};
-
-const WELCOME_MESSAGES: Record<AgentIAMode, string> = {
-    recommendations:
-        "Hola, soy Pochi 🧁. Puedo sugerirte productos según lo que se te antoje o lo que ya tienes en el carrito. Cuéntame qué te provoca.",
-    support:
-        "Hola, soy Pochi 🧁. Estoy aquí para ayudarte con dudas sobre tu pedido, el estado de tu compra o el uso de la página.",
-};
-
 function AgentIA({ mode = "recommendations" }: AgentIAProps) {
+    const normalizedMode = (mode === "Support" ? "Support" : mode) as AgentIAMode;
     const [messages, setMessages] = useState<ChatMessage[]>([
         {
             id: "welcome",
             role: "assistant",
-            content: WELCOME_MESSAGES[mode],
+            content: WELCOME_MESSAGES[normalizedMode],
         },
     ]);
-
     const [input, setInput] = useState("");
     const [isSending, setIsSending] = useState(false);
+    const [pochiMood, setPochiMood] = useState<PochiMood>("idle");
+    const [idleVariant, setIdleVariant] = useState<IdleVariant>("float");
+
     const messagesRef = useRef<HTMLDivElement | null>(null);
     const muffinRef = useRef<any>(null);
+    const soundHappyRef = useRef<HTMLAudioElement | null>(null);
+    const soundEmotionalRef = useRef<HTMLAudioElement | null>(null);
+    const emotionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
     const addToCart = CartStore((state) => state.addToCart);
 
     useEffect(() => {
         const el = messagesRef.current;
-        if (!el) return;
-        el.scrollTop = el.scrollHeight;
+        if (el) el.scrollTop = el.scrollHeight;
     }, [messages]);
 
     useEffect(() => {
         const viewer = muffinRef.current;
         if (!viewer) return;
 
-        function handleMouseMove(e: MouseEvent) {
-            const x = e.clientX / window.innerWidth;
-            const y = e.clientY / window.innerHeight;
-
+        function handleMouseMove(event: MouseEvent) {
+            const x = event.clientX / window.innerWidth;
+            const y = event.clientY / window.innerHeight;
             const baseAzimuth = 30;
             const basePolar = 100;
-
             const maxOffset = 35;
-            const offsetAzimuth = maxOffset - x * (maxOffset * 2);
-            const offsetPolar = maxOffset - y * (maxOffset * 2);
 
-            const azimuth = baseAzimuth + offsetAzimuth;
-            const polar = basePolar + offsetPolar;
-
+            const azimuth = baseAzimuth + (maxOffset - x * (maxOffset * 2));
+            const polar = basePolar + (maxOffset - y * (maxOffset * 2));
             viewer.cameraOrbit = `${azimuth}deg ${polar}deg`;
         }
 
@@ -122,10 +121,44 @@ function AgentIA({ mode = "recommendations" }: AgentIAProps) {
         return () => window.removeEventListener("mousemove", handleMouseMove as any);
     }, []);
 
-    const handleSend = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    useEffect(() => {
+        if (pochiMood !== "idle") return;
+
+        const interval = setInterval(() => {
+            setIdleVariant((prev) => (prev === "float" ? "wiggle" : "float"));
+        }, 6500);
+
+        return () => clearInterval(interval);
+    }, [pochiMood]);
+
+    useEffect(() => {
+        return () => {
+            if (emotionTimeoutRef.current) clearTimeout(emotionTimeoutRef.current);
+        };
+    }, []);
+
+    const triggerPochiMood = (nextMood: Exclude<PochiMood, "idle">, playSound = true) => {
+        setPochiMood(nextMood);
+
+        if (playSound) {
+            const audioRef =
+                nextMood === "happy" ? soundHappyRef.current : soundEmotionalRef.current;
+            if (audioRef) {
+                audioRef.currentTime = 0;
+                void audioRef.play().catch(() => undefined);
+            }
+        }
+
+        if (emotionTimeoutRef.current) clearTimeout(emotionTimeoutRef.current);
+        emotionTimeoutRef.current = setTimeout(() => setPochiMood("idle"), 4000);
+    };
+
+    const handleSend = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
         const text = input.trim();
         if (!text || isSending) return;
+
+        triggerPochiMood("emotional", true);
 
         const userMessage: ChatMessage = {
             id: `${Date.now()}-user`,
@@ -137,21 +170,20 @@ function AgentIA({ mode = "recommendations" }: AgentIAProps) {
         setInput("");
         setIsSending(true);
 
-        const res = await RequestIAConsulta(text, mode);
+        const res = await RequestIAConsulta(text, normalizedMode);
         let answer = "Lo siento, no pude procesar tu consulta en este momento.";
 
         if (res.ok) {
             const data = res.data;
             if (typeof data === "string") answer = data;
             else if (data) answer = data.respuesta || data.answer || data.message || answer;
-        } else if (mode === "support") {
+        } else if (normalizedMode === "Support") {
             answer =
                 res.message ??
                 "Nuestro canal de soporte está en construcción. Pronto podremos ayudarte desde aquí.";
         }
 
         const { cleanText, products } = extractProductsFromAnswer(answer);
-
         const assistantMessage: ChatMessage = {
             id: `${Date.now()}-assistant`,
             role: "assistant",
@@ -178,6 +210,18 @@ function AgentIA({ mode = "recommendations" }: AgentIAProps) {
             precioventa: Number.isFinite(price) ? price : 0,
             imageUrl,
         });
+
+        triggerPochiMood("emotional", false);
+    };
+
+    const handleMouseEnter = () => {
+        if (Math.random() > 0.5) triggerPochiMood("happy", false);
+    };
+
+    const handleMouseLeave = () => {
+        if (pochiMood === "idle") {
+            setIdleVariant((prev) => (prev === "float" ? "wiggle" : "float"));
+        }
     };
 
     const popover = (
@@ -241,7 +285,7 @@ function AgentIA({ mode = "recommendations" }: AgentIAProps) {
                             className="agentia__input"
                             placeholder="Escribe tu mensaje..."
                             value={input}
-                            onChange={(e) => setInput(e.target.value)}
+                            onChange={(event) => setInput(event.target.value)}
                         />
 
                         <button className="agentia__send" type="submit" disabled={isSending}>
@@ -254,12 +298,26 @@ function AgentIA({ mode = "recommendations" }: AgentIAProps) {
         </Popover>
     );
 
+    const modelClassName = [
+        "agentia__model",
+        `agentia__model--${pochiMood}`,
+        pochiMood === "idle" ? `agentia__model--${idleVariant}` : null,
+    ]
+        .filter(Boolean)
+        .join(" ");
+
     return (
-        <div className="agentia">
+        <div className="agentia" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+            <audio className="d-none" src="/emotional-pochi.mp3" ref={soundEmotionalRef} />
+            <audio className="d-none" src="/happy-pochi.mp3" ref={soundHappyRef} />
             <OverlayTrigger trigger="click" placement="top" overlay={popover} rootClose>
-                <button className="agentia__launcher" aria-label="Abrir asistente virtual">
+                <button
+                    onClick={() => triggerPochiMood("happy", true)}
+                    className="agentia__launcher"
+                    aria-label="Abrir asistente virtual"
+                >
                     <div
-                        className="agentia__model"
+                        className={modelClassName}
                         onClick={() => {
                             const wrapper = muffinRef.current?.parentElement;
                             if (!wrapper) return;
