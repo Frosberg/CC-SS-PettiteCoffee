@@ -47,7 +47,7 @@
 }
 
 .toast_custom--success {
-    border-color: #37914d;
+    border-color: var(--color-dark);
 }
 
 .toast_custom--warning {

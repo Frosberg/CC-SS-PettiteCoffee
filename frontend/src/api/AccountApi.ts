@@ -5,9 +5,13 @@ const ACCOUNT_URLS = {
     LIST: "/accounts/listar",
     EXPORT: "/accounts/export",
     UPDATE_PROFILE: "/accounts/update-profile",
+    CHANGE_ROLE: "/accounts/changeRole",
 };
 
 export const RequestAccounts = () => handleRequest<User[]>(HTTP_METHODS.GET, ACCOUNT_URLS.LIST);
+
+export const RequestChangeRole = (payload: { idcuenta: number; rol: string }) =>
+    handleRequest<void>(HTTP_METHODS.PATCH, ACCOUNT_URLS.CHANGE_ROLE, payload);
 
 export const RequestExportAccounts = async () => {
     const res = await handleRequest<Blob>(HTTP_METHODS.GET, ACCOUNT_URLS.EXPORT, null, {

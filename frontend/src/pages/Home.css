@@ -15,6 +15,7 @@
 .discounts,
 .faq {
     display: flex;
+    position: relative;
     justify-content: center;
     width: 100%;
 }
@@ -73,7 +74,7 @@
 
 /* DISCOUNTS */
 .discounts {
-    background-color: var(--color-dark);
+    background: var(--color-dark);
     padding-block: 250px;
 }
 
@@ -179,11 +180,11 @@
 .faq__container {
     display: flex;
     gap: 1.25rem;
+    transform: translateY(20px);
+    opacity: 0;
+    animation: faq-fade-in 0.5s ease-out 0.1s forwards;
     padding: 5rem 1rem;
     color: var(--color-dark);
-    opacity: 0;
-    transform: translateY(20px);
-    animation: faq-fade-in 0.5s ease-out 0.1s forwards;
 }
 
 .faq__display .faq__title {
@@ -207,14 +208,14 @@
 
 /* FAQ - Tag Details */
 .details {
+    transform: translateY(20px);
+    opacity: 0;
+    transition: opacity 0.35s ease-out, transform 0.35s ease-out;
     border: 1px solid var(--color-dark);
     border-radius: 0.25rem;
     background-color: var(--color-1);
     padding: 1.5rem;
     color: var(--color-dark);
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.35s ease-out, transform 0.35s ease-out;
 }
 
 .details__summary {
@@ -248,28 +249,71 @@ details[open] .details__summary i {
 }
 
 .details.details--visible {
-    opacity: 1;
     transform: translateY(0);
+    opacity: 1;
 }
 
 .details.details--hidden {
-    opacity: 0;
     transform: translateY(20px);
+    opacity: 0;
 }
 
 @keyframes faq-fade-in {
     from {
-        opacity: 0;
         transform: translateY(20px);
+        opacity: 0;
     }
     to {
-        opacity: 1;
         transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* SPONSORS */
+.sponsors-strip {
+    position: absolute;
+    top: 100%;
+    transform: rotate(-1.5deg) translateY(-50px);
+    z-index: 10;
+    box-shadow: 0 0px 5px var(--color-dark-alt);
+    border-block: 2px solid var(--color-dark-alt);
+    background-color: var(--color-dark-alt);
+    padding: 1.5rem 0;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.sponsors-track {
+    display: inline-flex;
+    gap: 1.5rem;
+    animation: marquee 120s linear infinite;
+}
+
+.sponsor-item {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    font-weight: 900;
+    font-size: 1.5rem;
+    font-family: sans-serif;
+    text-transform: uppercase;
+}
+
+.sponsor-item i {
+    font-size: 1.2rem;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
     }
 }
 
 /* RESPONSIVE DESIGN */
-
 @media screen and (max-width: 1200px) {
     .hero__container {
         padding-left: 5rem;
@@ -290,6 +334,10 @@ details[open] .details__summary i {
 
     .faq__container {
         flex-direction: column;
+    }
+
+    .discounts__images img:nth-child(3) {
+        display: none;
     }
 }
 
