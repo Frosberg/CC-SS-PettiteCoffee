@@ -117,7 +117,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwcnVlYmluaUBnbWFpbC5jb20iL
 
 ### Listar cuentas (solo ADMIN)
 GET http://localhost:8080/accounts/listar
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwcnVlYmluaUBnbWFpbC5jb20iLCJpYXQiOjE3NjMwODAzMzYsImV4cCI6MTc2MzA4MzkzNn0.nXV4bLBnm1eWoM0b5du27xcwroEdjgKz0H1HiPyOUt8
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzY0NTcyNTk3LCJleHAiOjE3NjQ1NzYxOTd9.x9Cb-upKRWydGw0B7r5B4zn2Qhj5jjqENHSKLtGytIQ
 
 ### Ingresar review como invitado | EndPoint libre
 POST http://localhost:8080/reviews/addReviewGuest
@@ -219,3 +219,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tI
 ### Obtener reporte de sucursales
 GET http://localhost:8080/sucursales/getReport
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzY0NTI1MDc4LCJleHAiOjE3NjQ1Mjg2Nzh9.rkRfulLX6jIlbR9bFrZzMuCxK23fhF1HFVGE1xdHoEw
+
+
+### Cambiar rol de usuario
+PATCH http://localhost:8080/accounts/changeRole
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzY0NTcyNTk3LCJleHAiOjE3NjQ1NzYxOTd9.x9Cb-upKRWydGw0B7r5B4zn2Qhj5jjqENHSKLtGytIQ
+Content-Type: application/json
+
+{
+  "idcuenta": 9,
+  "rol": "ADMIN"
+}

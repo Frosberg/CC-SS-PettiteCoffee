@@ -31,6 +31,7 @@ public class AccountListDTO {
         this.direccion = cuenta.getDireccion();
         this.pais = cuenta.getPais();
         this.fechaNacimiento = cuenta.getFechaNacimiento();
+        this.telefono = cuenta.getTelefono();
     }
 
 }

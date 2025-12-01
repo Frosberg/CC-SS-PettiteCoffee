@@ -14,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Account.AccountListDTO;
 import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Account.AccountUpdateDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Account.ChangeRoleRequestDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Product;
 import com.cursoIntegrador.lePettiteCoffe.Model.Security.CustomUserDetails;
 import com.cursoIntegrador.lePettiteCoffe.Service.DAO.AccountService;
 
@@ -85,6 +88,18 @@ public class AccountController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=reporte.pdf")
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(pdf);
+    }
+
+    @PatchMapping("/changeRole")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> actualizarParcial(@RequestBody ChangeRoleRequestDTO changeRoleRequestDTO) {
+        try {
+            ChangeRoleRequestDTO actualizado = accountService.cambiarRol(changeRoleRequestDTO);
+            return ResponseEntity.ok(actualizado);
+
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error al actualizar producto");
+        }
     }
 
 }

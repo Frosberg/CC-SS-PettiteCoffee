@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Account.AccountListDTO;
 import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Account.AccountUpdateDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Account.ChangeRoleRequestDTO;
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Cuenta;
 import com.cursoIntegrador.lePettiteCoffe.Model.Security.CustomUserDetails;
 import com.cursoIntegrador.lePettiteCoffe.Repository.AccountRepository;
@@ -95,5 +96,26 @@ public class AccountService {
             e.printStackTrace();
             return new byte[0];
         }
+    }
+
+    public ChangeRoleRequestDTO cambiarRol(ChangeRoleRequestDTO changeRoleRequestDTO) {
+
+        Cuenta cuenta = accountRepository.findById(changeRoleRequestDTO.getIdcuenta())
+                .orElse(null);
+
+        if (cuenta == null) {
+            throw new RuntimeException("Cuenta no encontrada");
+        }
+
+        List<String> rolesPermitidos = List.of("ADMIN", "CLIENTE");
+
+        if (!rolesPermitidos.contains(changeRoleRequestDTO.getRol())) {
+            throw new RuntimeException("Rol inválido");
+        }
+
+        cuenta.setRol(changeRoleRequestDTO.getRol());
+        accountRepository.save(cuenta);
+
+        return new ChangeRoleRequestDTO(cuenta.getIdcuenta(), cuenta.getRol());
     }
 }
