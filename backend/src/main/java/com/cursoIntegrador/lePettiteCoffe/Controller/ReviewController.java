@@ -10,7 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cursoIntegrador.lePettiteCoffe.Model.DTO.ReviewDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Review.ReviewDTO;
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Reviews;
 import com.cursoIntegrador.lePettiteCoffe.Model.Security.CustomUserDetails;
 import com.cursoIntegrador.lePettiteCoffe.Service.DAO.ReviewService;

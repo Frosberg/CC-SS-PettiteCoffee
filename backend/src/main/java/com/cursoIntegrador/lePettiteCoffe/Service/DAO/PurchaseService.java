@@ -6,9 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cursoIntegrador.lePettiteCoffe.Model.DTO.PurchaseProductDTO;
-import com.cursoIntegrador.lePettiteCoffe.Model.DTO.PurchaseRequestDTO;
-import com.cursoIntegrador.lePettiteCoffe.Model.DTO.PurhcaseHistoryDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Purchase.PurchaseProductDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Purchase.PurchaseRequestDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Purchase.PurhcaseHistoryDTO;
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Cuenta;
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Purchase;
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.PurchaseDetails;

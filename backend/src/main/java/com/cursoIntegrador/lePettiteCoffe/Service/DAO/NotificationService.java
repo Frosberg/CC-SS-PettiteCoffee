@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cursoIntegrador.lePettiteCoffe.Model.DTO.NotificationDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Notifications.NotificationDTO;
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Notification;
 import com.cursoIntegrador.lePettiteCoffe.Repository.NotificationRepository;
 

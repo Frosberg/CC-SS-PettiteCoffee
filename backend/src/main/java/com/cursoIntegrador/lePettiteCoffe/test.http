@@ -119,14 +119,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwcnVlYmluaUBnbWFpbC5jb20iL
 GET http://localhost:8080/accounts/listar
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwcnVlYmluaUBnbWFpbC5jb20iLCJpYXQiOjE3NjMwODAzMzYsImV4cCI6MTc2MzA4MzkzNn0.nXV4bLBnm1eWoM0b5du27xcwroEdjgKz0H1HiPyOUt8
 
-### Consultar a la IA
-POST http://localhost:8080/IA/consulta
-Content-Type: application/json
-
-{
-  "prompt": "HOLA!"
-}
-
 ### Ingresar review como invitado | EndPoint libre
 POST http://localhost:8080/reviews/addReviewGuest
 Content-Type: application/json
@@ -196,3 +188,34 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tI
   "pais": "Perú",
   "fechaNacimiento": "1990-05-12"
 }
+
+### Consultar a la IA | Modo recomendaciones (Pochi clásico)
+POST http://localhost:8080/IA/consulta
+Content-Type: application/json
+
+{
+  "prompt": "Pochi tengo diabetes",
+  "mode" : "recommendations"
+}
+
+### Consultar a la IA | Modo soporte al cliente
+POST http://localhost:8080/IA/consulta
+Content-Type: application/json
+
+{
+  "prompt": "¿Cual es su numero de contacto?",
+  "mode" : "Support"
+}
+
+### Obtener reporte de productos
+GET http://localhost:8080/products/getReport
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzY0NTI1MDc4LCJleHAiOjE3NjQ1Mjg2Nzh9.rkRfulLX6jIlbR9bFrZzMuCxK23fhF1HFVGE1xdHoEw
+
+### Obtener reporte de cuentas de usuario
+GET http://localhost:8080/accounts/getReport
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzY0NTI1MDc4LCJleHAiOjE3NjQ1Mjg2Nzh9.rkRfulLX6jIlbR9bFrZzMuCxK23fhF1HFVGE1xdHoEw
+
+
+### Obtener reporte de sucursales
+GET http://localhost:8080/sucursales/getReport
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnYXlsaW43NzNAZ21haWwuY29tIiwiaWF0IjoxNzY0NTI1MDc4LCJleHAiOjE3NjQ1Mjg2Nzh9.rkRfulLX6jIlbR9bFrZzMuCxK23fhF1HFVGE1xdHoEw

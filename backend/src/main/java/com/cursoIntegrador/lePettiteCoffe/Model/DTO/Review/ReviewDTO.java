@@ -1,4 +1,4 @@
-package com.cursoIntegrador.lePettiteCoffe.Model.DTO;
+package com.cursoIntegrador.lePettiteCoffe.Model.DTO.Review;
 
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Reviews;
 

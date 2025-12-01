@@ -1,4 +1,4 @@
-package com.cursoIntegrador.lePettiteCoffe.Model.DTO;
+package com.cursoIntegrador.lePettiteCoffe.Model.DTO.Product;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

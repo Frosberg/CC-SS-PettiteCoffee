@@ -5,6 +5,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -99,6 +101,17 @@ public class BranchController {
             logger.error("Error al eliminar sucursal: {}", e.getMessage(), e);
             return ResponseEntity.internalServerError().body("Error al eliminar sucursal");
         }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/getReport")
+    public ResponseEntity<?> getReportProduct() throws Exception {
+        byte[] pdf = branchService.getReport();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=reporte.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
     }
 
 }

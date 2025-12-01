@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cursoIntegrador.lePettiteCoffe.Model.DTO.ReviewDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Review.ReviewDTO;
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Cuenta;
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Reviews;
 import com.cursoIntegrador.lePettiteCoffe.Model.Security.CustomUserDetails;

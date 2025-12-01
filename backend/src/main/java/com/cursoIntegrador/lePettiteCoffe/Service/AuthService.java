@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.cursoIntegrador.lePettiteCoffe.Model.DTO.AccountLoginDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Account.AccountLoginDTO;
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Cuenta;
 import com.cursoIntegrador.lePettiteCoffe.Security.JwtUtil;
 import com.cursoIntegrador.lePettiteCoffe.Service.DAO.AccountService;

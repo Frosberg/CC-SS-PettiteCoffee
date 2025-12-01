@@ -1,4 +1,4 @@
-package com.cursoIntegrador.lePettiteCoffe.Model.DTO;
+package com.cursoIntegrador.lePettiteCoffe.Model.DTO.Purchase;
 
 import java.math.BigDecimal;
 import java.util.List;

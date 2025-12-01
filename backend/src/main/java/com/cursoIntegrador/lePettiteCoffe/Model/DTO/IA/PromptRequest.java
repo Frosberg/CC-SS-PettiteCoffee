@@ -1,4 +1,4 @@
-package com.cursoIntegrador.lePettiteCoffe.Model.DTO;
+package com.cursoIntegrador.lePettiteCoffe.Model.DTO.IA;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,4 +7,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class PromptRequest {
     private String prompt;
+    private String mode;
 }

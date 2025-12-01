@@ -13,13 +13,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cursoIntegrador.lePettiteCoffe.Model.DTO.AccountListDTO;
-import com.cursoIntegrador.lePettiteCoffe.Model.DTO.AccountUpdateDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Account.AccountListDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Account.AccountUpdateDTO;
 import com.cursoIntegrador.lePettiteCoffe.Model.Security.CustomUserDetails;
 import com.cursoIntegrador.lePettiteCoffe.Service.DAO.AccountService;
 
@@ -63,7 +64,7 @@ public class AccountController {
         return ResponseEntity.ok(cuentas);
     }
 
-    @PutMapping("/update-profile")
+    @PatchMapping("/update-profile")
     public ResponseEntity<?> actualizarPerfil(@AuthenticationPrincipal CustomUserDetails userDetails,
             @Valid @RequestBody AccountUpdateDTO dto) {
 
@@ -73,6 +74,17 @@ public class AccountController {
 
         accountService.updateAccountData(userDetails, dto);
         return ResponseEntity.ok("Perfil actualizado correctamente");
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/getReport")
+    public ResponseEntity<?> getReportProduct() throws Exception {
+        byte[] pdf = accountService.getReport();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=reporte.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
     }
 
 }

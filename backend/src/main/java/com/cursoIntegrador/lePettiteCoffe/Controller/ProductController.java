@@ -2,7 +2,7 @@ package com.cursoIntegrador.lePettiteCoffe.Controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cursoIntegrador.lePettiteCoffe.Model.DTO.ProductDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Product.ProductDTO;
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Product;
 import com.cursoIntegrador.lePettiteCoffe.Service.DAO.ProductService;
 
@@ -15,6 +15,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -113,6 +115,17 @@ public class ProductController {
             logger.error("Error en actualización parcial: {}", e.getMessage(), e);
             return ResponseEntity.internalServerError().body("Error al actualizar producto");
         }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/getReport")
+    public ResponseEntity<?> getReportProduct() throws Exception {
+        byte[] pdf = productService.getReport();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=reporte.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
     }
 
 }

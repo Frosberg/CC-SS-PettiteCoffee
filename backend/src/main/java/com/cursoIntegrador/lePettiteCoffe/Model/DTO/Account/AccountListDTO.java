@@ -1,5 +1,6 @@
-package com.cursoIntegrador.lePettiteCoffe.Model.DTO;
+package com.cursoIntegrador.lePettiteCoffe.Model.DTO.Account;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Cuenta;
@@ -14,6 +15,11 @@ public class AccountListDTO {
     private String rol;
     private String estado;
     private LocalDateTime fechaRegistro;
+    private String alias;
+    private String direccion;
+    private String pais;
+    private LocalDate fechaNacimiento;
+    private String telefono;
 
     public AccountListDTO(Cuenta cuenta) {
         this.idcuenta = cuenta.getIdcuenta();
@@ -21,6 +27,10 @@ public class AccountListDTO {
         this.rol = cuenta.getRol();
         this.estado = cuenta.getEstado();
         this.fechaRegistro = cuenta.getFechaRegistro();
+        this.alias = cuenta.getAlias();
+        this.direccion = cuenta.getDireccion();
+        this.pais = cuenta.getPais();
+        this.fechaNacimiento = cuenta.getFechaNacimiento();
     }
 
 }

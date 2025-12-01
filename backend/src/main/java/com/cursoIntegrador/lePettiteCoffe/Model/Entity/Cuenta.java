@@ -57,8 +57,11 @@ public class Cuenta {
     @Column(name = "pais", length = 100, nullable = true)
     private String pais = "No establecido";
 
+    @Column(name = "telefono", length = 12, nullable = true)
+    private String telefono = "No establecido";
+
     public Cuenta(Integer idcuenta, String email, String password, String rol, String estado,
-            LocalDateTime fechaRegistro) {
+            LocalDateTime fechaRegistro, String telefono) {
         this.idcuenta = idcuenta;
         this.email = email;
         this.password = password;
@@ -69,6 +72,7 @@ public class Cuenta {
         this.direccion = "No establecida";
         this.pais = "No establecido";
         this.fechaNacimiento = null;
+        this.telefono = "No establecido";
     }
 
 }

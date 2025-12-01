@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cursoIntegrador.lePettiteCoffe.Model.DTO.NotificationDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Notifications.NotificationDTO;
 import com.cursoIntegrador.lePettiteCoffe.Service.DAO.NotificationService;
 
 @RequestMapping("/notificaciones")
