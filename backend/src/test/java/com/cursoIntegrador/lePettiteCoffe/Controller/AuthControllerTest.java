@@ -15,8 +15,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.cursoIntegrador.lePettiteCoffe.Model.DTO.AccountLoginDTO;
-import com.cursoIntegrador.lePettiteCoffe.Model.DTO.LoginRequest;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Account.AccountLoginDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Login.LoginRequest;
+import com.cursoIntegrador.lePettiteCoffe.Service.WelcomeService;
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Cuenta;
 import com.cursoIntegrador.lePettiteCoffe.Service.AuthService;
 import com.cursoIntegrador.lePettiteCoffe.Service.PasswordRecoveryService;
@@ -33,13 +34,16 @@ public class AuthControllerTest {
     @Mock
     private PasswordRecoveryService passwordRecoveryService;
 
+    @Mock
+    private WelcomeService welcomeService;
+
     @Test
     void testLoginSuccess() {
         LoginRequest request = new LoginRequest("user@test.com", "pass123");
 
         Map<String, Object> fakeResponse = new HashMap<>();
         fakeResponse.put("loginData", new AccountLoginDTO(
-                new Cuenta(999, "user@test.com", "pass123", "ADMIN", "Activo", LocalDateTime.now()), "tokenFake"));
+            new Cuenta(999, "user@test.com", "pass123", "ADMIN", "Activo", LocalDateTime.now(), "123456789"), "tokenFake"));
 
         Mockito.when(authService.login("user@test.com", "pass123")).thenReturn(fakeResponse);
 
@@ -64,3 +68,4 @@ public class AuthControllerTest {
         Mockito.verify(authService).login("user@test.com", "wrongpass");
     }
 }
+
