@@ -244,4 +244,3 @@ public class AuthControllerTest {
         org.assertj.core.api.Assertions.assertThat((String) body.get("mensaje")).contains("Error al cambiar la contraseña");
     }
 }
-
