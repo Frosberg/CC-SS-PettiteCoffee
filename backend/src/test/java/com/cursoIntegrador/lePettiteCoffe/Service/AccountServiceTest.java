@@ -3,52 +3,64 @@ package com.cursoIntegrador.lePettiteCoffe.Service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Cuenta;
 import com.cursoIntegrador.lePettiteCoffe.Repository.AccountRepository;
 import com.cursoIntegrador.lePettiteCoffe.Service.DAO.AccountService;
+import com.cursoIntegrador.lePettiteCoffe.Service.ReportService;
 
 public class AccountServiceTest {
 
+    @Mock
+    private AccountRepository accountRepository;
+
+    @Mock
+    private ReportService reportService;
+
+    @InjectMocks
+    private AccountService accountService;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
     @Test
     void testSaveValoresPorDefecto() {
-        AccountRepository mockRepo = Mockito.mock(AccountRepository.class);
-        AccountService service = new AccountService(mockRepo);
-
         Cuenta user = new Cuenta();
-        service.save(user);
+        accountService.save(user);
 
         assertEquals("ACTIVO", user.getEstado());
         assertEquals("CLIENTE", user.getRol());
         assertNotNull(user.getFechaRegistro());
 
-        Mockito.verify(mockRepo).save(user);
+        org.mockito.Mockito.verify(accountRepository).save(user);
     }
 
     @Test
     void testUpdatePasswordSuccess() {
-        AccountRepository mockRepo = Mockito.mock(AccountRepository.class);
         Cuenta cuenta = new Cuenta();
-        Mockito.when(mockRepo.findByEmail("usuario@prueba.com")).thenReturn(cuenta);
+        org.mockito.Mockito.when(accountRepository.findByEmail("usuario@prueba.com")).thenReturn(cuenta);
 
-        AccountService service = new AccountService(mockRepo);
-        service.updatePassword("usuario@prueba.com", "nuevaPass");
+        accountService.updatePassword("usuario@prueba.com", "nuevaPass");
 
         assertEquals("nuevaPass", cuenta.getPassword());
-        Mockito.verify(mockRepo).save(cuenta);
+        org.mockito.Mockito.verify(accountRepository).save(cuenta);
     }
 
     @Test
     void testUpdatePasswordUsuarioNoEncontrado() {
-        AccountRepository mockRepo = Mockito.mock(AccountRepository.class);
-        Mockito.when(mockRepo.findByEmail("noExiste@correo.com")).thenReturn(null);
+        org.mockito.Mockito.when(accountRepository.findByEmail("noExiste@correo.com")).thenReturn(null);
 
-        AccountService service = new AccountService(mockRepo);
-        service.updatePassword("noExiste@correo.com", "nuevaPass");
+        accountService.updatePassword("noExiste@correo.com", "nuevaPass");
 
-        Mockito.verify(mockRepo, Mockito.never()).save(Mockito.any());
+        org.mockito.Mockito.verify(accountRepository, org.mockito.Mockito.never()).save(org.mockito.Mockito.any());
     }
 
 }
+
