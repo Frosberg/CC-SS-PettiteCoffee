@@ -9,9 +9,8 @@ function Home() {
     useEffect(() => {
         const handleScroll = () => {
             const y = window.scrollY;
-
             if (bgRef.current) {
-                bgRef.current.style.transform = `translateY(${y * 0.3}px)`;
+                bgRef.current.style.transform = `translateY(${y * 0.2}px)`;
             }
         };
 
@@ -48,6 +47,17 @@ function Home() {
         return () => observer.disconnect();
     }, []);
 
+    const sponsors = [
+        "ORGANIC BEANS",
+        "PREMIUM ROAST",
+        "SWEET BAKERY",
+        "LOCAL FARMERS",
+        "FAIR TRADE",
+        "FRESH MILK",
+        "CHOCOLATE LOVERS",
+        "BEST COFFEE 2024",
+    ];
+
     return (
         <Layout agentMode="recommendations">
             <img
@@ -66,6 +76,15 @@ function Home() {
                     </h2>
                     <div className="hero__links">
                         <Link to="/menus">ESTOY PREPARADO</Link>
+                    </div>
+                </div>
+                <div className="sponsors-strip">
+                    <div className="sponsors-track">
+                        {[...sponsors, ...sponsors, ...sponsors].map((text, i) => (
+                            <span key={i} className="sponsor-item">
+                                <i className="fa fa-star"></i> {text}
+                            </span>
+                        ))}
                     </div>
                 </div>
             </article>
