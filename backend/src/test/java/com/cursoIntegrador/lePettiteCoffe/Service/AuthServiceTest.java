@@ -13,14 +13,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.cursoIntegrador.lePettiteCoffe.Model.DTO.AccountLoginDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Account.AccountLoginDTO;
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Cuenta;
 import com.cursoIntegrador.lePettiteCoffe.Security.JwtUtil;
 import com.cursoIntegrador.lePettiteCoffe.Service.DAO.AccountService;
 
 import org.junit.jupiter.api.Assertions;
+import org.mockito.Mockito;
 
 @ExtendWith(MockitoExtension.class)
 public class AuthServiceTest {
@@ -33,6 +37,9 @@ public class AuthServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private AuthenticationManager authenticationManager;
 
     @InjectMocks
     private AuthService authService;
@@ -47,13 +54,21 @@ public class AuthServiceTest {
                 "contraseñaEncriptada",
                 "USER",
                 "ACTIVO",
-                LocalDateTime.now());
+                LocalDateTime.now(),
+                "1234567890");
     }
 
     @Test
     void testLogin_Success() {
+        Authentication mockAuth = Mockito.mock(Authentication.class);
+        org.springframework.security.core.userdetails.UserDetails mockUserDetails = Mockito.mock(
+                org.springframework.security.core.userdetails.UserDetails.class);
+        
+        when(authenticationManager.authenticate(Mockito.any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(mockAuth);
+        when(mockAuth.getPrincipal()).thenReturn(mockUserDetails);
+        when(mockUserDetails.getUsername()).thenReturn("usuario@prueba.com");
         when(accountService.findByEmail("usuario@prueba.com")).thenReturn(mockUser);
-        when(passwordEncoder.matches("contraseñaSinEncriptar", "contraseñaEncriptada")).thenReturn(true);
         when(jwtUtil.generateToken("usuario@prueba.com")).thenReturn("fakeToken");
 
         Map<String, Object> result = authService.login("usuario@prueba.com", "contraseñaSinEncriptar");
@@ -68,8 +83,8 @@ public class AuthServiceTest {
 
     @Test
     void testLogin_Failed_MalPassword() {
-        when(accountService.findByEmail("usuario@prueba.com")).thenReturn(mockUser);
-        when(passwordEncoder.matches("contraseñaIncorrecta", "contraseñaEncriptada")).thenReturn(false);
+        when(authenticationManager.authenticate(Mockito.any(UsernamePasswordAuthenticationToken.class)))
+                .thenThrow(new RuntimeException("Credenciales inválidas"));
 
         RuntimeException thrown = Assertions.assertThrows(RuntimeException.class,
                 () -> authService.login("usuario@prueba.com", "contraseñaIncorrecta"));
