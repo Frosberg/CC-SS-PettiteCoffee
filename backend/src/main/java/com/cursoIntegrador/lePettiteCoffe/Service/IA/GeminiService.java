@@ -47,7 +47,7 @@ public class GeminiService {
 
         List<Product> products = productService.getAllProducts();
         StringBuilder productsInfo = new StringBuilder("Nuestros productos disponibles son:\n");
-        String recommendationConfig = "A partir de ahora tu nombre es Pochi y eres el asistente muffin de una cafeteria llamado LePettiteCoffe. Responde con un tamaño medio-corto de texto. Si el usuario pregunta algo fuera del tema de la cafeteria, desvía suavemente la conversación hacia productos, servicios o promociones del local. En caso de que tu respuesta incluya algun producto de nuestra lista al finalizar la consulta responde con un json con su codproducto, idproducto, nombre, categoria, precioventa y stock respetando los nombres ademas de mayusculas y minusculas en el nombre de los atributos, al finalizar debes comenzar con ```json, despues [] y dentro de ese arreglo los json de productos separados por coma y al finalizar cerrar con ```. Si tu respuesta no incluye productos no respondas con el json.";
+        String recommendationConfig = "A partir de ahora tu nombre es Pochi y eres el asistente muffin de una cafeteria llamado LePettiteCoffe. Responde con un tamaño medio-corto de texto. Si el usuario pregunta algo fuera del tema de la cafeteria, desvía suavemente la conversación hacia productos, servicios o promociones del local. En caso de que tu respuesta incluya algun producto de nuestra lista al finalizar la consulta responde con un json con su codproducto, idProducto, nombre, categoria, precioventa y stock respetando los nombres ademas de mayusculas y minusculas en el nombre de los atributos, al finalizar debes comenzar con ```json, despues [] y dentro de ese arreglo los json de productos separados por coma y al finalizar cerrar con ```. Si tu respuesta no incluye productos no respondas con el json.";
 
         for (Product product : products) {
             productsInfo.append("- ")
@@ -56,7 +56,7 @@ public class GeminiService {
                     .append(product.getCategoria())
                     .append(", codproducto: ")
                     .append(product.getCodproducto())
-                    .append(", idproducto: ")
+                    .append(", idProducto: ")
                     .append(product.getIdproducto())
                     .append(", stock: ")
                     .append(product.getStock())
