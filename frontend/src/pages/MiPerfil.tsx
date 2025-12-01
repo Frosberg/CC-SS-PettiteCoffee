@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { TabItem, TabNavbar, TabPanel, TabsContent, TabsCustom } from "../components/TabsCustom";
 import useAuthStore from "../stores/AuthStore";
@@ -7,14 +7,34 @@ import Layout from "./Layout";
 import "./MiPerfil.css";
 import { RequestPurchases } from "../api/PurchasesApi";
 import { RequestProducts } from "../api/ProductApi";
+import { RequestUpdateProfile } from "../api/AccountApi";
 import { useQuery } from "@tanstack/react-query";
+import ToastStore from "../stores/ToastStore";
+
+const createEmptyProfileData = (): UpdateProfilePayload => ({
+    alias: "",
+    direccion: "",
+    pais: "",
+    fechaNacimiento: "",
+});
+
+const formatDateForInput = (value?: string | null) => {
+    if (!value) return "";
+    const raw = value.split("T")[0] ?? value;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) return raw;
+    return parsed.toISOString().split("T")[0];
+};
 
 function MiPerfil() {
     const navigate = useNavigate();
     const [editable, setEditable] = useState(false);
 
+    const showToast = ToastStore((state) => state.showToast);
     const LogoutStore = useAuthStore((state) => state.logout);
     const userStore = useAuthStore((state) => state.user);
+    const updateUserData = useAuthStore((state) => state.updateUserData);
 
     const { data: products } = useQuery({
         queryKey: ["products"],
@@ -23,6 +43,12 @@ function MiPerfil() {
 
     const [purchases, setPurchases] = useState<Purchase[]>([]);
     const [isLoadingPurchases, setIsLoadingPurchases] = useState(false);
+    const [profileData, setProfileData] = useState<UpdateProfilePayload>(() =>
+        createEmptyProfileData()
+    );
+    const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
+    const [cancelingOrders, setCancelingOrders] = useState<Record<string, boolean>>({});
+    const cancelTimeoutsRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 
     useEffect(() => {
         if (!userStore) return;
@@ -37,13 +63,141 @@ function MiPerfil() {
         void load();
     }, [userStore]);
 
+    useEffect(() => {
+        return () => {
+            cancelTimeoutsRef.current.forEach((timeoutId) => {
+                clearTimeout(timeoutId);
+            });
+            cancelTimeoutsRef.current.clear();
+        };
+    }, []);
+
+    useEffect(() => {
+        if (!userStore) {
+            setProfileData(createEmptyProfileData());
+            return;
+        }
+
+        setProfileData({
+            alias: userStore.alias ?? "",
+            direccion: userStore.direccion ?? "",
+            pais: userStore.pais ?? "",
+            fechaNacimiento: formatDateForInput(userStore.fechaNacimiento),
+        });
+    }, [userStore]);
+
     const handleLogout = async () => {
         await LogoutStore();
         navigate("/login");
     };
 
-    const handleEditable = () => {
-        setEditable(!editable);
+    const handleProfileButtonClick = () => {
+        if (!editable) {
+            setEditable(true);
+            return;
+        }
+
+        void handleSaveProfile();
+    };
+
+    const handleProfileFieldChange = (field: keyof UpdateProfilePayload) => (newValue: string) => {
+        setProfileData((prev) => ({ ...prev, [field]: newValue }));
+    };
+
+    const buildPurchaseKey = (purchase: Purchase, itemsCountParam?: number) => {
+        if (purchase.id !== undefined && purchase.id !== null) {
+            return String(purchase.id);
+        }
+        const itemsCount =
+            typeof itemsCountParam === "number"
+                ? itemsCountParam
+                : purchase.detalles.reduce((acc, item) => acc + item.quantity, 0);
+        return `${purchase.total}-${itemsCount}`;
+    };
+
+    const handleCancelPurchase = (purchaseKey: string) => {
+        if (cancelingOrders[purchaseKey]) return;
+
+        setCancelingOrders((prev) => ({ ...prev, [purchaseKey]: true }));
+
+        const timeoutId = setTimeout(() => {
+            setPurchases((prev) =>
+                prev.filter((purchase) => buildPurchaseKey(purchase) !== purchaseKey)
+            );
+            setCancelingOrders((prev) => {
+                const next = { ...prev };
+                delete next[purchaseKey];
+                return next;
+            });
+            cancelTimeoutsRef.current.delete(purchaseKey);
+        }, 1500);
+
+        cancelTimeoutsRef.current.set(purchaseKey, timeoutId);
+    };
+
+    const handleSaveProfile = async () => {
+        if (isUpdatingProfile) return;
+
+        const payload: UpdateProfilePayload = {
+            alias: profileData.alias.trim(),
+            direccion: profileData.direccion.trim(),
+            pais: profileData.pais.trim(),
+            fechaNacimiento: profileData.fechaNacimiento,
+        };
+
+        if (!payload.alias) {
+            showToast({
+                title: "Error",
+                message: "Por favor ingresa tu nombre y apellido.",
+                type: "error",
+            });
+            return;
+        }
+        if (!payload.direccion) {
+            showToast({
+                title: "Error",
+                message: "Por favor ingresa una dirección.",
+                type: "error",
+            });
+            return;
+        }
+        if (!payload.pais) {
+            showToast({
+                title: "Error",
+                message: "Por favor ingresa tu país.",
+                type: "error",
+            });
+            return;
+        }
+        if (!payload.fechaNacimiento) {
+            showToast({
+                title: "Error",
+                message: "Por favor selecciona tu fecha de nacimiento.",
+                type: "error",
+            });
+            return;
+        }
+
+        setIsUpdatingProfile(true);
+        const res = await RequestUpdateProfile(payload);
+        setIsUpdatingProfile(false);
+
+        if (!res.ok) {
+            showToast({
+                title: "Error",
+                message: res.message || "No se pudo actualizar el perfil. Intenta nuevamente.",
+                type: "error",
+            });
+            return;
+        }
+
+        updateUserData(payload);
+        setEditable(false);
+        showToast({
+            title: "Éxito",
+            message: "Perfil actualizado correctamente.",
+            type: "success",
+        });
     };
 
     return (
@@ -61,30 +215,58 @@ function MiPerfil() {
                             eventKey="datos"
                             className="d-flex flex-column justify-content-center gap-2"
                         >
+                            <ViewInfoUser title="Correo Electrónico" value={userStore?.email} />
                             <ViewInfoUser
-                                title="Correo Electrónico"
-                                value={userStore?.email}
+                                title="Nombre y Apellido"
+                                value={profileData.alias}
                                 editable={editable}
+                                onChange={handleProfileFieldChange("alias")}
                             />
-                            <ViewInfoUser title="Nombre y Apellido" value="" editable={editable} />
-                            <ViewInfoUser title="Dirección" value="" editable={editable} />
-                            <ViewInfoUser title="Teléfono" value="" editable={editable} />
+                            <ViewInfoUser
+                                title="Dirección"
+                                value={profileData.direccion}
+                                editable={editable}
+                                onChange={handleProfileFieldChange("direccion")}
+                            />
                             <ViewInfoUser
                                 title="Fecha de Nacimiento"
-                                value=""
+                                value={new Date(profileData.fechaNacimiento).toLocaleDateString(
+                                    "es-ES",
+                                    {
+                                        day: "2-digit",
+                                        month: "2-digit",
+                                        year: "numeric",
+                                    }
+                                )}
                                 editable={editable}
+                                onChange={handleProfileFieldChange("fechaNacimiento")}
+                                inputType="date"
                             />
-                            <ViewInfoUser title="País" value="" editable={editable} />
+                            <ViewInfoUser
+                                title="País"
+                                value={profileData.pais}
+                                editable={editable}
+                                onChange={handleProfileFieldChange("pais")}
+                            />
                             <div className="perfil__content__data__actions">
                                 {userStore?.rol === "ADMIN" && (
                                     <Link to="/dashboard" className="btn-filled">
                                         Ir Panel de Control
                                     </Link>
                                 )}
-                                <button className="btn-filled" onClick={handleEditable}>
-                                    {editable ? "Guardar" : "Editar Datos"}
+                                <button
+                                    type="button"
+                                    className="btn-filled"
+                                    onClick={handleProfileButtonClick}
+                                    disabled={editable && isUpdatingProfile}
+                                >
+                                    {editable
+                                        ? isUpdatingProfile
+                                            ? "Guardando..."
+                                            : "Guardar"
+                                        : "Editar Datos"}
                                 </button>
-                                <button className="btn-filled" onClick={handleLogout}>
+                                <button className="btn-filled" type="button" onClick={handleLogout}>
                                     Cerrar Sesion
                                 </button>
                             </div>
@@ -106,12 +288,11 @@ function MiPerfil() {
                                         );
 
                                         const totalFormatted = Number(purchase.total).toFixed(2);
+                                        const purchaseKey = buildPurchaseKey(purchase, itemsCount);
 
                                         return (
                                             <article
-                                                key={
-                                                    purchase.id ?? `${purchase.total}-${itemsCount}`
-                                                }
+                                                key={purchaseKey}
                                                 className="perfil__orders__item"
                                             >
                                                 <div className="perfil__orders__header">
@@ -167,6 +348,22 @@ function MiPerfil() {
                                                         </p>
                                                     </div>
                                                 ))}
+                                                <div className="perfil__orders__actions">
+                                                    <button
+                                                        type="button"
+                                                        className="perfil__orders__cancel"
+                                                        onClick={() =>
+                                                            handleCancelPurchase(purchaseKey)
+                                                        }
+                                                        disabled={
+                                                            cancelingOrders[purchaseKey] === true
+                                                        }
+                                                    >
+                                                        {cancelingOrders[purchaseKey]
+                                                            ? "Cancelando..."
+                                                            : "Cancelar Pedido"}
+                                                    </button>
+                                                </div>
                                             </article>
                                         );
                                     })}

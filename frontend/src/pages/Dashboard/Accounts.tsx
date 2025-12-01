@@ -2,11 +2,14 @@ import { useState } from "react";
 import { Table } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
 import { RequestAccounts, RequestExportAccounts } from "../../api/AccountApi";
+import ToastStore from "../../stores/ToastStore";
 import "./CommonDashboard.css";
 
 function Accounts() {
     const [selected, setSelected] = useState<number | null>(null);
     const [search, setSearch] = useState("");
+
+    const showToast = ToastStore((state) => state.showToast);
 
     const {
         data: accounts = [],
@@ -27,7 +30,11 @@ function Accounts() {
             await RequestExportAccounts();
         } catch (err) {
             console.error(err);
-            alert("Error al descargar el archivo de cuentas");
+            showToast({
+                title: "Error",
+                message: "Error al descargar el archivo de cuentas",
+                type: "error",
+            });
         }
     };
 

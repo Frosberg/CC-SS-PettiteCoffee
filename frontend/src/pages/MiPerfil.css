@@ -48,6 +48,35 @@
     padding: 0.75rem 1rem;
 }
 
+.perfil__orders__actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+}
+
+.perfil__orders__cancel {
+    transition: background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+    cursor: pointer;
+    border: 1px solid var(--color-dark);
+    background: transparent;
+    padding: 0.4rem 1rem;
+    color: var(--color-dark);
+    font-weight: 600;
+    letter-spacing: 0.05rem;
+}
+
+.perfil__orders__cancel:hover {
+    background-color: hsl(from var(--color-dark) h s l / 0.15);
+    color: var(--color-dark);
+}
+
+.perfil__orders__cancel:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: transparent;
+    color: var(--color-dark);
+}
+
 .perfil__orders__total {
     color: var(--color-dark);
     font-weight: 600;

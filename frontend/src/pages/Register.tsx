@@ -8,6 +8,8 @@ function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [repeatPassword, setRepeatPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [showRepeatPassword, setShowRepeatPassword] = useState(false);
     const [idError, setIdError] = useState(0);
 
     const AuthIsLoading = useAuthStore((state) => state.isLoading);
@@ -27,7 +29,7 @@ function Register() {
 
     return (
         <Layout className="auth">
-            <form className="form" onSubmit={handleRegister}>
+            <form className="form" noValidate onSubmit={handleRegister}>
                 <header className="form__header">
                     <h2>¿Una Mañana de Cafe?</h2>
                     <p>Únete a esta gran comunidad de amantes del café</p>
@@ -42,20 +44,40 @@ function Register() {
                             placeholder="Correo Electrónico"
                             disabled={AuthIsLoading}
                         />
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="Contraseña"
-                            disabled={AuthIsLoading}
-                        />
-                        <input
-                            type="password"
-                            value={repeatPassword}
-                            onChange={(e) => setRepeatPassword(e.target.value)}
-                            placeholder="Repetir Contraseña"
-                            disabled={AuthIsLoading}
-                        />
+                        <div className="form__content__password">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="Contraseña"
+                                disabled={AuthIsLoading}
+                            />
+                            <button
+                                type="button"
+                                className="form__content__password-toggle"
+                                aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                onClick={() => setShowPassword((prev) => !prev)}
+                            >
+                                <i className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
+                            </button>
+                        </div>
+                        <div className="form__content__password">
+                            <input
+                                type={showRepeatPassword ? "text" : "password"}
+                                value={repeatPassword}
+                                onChange={(e) => setRepeatPassword(e.target.value)}
+                                placeholder="Repetir Contraseña"
+                                disabled={AuthIsLoading}
+                            />
+                            <button
+                                type="button"
+                                className="form__content__password-toggle"
+                                aria-label={showRepeatPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                onClick={() => setShowRepeatPassword((prev) => !prev)}
+                            >
+                                <i className={`fa-solid ${showRepeatPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
+                            </button>
+                        </div>
                     </div>
 
                     <ul className="form__content__requisitos">

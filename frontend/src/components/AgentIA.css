@@ -31,6 +31,23 @@
     object-fit: cover;
 }
 
+.agentia__model--idle {
+    animation: pochiFloat 6s ease-in-out infinite;
+}
+
+.agentia__model--idle.agentia__model--wiggle {
+    animation-duration: 4.5s;
+    animation-name: pochiWiggle;
+}
+
+.agentia__model--happy {
+    animation: pochiHappy 1.8s ease-in-out infinite;
+}
+
+.agentia__model--emotional {
+    animation: pochiEmotional 1.2s ease-in-out infinite;
+}
+
 .agentia__popover {
     max-width: 360px;
 }
@@ -188,6 +205,65 @@
     }
     100% {
         transform: scale(1);
+    }
+}
+
+@keyframes pochiFloat {
+    0% {
+        transform: translateY(0px) scale(1);
+    }
+    50% {
+        transform: translateY(-6px) scale(1.025);
+    }
+    100% {
+        transform: translateY(0px) scale(1);
+    }
+}
+
+@keyframes pochiWiggle {
+    0% {
+        transform: rotate(0deg) translateY(0);
+    }
+    25% {
+        transform: rotate(2deg) translateY(-4px);
+    }
+    50% {
+        transform: rotate(-2deg) translateY(-6px);
+    }
+    75% {
+        transform: rotate(1.5deg) translateY(-3px);
+    }
+    100% {
+        transform: rotate(0deg) translateY(0);
+    }
+}
+
+@keyframes pochiHappy {
+    0%,
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+    40% {
+        transform: scale(1.08) rotate(-2deg);
+    }
+    70% {
+        transform: scale(1.05) rotate(2deg);
+    }
+}
+
+@keyframes pochiEmotional {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(1.12);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    75% {
+        transform: scale(1.12);
     }
 }
 

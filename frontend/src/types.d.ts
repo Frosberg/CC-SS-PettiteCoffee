@@ -5,6 +5,11 @@ interface User {
     fechaRegistro: string;
     rol: string;
     token: string;
+    alias?: string;
+    direccion?: string;
+    pais?: string;
+    fechaNacimiento?: string;
+    telefono?: string;
 }
 
 interface UserDataResponse {
@@ -30,7 +35,15 @@ interface CartItem {
     precioventa: number;
     imageUrl: string;
     quantity: number;
+    customizations?: CartItemCustomization[];
+    customKey?: string;
 }
+
+type CartItemCustomization = {
+    id: string;
+    label: string;
+    value: string;
+};
 
 interface Branch {
     idsucursal?: number;
@@ -123,6 +136,13 @@ type ChangePasswordProps = {
     nuevaPassword: string;
 };
 
+type UpdateProfilePayload = {
+    alias: string;
+    direccion: string;
+    pais: string;
+    fechaNacimiento: string;
+};
+
 // Purchase Api
 type NewPurchaseProduct = {
     idProducto: number;
@@ -173,13 +193,33 @@ interface AuthStore {
     setRecoveryPassword: (email: string) => Promise<boolean>;
     setChangePassword: (email: string, password: string, uuid: string) => Promise<boolean>;
     setLoading: (loading: boolean) => void;
+    updateUserData: (data: Partial<User>) => void;
 }
 
 interface CartStore {
     cart: CartItem[];
     addToCart: (item: Omit<CartItem, "quantity">) => void;
-    removeFromCart: (codproducto: string) => void;
-    decreaseQuantity: (codproducto: string) => void;
+    removeFromCart: (codproducto: string, customKey?: string) => void;
+    decreaseQuantity: (codproducto: string, customKey?: string) => void;
     clearCart: () => void;
     total: () => number;
 }
+
+type ToastType = "success" | "warning" | "error";
+
+type ToastPayload = {
+    title: string;
+    message: string;
+    type?: ToastType;
+    duration?: number;
+};
+
+type ToastStore = {
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: ToastType;
+    duration: number;
+    showToast: (payload: ToastPayload) => void;
+    closeToast: () => void;
+};

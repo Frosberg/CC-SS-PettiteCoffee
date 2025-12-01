@@ -27,14 +27,19 @@ const AuthStore = create<AuthStore>()(
                     const { data, ok, message } = res;
                     const loginData = data?.loginData;
 
-                    ok
-                        ? set({
-                              isAuth: !!loginData,
-                              user: loginData,
-                              messageError: "",
-                              ...defaultResponse,
-                          })
-                        : set({ messageError: message, ...defaultResponse });
+                    if (ok) {
+                        set({
+                            isAuth: !!loginData,
+                            user: loginData,
+                            messageError: "",
+                            ...defaultResponse,
+                        });
+                    } else {
+                        set({
+                            messageError: message,
+                            ...defaultResponse,
+                        });
+                    }
                 });
             },
 
@@ -46,14 +51,19 @@ const AuthStore = create<AuthStore>()(
                     const { data, ok, message } = res;
                     const loginData = data?.loginData;
 
-                    ok
-                        ? set({
-                              isAuth: !!loginData,
-                              user: loginData,
-                              messageError: "",
-                              ...defaultResponse,
-                          })
-                        : set({ messageError: message, ...defaultResponse });
+                    if (ok) {
+                        set({
+                            isAuth: !!loginData,
+                            user: loginData,
+                            messageError: "",
+                            ...defaultResponse,
+                        });
+                    } else {
+                        set({
+                            messageError: message,
+                            ...defaultResponse,
+                        });
+                    }
                 });
             },
 
@@ -63,9 +73,20 @@ const AuthStore = create<AuthStore>()(
 
                 return RequestLogout().then((res) => {
                     const { ok, message } = res;
-                    ok
-                        ? set({ isAuth: false, user: null, messageError: "", ...defaultResponse })
-                        : set({ messageError: message, ...defaultResponse });
+
+                    if (ok) {
+                        set({
+                            isAuth: false,
+                            user: null,
+                            messageError: "",
+                            ...defaultResponse,
+                        });
+                    } else {
+                        set({
+                            messageError: message,
+                            ...defaultResponse,
+                        });
+                    }
                 });
             },
 
@@ -73,7 +94,13 @@ const AuthStore = create<AuthStore>()(
                 set({ isLoading: true, typeLoading: "VERIFY_SESSION" });
 
                 return RequestVerifySession().then((res) => {
-                    set({ isAuth: res.ok ? true : false, isLoading: false, typeLoading: null });
+                    const isAuth = !!res.ok;
+
+                    set({
+                        isAuth,
+                        isLoading: false,
+                        typeLoading: null,
+                    });
                 });
             },
 
@@ -81,8 +108,16 @@ const AuthStore = create<AuthStore>()(
                 set({ isLoading: true, typeLoading: "RECOVERY" });
 
                 return RequestRecovery({ email }).then((res) => {
-                    if (!res.ok) return false;
-                    set({ isLoading: false, typeLoading: null, emailRecovery: email });
+                    if (!res.ok) {
+                        return false;
+                    }
+
+                    set({
+                        isLoading: false,
+                        typeLoading: null,
+                        emailRecovery: email,
+                    });
+
                     return true;
                 });
             },
@@ -92,18 +127,36 @@ const AuthStore = create<AuthStore>()(
                 set({ isLoading: true, typeLoading: "CHANGE_PASSWORD" });
 
                 const props = { email, nuevaPassword: password, token: uuid };
+
                 return RequestChangePassword(props).then((res) => {
                     const { data, ok, message } = res;
 
-                    ok
-                        ? set({ emailRecovery: "", messageError: "", ...defaultResponse })
-                        : set({ messageError: message, ...defaultResponse });
+                    if (ok) {
+                        set({
+                            emailRecovery: "",
+                            messageError: "",
+                            ...defaultResponse,
+                        });
+                    } else {
+                        set({
+                            messageError: message,
+                            ...defaultResponse,
+                        });
+                    }
 
-                    return data?.valido ? true : false;
+                    if (data?.valido) {
+                        return true;
+                    }
+
+                    return false;
                 });
             },
 
             setLoading: (loading) => set({ isLoading: loading }),
+            updateUserData: (data) =>
+                set((state) => ({
+                    user: state.user ? { ...state.user, ...data } : state.user,
+                })),
         }),
         {
             name: "session",

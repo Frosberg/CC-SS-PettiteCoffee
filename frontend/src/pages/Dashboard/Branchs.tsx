@@ -4,6 +4,7 @@ import "./CommonDashboard.css";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { RequestBranches, RequestDeleteBranch } from "../../api/BranchApi";
 import DateModalBranch from "../../components/Dashboard/DateModalBranch";
+import ToastStore from "../../stores/ToastStore";
 
 function Branchs() {
     const [selected, setSelected] = useState<number | null>(null);
@@ -12,6 +13,7 @@ function Branchs() {
     const [editingBranch, setEditingBranch] = useState<Branch | null>(null);
     const [search, setSearch] = useState("");
 
+    const showToast = ToastStore((state) => state.showToast);
     const queryClient = useQueryClient();
 
     const {
@@ -28,6 +30,18 @@ function Branchs() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["branchs"] });
             setSelected(null);
+            showToast({
+                title: "Éxito",
+                message: "Sucursal eliminada correctamente",
+                type: "success",
+            });
+        },
+        onError: () => {
+            showToast({
+                title: "Error",
+                message: "No se pudo eliminar la sucursal",
+                type: "error",
+            });
         },
     });
 
@@ -38,7 +52,14 @@ function Branchs() {
     };
 
     const handleEdit = () => {
-        if (!selected) return alert("Selecciona una sucursal para editar");
+        if (!selected) {
+            showToast({
+                title: "Error",
+                message: "Selecciona una sucursal para editar",
+                type: "error",
+            });
+            return;
+        }
         const branchToEdit = branchs.find((b) => b.idsucursal === selected);
         if (!branchToEdit) return;
         setEditMode("edit");
@@ -47,7 +68,14 @@ function Branchs() {
     };
 
     const handleDelete = () => {
-        if (!selected) return alert("Selecciona una sucursal para borrar");
+        if (!selected) {
+            showToast({
+                title: "Error",
+                message: "Selecciona una sucursal para borrar",
+                type: "error",
+            });
+            return;
+        }
         if (window.confirm("¿Seguro que deseas eliminar esta sucursal?")) {
             deleteMutation.mutate(selected);
         }
@@ -57,6 +85,7 @@ function Branchs() {
         setSelected(selected === branch.idsucursal ? null : branch.idsucursal || null);
 
     const handleClearSelection = () => setSelected(null);
+
     const keys = branchs.length ? (Object.keys(branchs[0]) as (keyof Branch)[]) : [];
 
     const filteredBranches = branchs.filter((b) =>

@@ -5,9 +5,11 @@ import "./Reviews.css";
 import Comment from "../components/Comment";
 import AuthStore from "../stores/AuthStore";
 import { RequestAddReview, RequestAddReviewGuest, RequestReviews } from "../api/ReviewsApi";
+import ToastStore from "../stores/ToastStore";
 
 function Reviews() {
     const isAuth = AuthStore((state) => state.isAuth);
+    const showToast = ToastStore((state) => state.showToast);
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -34,11 +36,19 @@ function Reviews() {
         if (isSubmitting) return;
 
         if (!body.trim()) {
-            alert("Por favor escribe tu reseña.");
+            showToast({
+                title: "Error",
+                message: "Por favor escribe tu reseña.",
+                type: "error",
+            });
             return;
         }
         if (score <= 0) {
-            alert("Por favor selecciona una puntuación.");
+            showToast({
+                title: "Error",
+                message: "Por favor selecciona una puntuación.",
+                type: "error",
+            });
             return;
         }
 
@@ -59,7 +69,11 @@ function Reviews() {
               });
 
         if (!res.ok) {
-            alert(res.message ?? "Ocurrió un error al enviar la reseña.");
+            showToast({
+                title: "Error",
+                message: res.message ?? "Ocurrió un error al enviar la reseña.",
+                type: "error",
+            });
             setIsSubmitting(false);
             return;
         }
@@ -73,7 +87,12 @@ function Reviews() {
 
         await loadReviews();
         setIsSubmitting(false);
-        alert("¡Gracias por tu reseña!");
+
+        showToast({
+            title: "Éxito",
+            message: "¡Gracias por tu reseña!",
+            type: "success",
+        });
     };
 
     return (
@@ -133,7 +152,7 @@ function Reviews() {
 
                     {isLoading && <p>Cargando reseñas...</p>}
                     {!isLoading && reviews.length === 0 && (
-                        <p>Aún no hay reseñas. ¡Sí el primero en opinar!</p>
+                        <p>Aún no hay reseñas. ¡Sé el primero en opinar!</p>
                     )}
                     {!isLoading &&
                         reviews.map((review) => (

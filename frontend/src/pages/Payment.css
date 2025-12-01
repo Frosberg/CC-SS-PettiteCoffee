@@ -208,6 +208,18 @@
     font-size: 0.9rem;
 }
 
+.payment__summary__customizations {
+    margin: 0;
+    padding-left: 1.25rem;
+    color: hsl(from var(--color-dark) h s l / 0.7);
+    font-size: 0.85rem;
+}
+
+.payment__summary__customizations li * {
+    color: var(--color-dark);
+    line-height: 1.2;
+}
+
 .payment__summary__price {
     margin: 0;
     color: var(--color-dark);

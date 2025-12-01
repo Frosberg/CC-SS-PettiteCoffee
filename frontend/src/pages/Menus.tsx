@@ -21,17 +21,17 @@ function Menus() {
         !products || !search.trim()
             ? products
             : products.filter((product) => {
-                const term = search.toLowerCase();
-                return (
-                    product.nombre.toLowerCase().includes(term) ||
-                    product.categoria.toLowerCase().includes(term) ||
-                    product.codproducto.toLowerCase().includes(term)
-                );
-            });
+                  const term = search.toLowerCase();
+                  return (
+                      product.nombre.toLowerCase().includes(term) ||
+                      product.categoria.toLowerCase().includes(term) ||
+                      product.codproducto.toLowerCase().includes(term)
+                  );
+              });
 
     const getCategoryKey = (product: Product): CategoryKey => {
         const raw = (product.categoria || "").toLowerCase();
-        return CATEGORY_KEYS.includes(raw as CategoryKey) ? (raw as CategoryKey) : "novedosos";
+        return CATEGORY_KEYS.includes(raw as any) ? (raw as any) : "novedosos";
     };
 
     const getFilteredByCategory = (category: CategoryKey) =>
@@ -51,7 +51,7 @@ function Menus() {
 
         return (
             <>
-                {categoryProducts.map((product) => (
+                {categoryProducts.map((product, index) => (
                     <CardProduct
                         key={product.codproducto}
                         codproducto={product.codproducto}
@@ -59,6 +59,8 @@ function Menus() {
                         image={product.imageUrl}
                         title={product.nombre}
                         price={product.precioventa}
+                        category={getCategoryKey(product)}
+                        appearDelay={index * 100}
                     />
                 ))}
             </>
@@ -72,9 +74,11 @@ function Menus() {
 
                 <TabsCustom defaultActiveKey="novedosos">
                     <TabNavbar>
-                        <TabItem eventKey="novedosos" title="Bebidas" />
+                        <TabItem eventKey="novedosos" title="Novedosos" />
+                        {/* <TabItem eventKey="cafes" title="Cafes" /> */}
                         <TabItem eventKey="tortas" title="Tortas" />
                         <TabItem eventKey="muffins" title="Muffins" />
+                        {/* <TabItem eventKey="pasteles" title="Pasteles" /> */}
                         <TabItem eventKey="panes" title="Panes" />
                     </TabNavbar>
 

@@ -27,11 +27,11 @@ const routesPaths = {
         },
     ],
     manage: [
-        // {
-        //     path: "/dashboard/manage/reports",
-        //     name: "Reportes",
-        //     icon: "fa-solid fa-book",
-        // },
+        {
+            path: "/dashboard/reports",
+            name: "Reportes",
+            icon: "fa-solid fa-book",
+        },
     ],
 };
 
