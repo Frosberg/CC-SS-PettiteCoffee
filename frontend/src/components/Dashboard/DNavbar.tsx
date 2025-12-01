@@ -36,14 +36,16 @@ function DNavbar({ routesPaths }: Props) {
                             </Link>
                         </li>
                     ))}
-                    {/* <li className="nav-title">Mantenimiento</li> */}
+                    <li className="nav-title">Mantenimiento</li>
                     {routesPaths.manage.map((route) => (
-                        <li
-                            key={route.path}
-                            className={pathname === route.path ? "nav-item active" : "nav-item"}
-                        >
-                            <i className={route.icon}></i>
-                            <Link to={route.path}>{route.name}</Link>
+                        <li key={route.path}>
+                            <Link
+                                className={pathname === route.path ? "nav-item active" : "nav-item"}
+                                to={route.path}
+                            >
+                                <i className={route.icon}></i>
+                                {route.name}
+                            </Link>
                         </li>
                     ))}
                 </ul>

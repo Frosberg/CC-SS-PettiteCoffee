@@ -10,8 +10,8 @@
 }
 
 .card_products--fade {
-    opacity: 0;
     transform: translateY(14px);
+    opacity: 0;
     animation: card_products_fade-in 0.6s ease forwards;
 }
 
@@ -21,12 +21,12 @@
 
 @keyframes card_products_fade-in {
     from {
-        opacity: 0;
         transform: translateY(14px);
+        opacity: 0;
     }
     to {
-        opacity: 1;
         transform: translateY(0);
+        opacity: 1;
     }
 }
 
@@ -94,24 +94,24 @@
 }
 
 .card_products__modal-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 999;
     display: flex;
+    position: fixed;
     justify-content: center;
     align-items: center;
-    padding: 1.25rem;
+    z-index: 999;
+    inset: 0;
     background-color: rgba(0, 0, 0, 0.6);
+    padding: 1.25rem;
 }
 
 .card_products__modal {
     position: relative;
-    width: min(520px, 100%);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
     border-radius: 1.25rem;
     background-color: var(--color-light);
     padding: 2rem 2rem 1.5rem;
+    width: min(520px, 100%);
     color: var(--color-dark);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
 }
 
 .card_products__modal-close {
@@ -171,6 +171,8 @@
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
+    opacity: 0.55;
+    transition: opacity 0.2s ease, transform 0.15s ease;
     cursor: pointer;
     border: none;
     border-radius: 999px;
@@ -179,8 +181,6 @@
     color: var(--color-light);
     font-weight: 600;
     letter-spacing: 0.03rem;
-    opacity: 0.55;
-    transition: opacity 0.2s ease, transform 0.15s ease;
 }
 
 .card_products__modal-option input {
@@ -195,8 +195,8 @@
 }
 
 .card_products__modal-option.is-active {
-    opacity: 1;
     transform: translateY(-1px);
+    opacity: 1;
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
 }
 

@@ -17,6 +17,7 @@ import Products from "./pages/Dashboard/Products";
 import Branchs from "./pages/Dashboard/Branchs";
 import AuthStore from "./stores/AuthStore";
 import Accounts from "./pages/Dashboard/Accounts";
+import Reportes from "./pages/Dashboard/Reportes";
 
 function ProtectedRoute() {
     const isAuth = AuthStore((state) => state.isAuth);
@@ -71,6 +72,7 @@ function App() {
                             <Route path="products" element={<Products />} />
                             <Route path="branchs" element={<Branchs />} />
                             <Route path="accounts" element={<Accounts />} />
+                            <Route path="reports" element={<Reportes />} />
                         </Route>
                     </Route>
                 </Route>
