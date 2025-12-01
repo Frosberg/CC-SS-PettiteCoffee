@@ -37,6 +37,34 @@
     font-weight: 600;
 }
 
+.comment__header {
+    color: var(--color-dark);
+    font-size: 0.5rem;
+}
+
+.comment__header div {
+    display: flex;
+    gap: 10px;
+}
+
+.comment__header .verfied__badge {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    border: 1px solid var(--color-dark);
+    border-radius: 100px;
+    padding: 0.25rem 0.5rem;
+    color: var(--color-dark);
+    font-weight: 500;
+    font-size: 0.75rem;
+}
+
+.comment__header .verfied__badge i {
+    color: var(--color-dark);
+    font-size: 0.6rem;
+}
+
 .comment__header span,
 .comment__description {
     margin: 0;
