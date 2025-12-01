@@ -9,7 +9,7 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.cursoIntegrador.lePettiteCoffe.Model.DTO.ProductDTO;
+import com.cursoIntegrador.lePettiteCoffe.Model.DTO.Product.ProductDTO;
 import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Product;
 import com.cursoIntegrador.lePettiteCoffe.Service.DAO.ProductService;
 
@@ -40,3 +40,4 @@ public class ProductControllerTest {
         assertEquals("http://localhost:8080/images/productos/1.webp", response.getBody().get(0).getImageUrl());
     }
 }
+
