@@ -161,6 +161,7 @@ function Reviews() {
                                     review.idReview ??
                                     `${review.nombre}-${review.cuerpo}-${review.puntuacion}`
                                 }
+                                verified={review.verified}
                                 author={review.email}
                                 description={review.cuerpo}
                                 rating={review.puntuacion}
