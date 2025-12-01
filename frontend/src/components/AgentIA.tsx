@@ -4,6 +4,7 @@ import "./AgentIA.css";
 import "@google/model-viewer";
 import { RequestIAConsulta, type AgentIAMode } from "../api/IAApi";
 import CartStore from "../stores/CartStore";
+import ToastStore from "../stores/ToastStore";
 
 type IAProduct = {
     codproducto: string;
@@ -87,6 +88,7 @@ function AgentIA({ mode = "recommendations" }: AgentIAProps) {
     const [isSending, setIsSending] = useState(false);
     const [pochiMood, setPochiMood] = useState<PochiMood>("idle");
     const [idleVariant, setIdleVariant] = useState<IdleVariant>("float");
+    const showToast = ToastStore((state) => state.showToast);
 
     const messagesRef = useRef<HTMLDivElement | null>(null);
     const muffinRef = useRef<any>(null);
@@ -158,8 +160,6 @@ function AgentIA({ mode = "recommendations" }: AgentIAProps) {
         const text = input.trim();
         if (!text || isSending) return;
 
-        triggerPochiMood("emotional", true);
-
         const userMessage: ChatMessage = {
             id: `${Date.now()}-user`,
             role: "user",
@@ -193,6 +193,7 @@ function AgentIA({ mode = "recommendations" }: AgentIAProps) {
 
         setMessages((prev) => [...prev, assistantMessage]);
         setIsSending(false);
+        triggerPochiMood("emotional", true);
     };
 
     const handleAddProductToCart = (product: IAProduct) => {
@@ -210,8 +211,13 @@ function AgentIA({ mode = "recommendations" }: AgentIAProps) {
             precioventa: Number.isFinite(price) ? price : 0,
             imageUrl,
         });
+        showToast({
+            title: "Pochi, ¡Esta Contento!",
+            message: "¡Pochi agradece que hayas elegido su recomendación!",
+            type: "success",
+        });
 
-        triggerPochiMood("emotional", false);
+        triggerPochiMood(Math.random() > 0.5 ? "happy" : "emotional", true);
     };
 
     const handleMouseEnter = () => {

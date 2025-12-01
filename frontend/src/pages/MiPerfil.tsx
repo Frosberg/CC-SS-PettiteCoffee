@@ -82,6 +82,7 @@ function MiPerfil() {
             alias: userStore.alias ?? "",
             direccion: userStore.direccion ?? "",
             pais: userStore.pais ?? "",
+            telefono: userStore.telefono ?? "",
             fechaNacimiento: formatDateForInput(userStore.fechaNacimiento),
         });
     }, [userStore]);
@@ -142,6 +143,7 @@ function MiPerfil() {
             alias: profileData.alias.trim(),
             direccion: profileData.direccion.trim(),
             pais: profileData.pais.trim(),
+            telefono: profileData.telefono.trim(),
             fechaNacimiento: profileData.fechaNacimiento,
         };
 
@@ -241,6 +243,12 @@ function MiPerfil() {
                                 editable={editable}
                                 onChange={handleProfileFieldChange("fechaNacimiento")}
                                 inputType="date"
+                            />
+                            <ViewInfoUser
+                                title="Teléfono"
+                                value={profileData.telefono}
+                                editable={editable}
+                                onChange={handleProfileFieldChange("telefono")}
                             />
                             <ViewInfoUser
                                 title="País"

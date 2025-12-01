@@ -140,6 +140,7 @@ type UpdateProfilePayload = {
     alias: string;
     direccion: string;
     pais: string;
+    telefono: string;
     fechaNacimiento: string;
 };
 
