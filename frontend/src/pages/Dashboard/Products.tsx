@@ -3,6 +3,7 @@ import { Table } from "react-bootstrap";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { RequestProducts, RequestDeleteProduct } from "../../api/ProductApi";
 import DataModalProducts from "../../components/Dashboard/DataModalProducts";
+import ToastStore from "../../stores/ToastStore";
 import "./CommonDashboard.css";
 
 function Products() {
@@ -12,7 +13,9 @@ function Products() {
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
     const [search, setSearch] = useState("");
 
+    const showToast = ToastStore((state) => state.showToast);
     const queryClient = useQueryClient();
+
     const {
         data: products = [],
         isLoading,
@@ -27,6 +30,18 @@ function Products() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["products"] });
             setSelected(null);
+            showToast({
+                title: "Éxito",
+                message: "Producto eliminado correctamente",
+                type: "success",
+            });
+        },
+        onError: () => {
+            showToast({
+                title: "Error",
+                message: "No se pudo eliminar el producto",
+                type: "error",
+            });
         },
     });
 
@@ -37,7 +52,14 @@ function Products() {
     };
 
     const handleUpdate = () => {
-        if (!selected) return alert("Selecciona un producto para editar");
+        if (!selected) {
+            showToast({
+                title: "Error",
+                message: "Selecciona un producto para editar",
+                type: "error",
+            });
+            return;
+        }
         const productToEdit = products.find((p) => p.id === selected);
         if (!productToEdit) return;
         setEditMode("edit");
@@ -46,7 +68,14 @@ function Products() {
     };
 
     const handleDelete = () => {
-        if (!selected) return alert("Selecciona un producto para borrar");
+        if (!selected) {
+            showToast({
+                title: "Error",
+                message: "Selecciona un producto para borrar",
+                type: "error",
+            });
+            return;
+        }
         if (window.confirm("¿Seguro que deseas eliminar este producto?")) {
             deleteMutation.mutate(selected);
         }
@@ -56,6 +85,7 @@ function Products() {
         setSelected(selected === product.id ? null : product.id);
 
     const handleClearSelection = () => setSelected(null);
+
     const keys = products.length ? (Object.keys(products[0]) as (keyof Product)[]) : [];
 
     const filteredProducts = products.filter((p) =>

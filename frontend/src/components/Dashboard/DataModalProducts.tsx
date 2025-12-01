@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { RequestCreateProduct, RequestUpdateProduct } from "../../api/ProductApi";
 import CustomInput from "./CustomInput";
 import "./CommonModals.css";
+import ToastStore from "../../stores/ToastStore";
 
 type Props = {
     state: boolean;
@@ -14,6 +15,7 @@ type Props = {
 
 function DataModalProducts({ state, onClose, mode, product }: Props) {
     const queryClient = useQueryClient();
+    const showToast = ToastStore((state) => state.showToast);
 
     const [form, setForm] = useState({
         codproducto: "",
@@ -75,7 +77,14 @@ function DataModalProducts({ state, onClose, mode, product }: Props) {
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const isValid = form.nombre && form.codproducto && form.categoria && form.precioventa > 0;
-        if (!isValid) return alert("Completa todos los campos obligatorios");
+        if (!isValid) {
+            showToast({
+                title: "Error",
+                message: "Completa todos los campos obligatorios",
+                type: "error",
+            });
+            return;
+        }
 
         if (mode === "edit" && product) updateMutation.mutate(form as Product);
         else createMutation.mutate(form as Product);

@@ -3,6 +3,7 @@ import {
     RequestReportBranch,
     RequestReportProduct,
 } from "../../api/ReportsApi";
+import ToastStore from "../../stores/ToastStore";
 import "./Reportes.css";
 
 const reports = [
@@ -38,19 +39,63 @@ const downloadBlob = (blob: Blob, fileName: string) => {
 };
 
 function Reportes() {
+    const showToast = ToastStore((state) => state.showToast);
+
     const handleDownload = async (report: string) => {
         if (report === "accounts") {
             const res = await RequestReportAccount();
-            if (!res.ok) return alert("Error al exportar cuentas");
-            if (res.data) downloadBlob(res.data, "reporte_cuentas.pdf");
+            if (!res.ok) {
+                showToast({
+                    title: "Error",
+                    message: "Error al exportar cuentas",
+                    type: "error",
+                });
+                return;
+            }
+            if (res.data) {
+                downloadBlob(res.data, "reporte_cuentas.pdf");
+                showToast({
+                    title: "Éxito",
+                    message: "Reporte de cuentas descargado",
+                    type: "success",
+                });
+            }
         } else if (report === "sucursales") {
             const res = await RequestReportBranch();
-            if (!res.ok) return alert("Error al exportar sucursales");
-            if (res.data) downloadBlob(res.data, "reporte_sucursales.pdf");
+            if (!res.ok) {
+                showToast({
+                    title: "Error",
+                    message: "Error al exportar sucursales",
+                    type: "error",
+                });
+                return;
+            }
+            if (res.data) {
+                downloadBlob(res.data, "reporte_sucursales.pdf");
+                showToast({
+                    title: "Éxito",
+                    message: "Reporte de sucursales descargado",
+                    type: "success",
+                });
+            }
         } else if (report === "products") {
             const res = await RequestReportProduct();
-            if (!res.ok) return alert("Error al exportar productos");
-            if (res.data) downloadBlob(res.data, "reporte_productos.pdf");
+            if (!res.ok) {
+                showToast({
+                    title: "Error",
+                    message: "Error al exportar productos",
+                    type: "error",
+                });
+                return;
+            }
+            if (res.data) {
+                downloadBlob(res.data, "reporte_productos.pdf");
+                showToast({
+                    title: "Éxito",
+                    message: "Reporte de productos descargado",
+                    type: "success",
+                });
+            }
         }
     };
 

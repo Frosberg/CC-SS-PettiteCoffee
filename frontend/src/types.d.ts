@@ -204,3 +204,22 @@ interface CartStore {
     clearCart: () => void;
     total: () => number;
 }
+
+type ToastType = "success" | "warning" | "error";
+
+type ToastPayload = {
+    title: string;
+    message: string;
+    type?: ToastType;
+    duration?: number;
+};
+
+type ToastStore = {
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: ToastType;
+    duration: number;
+    showToast: (payload: ToastPayload) => void;
+    closeToast: () => void;
+};

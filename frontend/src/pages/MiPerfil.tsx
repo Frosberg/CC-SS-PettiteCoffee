@@ -9,6 +9,7 @@ import { RequestPurchases } from "../api/PurchasesApi";
 import { RequestProducts } from "../api/ProductApi";
 import { RequestUpdateProfile } from "../api/AccountApi";
 import { useQuery } from "@tanstack/react-query";
+import ToastStore from "../stores/ToastStore";
 
 const createEmptyProfileData = (): UpdateProfilePayload => ({
     alias: "",
@@ -30,6 +31,7 @@ function MiPerfil() {
     const navigate = useNavigate();
     const [editable, setEditable] = useState(false);
 
+    const showToast = ToastStore((state) => state.showToast);
     const LogoutStore = useAuthStore((state) => state.logout);
     const userStore = useAuthStore((state) => state.user);
     const updateUserData = useAuthStore((state) => state.updateUserData);
@@ -144,19 +146,35 @@ function MiPerfil() {
         };
 
         if (!payload.alias) {
-            alert("Por favor ingresa tu nombre y apellido.");
+            showToast({
+                title: "Error",
+                message: "Por favor ingresa tu nombre y apellido.",
+                type: "error",
+            });
             return;
         }
         if (!payload.direccion) {
-            alert("Por favor ingresa una dirección.");
+            showToast({
+                title: "Error",
+                message: "Por favor ingresa una dirección.",
+                type: "error",
+            });
             return;
         }
         if (!payload.pais) {
-            alert("Por favor ingresa tu país.");
+            showToast({
+                title: "Error",
+                message: "Por favor ingresa tu país.",
+                type: "error",
+            });
             return;
         }
         if (!payload.fechaNacimiento) {
-            alert("Por favor selecciona tu fecha de nacimiento.");
+            showToast({
+                title: "Error",
+                message: "Por favor selecciona tu fecha de nacimiento.",
+                type: "error",
+            });
             return;
         }
 
@@ -165,13 +183,21 @@ function MiPerfil() {
         setIsUpdatingProfile(false);
 
         if (!res.ok) {
-            alert(res.message || "No se pudo actualizar el perfil. Intenta nuevamente.");
+            showToast({
+                title: "Error",
+                message: res.message || "No se pudo actualizar el perfil. Intenta nuevamente.",
+                type: "error",
+            });
             return;
         }
 
         updateUserData(payload);
         setEditable(false);
-        alert("Perfil actualizado correctamente.");
+        showToast({
+            title: "Éxito",
+            message: "Perfil actualizado correctamente.",
+            type: "success",
+        });
     };
 
     return (
@@ -202,9 +228,6 @@ function MiPerfil() {
                                 editable={editable}
                                 onChange={handleProfileFieldChange("direccion")}
                             />
-                            {/* campo de teléfono para darle soporte mas adelante
-                            <ViewInfoUser title="Teléfono" value="" editable={editable} />
-                            */}
                             <ViewInfoUser
                                 title="Fecha de Nacimiento"
                                 value={new Date(profileData.fechaNacimiento).toLocaleDateString(

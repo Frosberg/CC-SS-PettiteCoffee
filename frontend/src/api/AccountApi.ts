@@ -1,4 +1,5 @@
 import { handleRequest, HTTP_METHODS } from "./ApiRequest";
+import ToastStore from "../stores/ToastStore";
 
 const ACCOUNT_URLS = {
     LIST: "/accounts/listar",
@@ -13,7 +14,14 @@ export const RequestExportAccounts = async () => {
         responseType: "blob",
     });
 
-    if (!res.ok || !res.data) return alert("Error al exportar cuentas");
+    if (!res.ok || !res.data) {
+        ToastStore.getState().showToast({
+            title: "Error",
+            message: "Error al exportar cuentas",
+            type: "error",
+        });
+        return;
+    }
 
     const url = URL.createObjectURL(res.data);
     const a = document.createElement("a");
@@ -21,6 +29,12 @@ export const RequestExportAccounts = async () => {
     a.download = "accounts.xlsx";
     a.click();
     URL.revokeObjectURL(url);
+
+    ToastStore.getState().showToast({
+        title: "Descarga lista",
+        message: "Se exportó el listado de cuentas.",
+        type: "success",
+    });
 };
 
 export const RequestUpdateProfile = (payload: UpdateProfilePayload) =>

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import CartStore from "../stores/CartStore";
+import ToastStore from "../stores/ToastStore";
 import "./CardProduct.css";
 
 type Props = {
@@ -179,6 +180,7 @@ function CardProduct({
     appearDelay,
 }: Props) {
     const addToCart = CartStore((state) => state.addToCart);
+    const showToast = ToastStore((state) => state.showToast);
     const normalizedCategory = (category || "novedosos").toLowerCase();
     const customizationFields = useMemo(
         () => CUSTOMIZATION_FIELDS[normalizedCategory] || CUSTOMIZATION_FIELDS.default,
@@ -211,7 +213,11 @@ function CardProduct({
         const missing = customizationFields.filter((field) => !customValues[field.id]);
 
         if (missing.length > 0) {
-            alert("Por favor, selecciona todos los adicionales para continuar.");
+            showToast({
+                title: "Faltan opciones",
+                message: "Por favor, selecciona todos los adicionales para continuar.",
+                type: "warning",
+            });
             return;
         }
 
@@ -311,8 +317,12 @@ function CardProduct({
     return (
         <>
             <div
-                className={`card_products${appearDelay !== undefined ? " card_products--fade" : ""}`}
-                style={appearDelay !== undefined ? { animationDelay: `${appearDelay}ms` } : undefined}
+                className={`card_products${
+                    appearDelay !== undefined ? " card_products--fade" : ""
+                }`}
+                style={
+                    appearDelay !== undefined ? { animationDelay: `${appearDelay}ms` } : undefined
+                }
             >
                 <img className="card_products__image" src={image} alt={title} />
                 <section className="card_products__content">
